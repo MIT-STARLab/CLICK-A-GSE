@@ -1,0 +1,90 @@
+#Author: Peter Grenfell, Sept 2020 (inherits code from DeMi_COSMOS_Interface.git)
+
+#Get File - RPi APID: 0x500 (Return an RPi file content) [TBR - DeMi_COSMOS_Interface.git]
+COMMAND XACT PL_FILE_DWNLNK_REQ BIG_ENDIAN "Request File Downlink by name"
+	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+		FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+		FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER LEN 32 UINT 354 354 354 "Length of Payload in Bytes" # Not sure if this value is going to work because it is less than the number of raw bytes selection below
+	#APPEND_ID_PARAMETER LEN 32 UINT 204 204 204 "Length of Payload in Bytes"
+	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+ 	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 ""
+	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 ""
+	APPEND_PARAMETER LENGTH 16 UINT 256 256 256 "Number of bytes in RawBytes"
+	#APPEND_PARAMETER LENGTH 16 UINT 54 54 54 "Number of bytes in RawBytes"
+		UNITS bytes bytes
+	# End header
+
+	APPEND_ID_PARAMETER PACK_ID 8 UINT 0xFD 0xFD 0xFD "Packet ID code"
+		FORMAT_STRING "0x%02X"
+	APPEND_PARAMETER TARGET_PI 8 UINT 0x00 0x33 0x11 "0x22,0x33 - the pi to target"
+		STATE PI_2 0x22
+		STATE PI_3 0x33
+	APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros"
+	APPEND_PARAMETER CMD_SEQ 16 UINT 0x00 0xFFFF 0x00 "Command Sequence Number"
+	APPEND_PARAMETER DEL_WHEN_ACKD 8 UINT 0x00 0xFF 0x00 "Delete when gnd-receipt acknowledged?"
+		STATE YES 0xFF
+		STATE NO 0x00
+	APPEND_PARAMETER DIR_NAME_LEN 8 UINT 0x03 0x80 0x03 "Directory Name Length (128 char max, of 'path/to'--no slashes on ends)"
+		UNITS Characters Characters
+	APPEND_PARAMETER FILE_NAME_LEN 8 UINT 0x03 0x40 0x03 "File Name Length (64 char max, of 'file.fits')"
+		UNITS Characters Characters
+	APPEND_PARAMETER DIR_NAME 1536 STRING "" "Filename: path/to/file.fits"
+	APPEND_PARAMETER PADDING 432 BLOCK '' "Padding for 256-byte packet"
+	APPEND_PARAMETER CH_SUM 16 UINT 0x00 0xFFFF 0x00 "16 bit checksum"
+
+#Push File - RPi APID: 0x501 (Write an RPi file) [TBR - DeMi_COSMOS_Interface.git]
+COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload File to Staging" #New packet size is less than 1002, making it 1000 
+	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+		FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+		FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER LEN 32 UINT 1000 1000 1000 "Length of Payload in Bytes"
+	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 ""
+	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 ""
+	APPEND_PARAMETER LENGTH 16 UINT 950 950 950 "Number of bytes in RawBytes"  # despite the bus's spec that this can be 1002, it had indeterminate behavior at 1000
+		UNITS bytes bytes
+#### demi def start
+	APPEND_ID_PARAMETER PACK_ID 8 UINT 0xF1 0xF1 0xF1 "Packet ID code"
+		FORMAT_STRING "0x%02X"
+	APPEND_PARAMETER TARGET_PI 8 UINT 0x00 0x33 0x00 "0x00,0x22,0x33 - the pi to target"
+		STATE PI_2 0x22
+		STATE PI_3 0x33
+		STATE PI_BOTH 0x00
+	APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros"
+	APPEND_PARAMETER CMD_SEQ 16 UINT 0x0000 0xFFFF 0x0000 "Command Sequence Number"
+	APPEND_PARAMETER TRANS_ID 16 UINT 0x00 0xFFFF 0x00 "Transfer ID" LITTLE_ENDIAN
+	APPEND_PARAMETER TOT_PACKETS_NUM 16 UINT 0x00 0xFFFF 0x00 "Total Packets #" LITTLE_ENDIAN
+	APPEND_PARAMETER FILE_SEQ_NUM 16 UINT 0x00 0xFFFF 0x00 "File Sequence #" LITTLE_ENDIAN
+	APPEND_PARAMETER PL_SIZE 16 UINT 0x00 0x03DA 0x00 "Payload Size" LITTLE_ENDIAN
+	APPEND_PARAMETER OVERWRITE 8 UINT 0x00 0xFF 0x00 "Overwrite data?"
+		STATE NO 0x00
+		STATE YES 0xFF
+	APPEND_ARRAY_PARAMETER DATA 8 UINT 7472 "Data"
+	APPEND_PARAMETER CH_SUM 16 UINT 0x00 0xFFFF 0x00 "16 bit checksum"
+
+#Get PAT History - RPi APID: 0x502 (Request buffer (history) of PAT data, for ground performance analysis)
+
+#Set FPGA Memory Map Values - RPi APID: 0x503 (Address (4B, 4B alligned), Data (size multiples of 4B) -> Ok/Not OK)
+
+#Set Time - RPi APID: 0x504 (Set payload time using GPS from bus, so telemetry can be requested with relevant ranges)
+
+#Get Errors and Events - RPi APID: 0x505 (Return all errors between 2 UTC times)
+
+#Get Housekeeping Data - RPi APID: 0x506 (Return a given number of housekeeping packets after a given UTC time)
+
+#Get Telemetry Packet - RPi APID: 0x507 (Return a given number of telemetry packets of a certain type after a given UTC time)
+
+#Get FPGA Memory Map Values - RPi APID: 0x508 (Address (4B, 4B alligned), range (multiples of 4) -> Values)
+
+#Request Telemetry - RPi APID: 0x509 
+
+#Turn On Subsystem - RPi APID: 0x510 
+
+#Turn Off Subsystem - RPi APID: 0x511 
+
+#Change Payload Mode - RPi APID: 0x512 
+
+#Execute File - RPi APID: 0x513 TBR
