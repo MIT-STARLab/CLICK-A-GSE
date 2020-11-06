@@ -1,5 +1,18 @@
 #Author: Peter Grenfell, Sept 2020 (inherits code from DeMi_COSMOS_Interface.git)
 
+#1 Byte Test Command (Tested & Works)
+COMMAND XACT EXAMPLE_PAYLOAD_COMMAND BIG_ENDIAN "Example one-byte command"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 1 1 1 "Length of bytes send to payload"
+  APPEND_PARAMETER SINGLE_CMD_BYTE 8 UINT 0 255 1 “The only byte sent to payload”
+
 #Get File - RPi APID: 0x500 (Return an RPi file content) [TBR - DeMi_COSMOS_Interface.git]
 COMMAND XACT PL_FILE_DWNLNK_REQ BIG_ENDIAN "Request File Downlink by name"
 	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
