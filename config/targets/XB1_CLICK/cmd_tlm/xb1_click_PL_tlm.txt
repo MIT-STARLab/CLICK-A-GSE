@@ -1,10 +1,11 @@
 #Author: Peter Grenfell, Sept 2020 (inherits code from DeMi_COSMOS_Interface.git)
+#Reference: https://cosmosrb.com/docs/v4/telemetry
 
 #Test Telemetry (Tested & Works)
 TELEMETRY XACT EXAMPLE_PAYLOAD_DATA BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x204 "Message ID – should be 0x200 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3C0 "Message ID – should be 0x300 – 0x3FF and unique for each pkt" #TBR
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
@@ -25,42 +26,13 @@ TELEMETRY XACT EXAMPLE_PAYLOAD_DATA BIG_ENDIAN
   APPEND_ITEM PL_CCSDS_LEN 16 UINT
   APPEND_ITEM PL_SINGLE_BYTE_TLM 8 UINT “Single byte of telemetry from payload
 
-#Test Telemetry (two bytes) [TBR - DeMi_COSMOS_Interface.git]
-TELEMETRY XACT PL_PAYLOAD_TEST BIG_ENDIAN
-  ITEM SYNC 0 64 UINT "Sync Pattern"
-    FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 546 "Message ID as int = PL APID in hex"
-    FORMAT_STRING "0x%04X" #was "0x%02X" but changed by Jenny 
-  ITEM LEN 96 32 UINT "Length (bytes)"
-  ITEM SEQ 128 32 UINT "Sequence Count"
-  ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
-    UNITS sec sec
-  ITEM CCSDS_TAI_SUBSECS 192 8 UINT "TAI Subseconds from CCSDS Header"
-    POLY_READ_CONVERSION 0 0.2
-    UNITS sec sec
-  ITEM CCSDS_REALTIME 200 8 UINT "Identifies data as realtime or from storage"
-    STATE REALTIME 1
-    STATE STORED 0
-  ITEM PL_APID 208 16 UINT "Payload CCSDS Version, Packet Type, Sec Header Flag, and Payload APID"
-    FORMAT_STRING "0x%02X"
-  ITEM PL_GRP_SEQ 224 16 UINT "Payload Grouping Flag (2bits) and Seq CT (14bits)"
-    FORMAT_STRING "0x%02X"
-  ITEM PL_LEN 240 16 UINT "Payload Length after header - 1"
-  ITEM PL_SINGLE_BYTE_TLM 256 8 UINT "single byte of telemetry from payload"
-    FORMAT_STRING "0x%01X"
-  ITEM PL_SECOND_BYTE_TLM 264 8 UINT "second byte of telemetry from payload"
-    FORMAT_STRING "0x%01X"
-  ITEM CH_SUM 272 16 UINT "2 byte checksum for payload data"
-    FORMAT_STRING "0x%02X" 
-
-#File Telemetry (e.g. camera image, csv or txt file, etc.) [TBR - DeMi_COSMOS_Interface.git]
+#File Telemetry (e.g. camera image, csv or txt file, etc.)
 TELEMETRY XACT PL_DWNLNK_FILE LITTLE_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0xA4000000 "Message ID as int = PL APID in hex"
-    FORMAT_STRING "0x%04X" 
-  ITEM LEN 96 32 UINT "Length (bytes)"
-  ITEM SEQ 128 32 UINT "Sequence Count"
+  ID_ITEM MSG_ID 64 32 UINT 0x3C1 "Message ID – should be 0x300 – 0x3FF and unique for each pkt" #TBR
+  ITEM LEN 96 32 UINT "Length (bytes) of packet"
+  ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
     UNITS sec sec
   ITEM CCSDS_TAI_SUBSECS 192 8 UINT "TAI Subseconds from CCSDS Header"
@@ -69,40 +41,41 @@ TELEMETRY XACT PL_DWNLNK_FILE LITTLE_ENDIAN
   ITEM CCSDS_REALTIME 200 8 UINT "Identifies data as realtime or from storage"
     STATE REALTIME 1
     STATE STORED 0
-  ITEM PL_APID 208 16 UINT "Payload CCSDS Version, Packet Type, Sec Header Flag, and Payload APID"
-    FORMAT_STRING "0x%02X"
-  ITEM PL_GRP_SEQ 224 16 UINT "Payload Grouping Flag (2bits) and Seq CT (14bits)"
-    FORMAT_STRING "0x%02X"
-  ITEM PL_LEN 240 16 UINT "Payload Length after header - 1"
-  #end header
-  ID_ITEM ID_CODE 256 8 UINT 0xA4 "Packet ID code"
-    FORMAT_STRING "0x%01X"
-  ITEM SOURCE_PI 264 8 UINT "source Pi, 2 or 3"
-    STATE PI_2 0x22
-    STATE PI_3 0x33
-  ITEM FILE_SEQ_NUM 272 16 UINT "File sequence number"
-    FORMAT_STRING "0x%02X"
-  ITEM STAGED_TAI 288 32 UINT "Staged Time TAI Timestamp"
-    UNITS Seconds Sec
-  ITEM GPS_PPS_AGE 320 16 UINT "Milliseconds since GPS PPS"
-    UNITS Milliseconds ms
-  ITEM TRANSF_ID 336 16 UINT "Transfer ID"
-  ITEM TOT_PACKETS 352 16 UINT "Total Packets #"
-  ITEM PATH_NAME 368 2040 STRING "File Path/Name (255 bytes, fixed with trailing padding)"
-  ARRAY_ITEM FILE_MD5 2408 8 UINT 128 "Original File MD5 Hash, bytewise"
-    FORMAT_STRING "%01X"
+  APPEND_ITEM PL_CCSDS_VER 3 UINT
+  APPEND_ITEM PL_CCSDS_TYPE 1 UINT
+  APPEND_ITEM PL_CCSDS_SECNDRY 1 UINT
+  APPEND_ITEM PL_CCSDS_APID 11 UINT “Same as message ID above”
+    FORMAT_STRING "0x%03X"
+  APPEND_ITEM PL_CCSDS_GRP 2 UINT
+  APPEND_ITEM PL_CCSDS_SEQ 14 UINT
+  APPEND_ITEM PL_CCSDS_LEN 16 UINT
+  #End header
   ITEM PL_SIZE 2536 16 UINT "Payload Size"
   ITEM DATA 2552 13600 BLOCK "Data"
   APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
 
-#Housekeeping Data Telemetry [TBR - DeMi_COSMOS_Interface.git]
+  #DEMI:
+  #ID_ITEM ID_CODE 256 8 UINT 0xA4 "Packet ID code"
+  #  FORMAT_STRING "0x%01X"
+  #ITEM FILE_SEQ_NUM 272 16 UINT "File sequence number"
+  #  FORMAT_STRING "0x%02X"
+  #ITEM STAGED_TAI 288 32 UINT "Staged Time TAI Timestamp"
+  #  UNITS Seconds Sec
+  #ITEM GPS_PPS_AGE 320 16 UINT "Milliseconds since GPS PPS"
+  #  UNITS Milliseconds ms
+  #ITEM TRANSF_ID 336 16 UINT "Transfer ID"
+  #ITEM TOT_PACKETS 352 16 UINT "Total Packets #"
+  #ITEM PATH_NAME 368 2040 STRING "File Path/Name (255 bytes, fixed with trailing padding)"
+  #ARRAY_ITEM FILE_MD5 2408 8 UINT 128 "Original File MD5 Hash, bytewise"
+  #  FORMAT_STRING "%01X"
+
+#Housekeeping Data Telemetry
 TELEMETRY XACT PAYLOAD_HOUSEKEEPING LITTLE_ENDIAN 
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0xAA020000 "Message ID (APID) in hex" # prev 0xA10000000
-    FORMAT_STRING "0x%04X"
-  ITEM LEN 96 32 UINT "Length (bytes)"
-  ITEM SEQ 128 32 UINT "Sequence Count"
+  ID_ITEM MSG_ID 64 32 UINT 0x300 "Message ID – should be 0x300 – 0x3FF and unique for each pkt" #TBR (APID range for payload health is 0x300 to 0x33F)
+  ITEM LEN 96 32 UINT "Length (bytes) of packet"
+  ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
     UNITS sec sec
   ITEM CCSDS_TAI_SUBSECS 192 8 UINT "TAI Subseconds from CCSDS Header"
@@ -111,144 +84,39 @@ TELEMETRY XACT PAYLOAD_HOUSEKEEPING LITTLE_ENDIAN
   ITEM CCSDS_REALTIME 200 8 UINT "Identifies data as realtime or from storage"
     STATE REALTIME 1
     STATE STORED 0
-  ITEM PL_APID 208 16 UINT "Payload CCSDS Version, Packet Type, Sec Header Flag, and Payload APID"
-    FORMAT_STRING "0x%02X"
-  ITEM PL_GRP_SEQ 224 16 UINT "Payload Grouping Flag (2bits) and Seq CT (14bits)"
-    FORMAT_STRING "0x%02X"
-  ITEM PL_LEN 240 16 UINT "Payload Length after header - 1"
-# end CCSDS header
-
-# Common payload data header for TELEMETRY (file downlink differs)
-  ID_ITEM ID_CODE 256 8 UINT 0xA1 "Packet ID code"
-    FORMAT_STRING "0x%01X"
-  ITEM SOURCE_PI 264 8 UINT "source PL, 1 or 2"
-    STATE PL_1 0x22
-    STATE PL_2 0x33
-  ITEM CUR_SD_CARD 272 8 UINT "current SD, A or B"
-    STATE SD-A 0xAA
-    STATE SD-B 0xBB
-  ITEM TLM_SEQ 280 32 UINT "telemetry sequence number"  # Note this tlm seq# != file downlink seq#
-    FORMAT_STRING "0x%02X"
-  ITEM GPS_TAI 312 32 UINT "GPS TAI Timestamp"
-    UNITS Seconds Sec
-  ITEM GPS_PPS_AGE 344 16 UINT "Milliseconds since GPS PPS"
-    UNITS milliseconds ms
-  ITEM PLM_MODE 360 8 UINT "current PLM Mode"
-    STATE IDLE 0xB5
-    STATE CAL_ALL 0xCA
-    STATE WFC_OPS 0xA1
-    STATE DEBUG 0x35
-    STATE SAFE 0x96
-
-#end common data header for tlm
-
-# Housekeeping data (not corrected yet)
-  APPEND_ITEM MASTER_MODE 8 UINT "Master Mode"
-    STATE MASTER_ASSERTED 0xFF
-    STATE NOT_ASSERTED 0x00
-  APPEND_ITEM MS_SINCE_BOOT 32 UINT "Milliseconds since boot"
-    UNITS Milliseconds ms
-  APPEND_ITEM BOOT_COUNT 16 UINT "Boot count"
-  APPEND_ITEM SD_FLIPS 8 UINT "SD flips since PU"
-  APPEND_ITEM MS_MAIN_START 32 UINT "Milliseconds since main process start"
-    UNITS Milliseconds ms
-  APPEND_ITEM MS_PI_HB 32 UINT "Milliseconds since Pi Heartbeat"
-    UNITS Milliseconds ms
-  APPEND_ITEM MS_PWRBOARD_HB 32 UINT "Milliseconds Power Board Heartbeat"
-    UNITS Milliseconds ms
-  APPEND_ITEM CMD_RECVD 32 UINT "Command Packets Received"
-  APPEND_ITEM LASTCMD_SEQ_NUM 16 UINT "Last command sequence number"
-  APPEND_ITEM MB_DATA_AVAIL 16 UINT "Megabytes of data available"
-    UNITS Megabytes MB
-  APPEND_ITEM PI_TEMP 32 FLOAT "Pi temperature- in Celcius"
-    UNITS Celsius C
-  APPEND_ITEM WFC_MAN_MODE 8 UINT "WFC manager submode on PLM"
-    STATE NOT_ENABLED 0x00
-    STATE MAN_SAFE 0xA0
-    STATE COMM_IDLE 0xCC
-    STATE OPS_BUSY 0xBB
-    STATE WFC_DEAD_IDLE 0x66
-    STATE RETURN_TO_COMM 0xFF
-  APPEND_ITEM WFC_MODE 8 UINT "WFC mode"
-    # STATE CAM_CAL 0xC1
-    # STATE WFC_CAL 0xF3
-    # STATE CL_OPS 0xA5
-    # STATE OL_OPS 0xB7
-    # STATE IDLE 0x00
-    # STATE CAL_ALL 0xD9
-    STATE NONE 0x00
-    STATE STATE_SETUP 0x01
-    STATE STATE_COMM 0x02
-    STATE STATE_CALIBRATE_WFC 0x04
-    STATE STATE_CALIBRATE_CAM 0x08
-    STATE STATE_APPLY_ZERNIKE 0x10
-    STATE STATE_POKE 0x20
-    STATE STATE_MONITOR 0x40
-    STATE STATE_WFC 0x80
-    STATE STATE_SNAPSHOT 0xAA
-    STATE STATE_SUBAP 0xA1
-    STATE STATE_SAFE 0x77
-    STATE STATE_SHUTDOWN 0x66
-    
-  APPEND_ITEM WFS_CONFIG_INDEX 8 UINT "WFS Configuration Index"
-    FORMAT_STRING "0x%01X"
-  APPEND_ITEM DM_CONTR_MODE 8 UINT "DM Control Mode"
-    STATE CALIBRATION           0x01
-    STATE OPENLOOP_ACT_RT       0x34
-    STATE OPENLOOP_PATTERN      0x4A
-    STATE CLOSEDLOOP_FLAT       0x2C
-    STATE CLOSEDLOOP_PATTERN    0xD0
-    STATE CLOSEDLOOP_TIP_CORR   0x15
-    STATE CLOSEDLOOP_TILT_CORR  0x16
-    STATE CLOSEDLOOP_BOTH_CORR  0x17
-    STATE CL_TIP_CORR_wFLAT     0x3D
-    STATE CL_TILT_CORR_wFLAT    0x3E
-    STATE CL_BOTH_CORR_wFLAT    0x3F
-  APPEND_ITEM DM_CONFIG_INDEX 8 UINT "DM Configuration Index"
-    FORMAT_STRING "0x%01X"
-  APPEND_ITEM DM_MODE_PARAMS 8 UINT "DM Mode Parameters"
-    FORMAT_STRING "0x%01X"
-  APPEND_ITEM SOURCE 8 UINT "Source: Internal(Laser) or External(Off)"
-    STATE INTERNAL_LASER 0xA3
-    STATE EXTERNAL_OFF 0xF2
-  APPEND_ITEM MS_SINCE_WFS_START 32 UINT "Milliseconds since WFS start"
-    UNITS Milliseconds ms
-  APPEND_ITEM WFS_MS_REM 32 UINT "WFS milliseconds remaining"
-    UNITS Milliseconds ms
-  APPEND_ITEM PI_PT_ENABLED 8 UINT "Pi Passthru Enabled"
-    STATE DISABLED 0x00
-    STATE ENABLED 0xFF
-  APPEND_ITEM BAD_BUS_CS_CNT  16 UINT "Bad bus CS count"
-  APPEND_ITEM BAD_PI_CS_CNT   16 UINT "Bad pi CS count"
-  APPEND_ITEM BAD_PB_CRC_CNT  16 UINT "Bad power board CRC count"
-  APPEND_ITEM NUM_UNCONF_DL_PCKT 16 UINT "# of unconfirmed downlink packets"
-  APPEND_ITEM PB_RAILS_ENBL 8 UINT "Power Board rails enabled"
-#    STATE   6V 0x30
-#    STATE  -5V 0x0C
-#    STATE 200V 0X03
-    STATE DISABLED 0x00
-    STATE ENABLED 0xFF
-  APPEND_ITEM HV_ON_DAC   16 UINT "DAC signalling PB is outputting HV (>700)"
-  APPEND_ITEM HV_DRAW_DAC 16 UINT "PB HV Current (Deprecated, see per-DM-Ux)."
-  APPEND_ITEM PB_TEMP     16 UINT "PB temperature"
-  APPEND_ITEM DM_UNIT_STATE 8 UINT "DM unit state- [0-5 LSB pos 0/1] "
-  APPEND_ITEM DM_U0_CUR_DRAW 16 UINT "DM-U0 current draw" #Raw ADC output representing fraction of max value (set by ref voltage)
-  APPEND_ITEM DM_U1_CUR_DRAW 16 UINT "DM-U1 current draw"
-  APPEND_ITEM DM_U2_CUR_DRAW 16 UINT "DM-U2 current draw"
-  APPEND_ITEM DM_U3_CUR_DRAW 16 UINT "DM-U3 current draw"
-  APPEND_ITEM DM_U4_CUR_DRAW 16 UINT "DM-U4 current draw"
-  APPEND_ITEM DM_U5_CUR_DRAW 16 UINT "DM-U5 current draw"
-  APPEND_ITEM DM_TLM_TIME 32 FLOAT "dm time of telemetry"
-  APPEND_ITEM CENTROID_X 32 FLOAT "centroid x in pixels"
-  APPEND_ITEM CENTROID_Y 32 FLOAT "centroid y in pixels"
-  APPEND_ITEM UNUSED_0 24 BLOCK "filler"
-  APPEND_ITEM CAM_STATE 8 UINT "Camera State"
-  APPEND_ITEM MS_SINCE_CAMA 32 UINT "Camera TLM time (32lsb)"
-    UNITS Milliseconds ms
-  APPEND_ITEM CAMA_TEMP_SENSOR 32 FLOAT "Camera sensor temperature"
-    UNITS Celsius C
-  APPEND_ITEM CAMA_TEMP_BODY 32 FLOAT "Camera body temperature"
-    UNITS Celsius C
-  APPEND_ITEM FILLER 1088 BLOCK "filler"
+  APPEND_ITEM PL_CCSDS_VER 3 UINT
+  APPEND_ITEM PL_CCSDS_TYPE 1 UINT
+  APPEND_ITEM PL_CCSDS_SECNDRY 1 UINT
+  APPEND_ITEM PL_CCSDS_APID 11 UINT “Same as message ID above”
+    FORMAT_STRING "0x%03X"
+  APPEND_ITEM PL_CCSDS_GRP 2 UINT
+  APPEND_ITEM PL_CCSDS_SEQ 14 UINT
+  APPEND_ITEM PL_CCSDS_LEN 16 UINT
+  #End header
+  # TBR data bin defitions for payload health data: see DEMI files for example of all their data bin parsing definitions
+  ITEM PL_SIZE 2536 16 UINT "Payload Size"
+  ITEM DATA 2552 13600 BLOCK "Data"
   APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
-    FORMAT_STRING "0x%02X"
+
+#DEMI:
+# Common payload data header for TELEMETRY (file downlink differs):
+#  ID_ITEM ID_CODE 256 8 UINT 0xA1 "Packet ID code"
+# #   FORMAT_STRING "0x%01X"
+#  ITEM SOURCE_PI 264 8 UINT "source PL, 1 or 2"
+#    STATE PL_1 0x22
+#    STATE PL_2 0x33
+#  ITEM CUR_SD_CARD 272 8 UINT "current SD, A or B"
+#    STATE SD-A 0xAA
+#    STATE SD-B 0xBB
+#  ITEM TLM_SEQ 280 32 UINT "telemetry sequence number"  # Note this tlm seq# != file downlink seq#
+#    FORMAT_STRING "0x%02X"
+#  ITEM GPS_TAI 312 32 UINT "GPS TAI Timestamp"
+#    UNITS Seconds Sec
+#  ITEM GPS_PPS_AGE 344 16 UINT "Milliseconds since GPS PPS"
+#    UNITS milliseconds ms
+#  ITEM PLM_MODE 360 8 UINT "current PLM Mode"
+#    STATE IDLE 0xB5
+#    STATE CAL_ALL 0xCA
+#    STATE WFC_OPS 0xA1
+#    STATE DEBUG 0x35
+#    STATE SAFE 0x96
