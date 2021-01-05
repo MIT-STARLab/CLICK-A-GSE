@@ -20,7 +20,7 @@ filename = "C:/Users/STAR_User/Downloads/practice_file.txt"
 #filename = ask("Enter the file path name you'd like to stage (ie C:/Users/STAR_User/Desktop/Data.fits")
 
 # Choose which pi to send the file to
-pi_cmd = message_box("Which pi would you like to command? Pi 2 is Payload 1, Pi 3 is Payload 2.", 'PI_2', 'PI_3')
+# pi_cmd = message_box("Which pi would you like to command? Pi 2 is Payload 1, Pi 3 is Payload 2.", 'PI_2', 'PI_3')
 
 chunk_size_bytes = 900 #max size of a .chk file to put in packet
 
@@ -112,10 +112,10 @@ while i<num_chunks do
     # Send the command twice for each packet    
     while sendAgain=='yes' do
         #puts pi_cmd, trans_id, num_chunks,i, file_contents
-        cmd("UUT PL_UPLOAD_FILE_TOSTAGING with TARGET_PI #{pi_cmd}, TRANS_ID #{trans_id}, TOT_PACKETS_NUM #{num_chunks}, FILE_SEQ_NUM #{i}, PL_SIZE #{payload_length}, DATA #{file_contents}")
+        cmd("UUT PL_UPLOAD_FILE_TOSTAGING with TRANS_ID #{trans_id}, TOT_PACKETS_NUM #{num_chunks}, FILE_SEQ_NUM #{i}, PL_SIZE #{payload_length}, DATA #{file_contents}")
         singleChkSentCnt += 1
         if singleChkSentCnt==1 then
-            cmd("UUT PL_UPLOAD_FILE_TOSTAGING with TARGET_PI #{pi_cmd}, TRANS_ID #{trans_id}, TOT_PACKETS_NUM #{num_chunks}, FILE_SEQ_NUM #{i}, PL_SIZE #{payload_length}, DATA #{file_contents}")
+            cmd("UUT PL_UPLOAD_FILE_TOSTAGING with TRANS_ID #{trans_id}, TOT_PACKETS_NUM #{num_chunks}, FILE_SEQ_NUM #{i}, PL_SIZE #{payload_length}, DATA #{file_contents}")
             singleChkSentCnt += 1
         end
         sendAgain = 'no'
