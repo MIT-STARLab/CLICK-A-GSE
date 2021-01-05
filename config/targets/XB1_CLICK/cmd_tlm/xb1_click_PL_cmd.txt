@@ -1,8 +1,282 @@
 #Author: Peter Grenfell, Sept 2020 (inherits code from DeMi_COSMOS_Interface.git)
 #Reference: https://cosmosrb.com/docs/v4/command
 #Internal Software Architecture Definitions: https://docs.google.com/document/d/1Js6CPJUfNAR2Xn8qK_whVCu2eVNNGZC8wcbRlzm1UGw/edit#heading=h.fk4yqm3vqev0 
+#Command List: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
 
-#TBR: might not actually need to explicitly define many of these - see procedures/test_1.rb and procedures/fmt_cmd_click.rb ... seems to send arbitrary data on pre-defined payload write command
+#SYSTEM - PL_REBOOT - DC - Reboot Payload - RPi APID: 0x01
+COMMAND XACT PL_REBOOT BIG_ENDIAN "Reboot Payload"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x01 0x01 0x01 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#SYSTEM - PL_ENABLE_TIME - DC - Enable updating system time from time-to-tone packets - RPi APID: 0xC2
+COMMAND XACT PL_ENABLE_TIME BIG_ENDIAN "Enable updating system time from time-to-tone packets"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xC2 0xC2 0xC2 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#SYSTEM - PL_DISABLE_TIME - DC - Disable updating system time from time-to-tone packets - RPi APID: 0xA4
+COMMAND XACT PL_DISABLE_TIME BIG_ENDIAN "Enable updating system time from time-to-tone packets"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xA4 0xA4 0xA4 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#SYSTEM - PL_EXEC_FILE - SM-R - Execute file - RPi APID: 0x67
+COMMAND XACT PL_EXEC_FILE BIG_ENDIAN "Execute file"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 256 256 256 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x67 0x67 0x67 "RPi APID"
+	APPEND_PARAMETER OUTPUT_TO_FILE 8 UINT 0x00 0xFF 0x00 "Output contents of exec to a file"
+		STATE YES 0xFF
+		STATE NO 0x00
+	APPEND_PARAMETER OUTNUM 8 UINT 0x00 0xFF 0x00 "Output file number, enabled."
+	APPEND_PARAMETER PATHNAME_LEN 8 UINT 0x03 0x7A 0x03 "PathName Length (Up to 122 bytes)" #TBR
+		UNITS Characters Characters
+	APPEND_PARAMETER PATHNAME 2000 STRING "" "File PathName: path/to/file.sh)" #TBR
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#FILE - PL_LIST_FILE - SM-R - List files - RPi APID: 0xFE
+COMMAND XACT PL_LIST_FILE BIG_ENDIAN "List files"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER LENGTH 16 UINT 256 256 256 "Number of bytes in RawBytes"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xFE 0xFE 0xFE "RPi APID"
+	APPEND_PARAMETER DIR_NAME_LEN 8 UINT 0x03 0x80 0x11 "directory name length" #TBR
+	APPEND_PARAMETER DIR_NAME 2016 STRING "" "Directory Name." #TBR
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#FILE - PL_REQUEST_FILE - SM-R - Get file - RPi APID: 0xAB
+COMMAND XACT PL_REQUEST_FILE BIG_ENDIAN "Request File Downlink by name"
+	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+	FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+	FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+	APPEND_PARAMETER CMD_LENGTH 16 UINT 256 256 256 "Length of bytes send to payload"
+	# End header
+	APPEND_PARAMETER RPI_AP_ID 8 UINT 0xAB 0xAB 0xAB "RPi APID"
+	APPEND_PARAMETER DIR_NAME_LEN 8 UINT 0x03 0x80 0x11 "File path name length" #TBR
+	APPEND_PARAMETER DIR_NAME 2016 STRING "" "File path Name." #TBR
+	APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+	#DEMI - Other Parameters:
+	#APPEND_ID_PARAMETER PACK_ID 8 UINT 0xFD 0xFD 0xFD "Packet ID code" #TBR - might be useful for string input...
+	#	FORMAT_STRING "0x%02X"
+	#APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros" #internal defn
+	#APPEND_PARAMETER CMD_SEQ 16 UINT 0x00 0xFFFF 0x00 "Command Sequence Number" #internal defn
+	#APPEND_PARAMETER DEL_WHEN_ACKD 8 UINT 0x00 0xFF 0x00 "Delete when gnd-receipt acknowledged?"
+	#	STATE YES 0xFF
+	#	STATE NO 0x00
+  #APPEND_PARAMETER DIR_NAME_LEN 8 UINT 0x03 0x80 0x03 "Directory Name Length (128 char max, of 'path/to'--no slashes on ends)" #TBR
+	#	UNITS Characters Characters
+	#APPEND_PARAMETER FILE_NAME_LEN 8 UINT 0x03 0x40 0x03 "File Name Length (64 char max, of 'file.fits')" #TBR
+	#	UNITS Characters Characters
+	#APPEND_PARAMETER DIR_NAME 1536 STRING "" "Filename: path/to/file.fits"
+	#APPEND_PARAMETER PADDING 472 BLOCK '' "Padding for 256-byte packet" #TBR if needed
+
+#FILE - PL_UPLOAD_FILE - SM-R - Send file - RPi APID: 0xCD
+COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload File to Staging" #New packet size is less than 1002, making it 1000 
+	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+	FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+	FORMAT_STRING "0x%08X"
+	APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+	APPEND_PARAMETER CMD_LENGTH 16 UINT 950 950 950 "Length of bytes send to payload"
+	# End header
+	APPEND_PARAMETER RPI_AP_ID 8 UINT 0xCD 0xCD 0xCD "RPi APID"
+	APPEND_PARAMETER TRANS_ID 16 UINT 0x00 0xFFFF 0x00 "Transfer ID" LITTLE_ENDIAN
+	APPEND_PARAMETER TOT_PACKETS_NUM 16 UINT 0x00 0xFFFF 0x00 "Total Packets #" LITTLE_ENDIAN
+	APPEND_PARAMETER FILE_SEQ_NUM 16 UINT 0x00 0xFFFF 0x00 "File Sequence #" LITTLE_ENDIAN
+	APPEND_PARAMETER PL_SIZE 16 UINT 0x00 0x03DA 0x00 "Payload Size" LITTLE_ENDIAN
+	APPEND_PARAMETER OVERWRITE 8 UINT 0x00 0xFF 0x00 "Overwrite data?"
+		STATE NO 0x00
+		STATE YES 0xFF
+	APPEND_ARRAY_PARAMETER DATA 8 UINT 7504 "Data"
+	APPEND_PARAMETER CH_SUM 16 UINT 0x00 0xFFFF 0x00 "16 bit checksum"
+
+	#DEMI:
+	#APPEND_PARAMETER LENGTH 16 UINT 950 950 950 "Number of bytes in RawBytes"  # despite the bus's spec that this can be 1002, it had indeterminate behavior at 1000
+	#UNITS bytes bytes
+	#APPEND_ID_PARAMETER PACK_ID 8 UINT 0xF1 0xF1 0xF1 "Packet ID code"
+	#FORMAT_STRING "0x%02X"
+	#APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros"
+	#APPEND_PARAMETER CMD_SEQ 16 UINT 0x0000 0xFFFF 0x0000 "Command Sequence Number"
+
+#PAT - PL_SET_PAYLOAD_MODE - SM - Configure payload mode (Optical Downlink, Debug) - RPi APID: 0x0E - TBR (Redundant with 0x0500 and 0x0501?)
+
+#PAT - PL_SINGLE_CAPTURE - DC - Trigger PAT capture of a single image - RPi APID: 0xF1
+COMMAND XACT PL_SINGLE_CAPTURE BIG_ENDIAN "Trigger PAT capture of a single image"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xF1 0xF1 0xF1 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#PAT - PL_RUN_CALIBRATION - DC - Run PAT calibration independently - RPi APID: 0x32
+COMMAND XACT PL_RUN_CALIBRATION BIG_ENDIAN "Run PAT calibration independently"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x32 0x32 0x32 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#FPGA - PL_SET_FPGA - SM - Set FPGA memory map values  - RPi APID: 0x54
+COMMAND XACT PL_SET_FPGA BIG_ENDIAN "Set FPGA memory map values"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 12 12 12 "Length of bytes send to payload" #TBR
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x54 0x54 0x54 "RPi APID"
+  APPEND_PARAMETER REGISTER_START_ADDR 16 UINT 0x0000 0xFFFF 0x0000 "FPGA Register Start Address"
+  APPEND_PARAMETER SIZE 8 UINT 0x00 0xFF 0x00 "Size of Data"
+  APPEND_PARAMETER WRITE_DATA_0 32 UINT 0x00000000 0xFFFFFFFF 0x00000000 "Write Data [0]"
+  APPEND_PARAMETER WRITE_DATA_1 32 UINT 0x00000000 0xFFFFFFFF 0x00000000 "Write Data [1]"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#HK - PL_SET_HK - SM - Set housekeeping settings  - RPi APID: 0x97
+COMMAND XACT PL_SET_HK BIG_ENDIAN "Set housekeeping settings"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload" #TBR
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x97 0x97 0x97 "RPi APID"
+  #TBD Data
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#TEST - PL_ECHO - SM-R - Echo - RPi APID: 0x3D
+COMMAND XACT PL_ECHO BIG_ENDIAN "Echo"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 4 4 4 "Length of bytes send to payload" #TBR
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x3D 0x3D 0x3D "RPi APID"
+  APPEND_PARAMETER ECHO_DATA 8 UINT 0x00 0xFF 0x00 "Data to echo back"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#TEST - PL_NOOP - DC - No-op - RPi APID: 0x5B
+COMMAND XACT PL_NOOP BIG_ENDIAN "No-op"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x5B 0x5B 0x5B "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#BUS - PL_CONFIG_OPTICAL_DOWNLINK - DC - Configure Payload for Optical Downlink (Will be sent by bus macro on-orbit) - RPi APID: 0x0500
+COMMAND XACT PL_CONFIG_OPTICAL_DOWNLINK BIG_ENDIAN "Configure the payload for optical downlink"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x0500 0x0500 0x0500 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
+
+#BUS - PL_CONFIG_DEBUG - DC - Configure Payload for Debug Mode (Will be sent by bus macro on-orbit) - RPi APID: 0x0501
+COMMAND XACT PL_CONFIG_DEBUG BIG_ENDIAN "Configure the payload for debug"
+  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
+    FORMAT_STRING "0x%08X"
+  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
+  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
+  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
+  APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
+  #End header
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x0501 0x0501 0x0501 "RPi APID"
+  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
 #1 Byte Test Command (Tested & Works)
 COMMAND XACT EXAMPLE_PAYLOAD_COMMAND BIG_ENDIAN "Example one-byte command"
@@ -16,115 +290,3 @@ COMMAND XACT EXAMPLE_PAYLOAD_COMMAND BIG_ENDIAN "Example one-byte command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 1 1 1 "Length of bytes send to payload"
   APPEND_PARAMETER SINGLE_CMD_BYTE 8 UINT 0 255 1 "The only byte sent to payload"
-
-#Configure Payload for Optical Downlink - RPi APID: 0x0500
-COMMAND XACT CONFIG_OPTICAL_DOWNLINK BIG_ENDIAN "Configure the payload for optical downlink"
-  APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
-    FORMAT_STRING "0x%08X"
-  APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
-    FORMAT_STRING "0x%08X"
-  APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
-  APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
-  APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
-  APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
-  APPEND_PARAMETER CMD_LENGTH 16 UINT 4 4 4 "Length of bytes send to payload"
-  #End header
-  APPEND_PARAMETER RPI_AP_ID 16 UINT 0x0500 0x0500 0x0500 "RPi APID"
-  APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
-
-#Configure Payload for Debug Mode - RPi APID: 0x0501
-
-#Get File - RPi APID: 0x0502 (Return an RPi file content)
-COMMAND XACT PL_FILE_DWNLNK_REQ BIG_ENDIAN "Request File Downlink by name"
-	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
-	FORMAT_STRING "0x%08X"
-	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
-	FORMAT_STRING "0x%08X"
-	APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
-	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
-	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
-	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
-	APPEND_PARAMETER CMD_LENGTH 16 UINT 256 256 256 "Length of bytes send to payload"
-	# End header
-	APPEND_PARAMETER RPI_AP_ID 16 UINT 0x0502 0x0502 0x0502 "RPi APID" #TBR bounds
-	#TBD: timestamp txed ms #google doc
-	#TBD: size #google doc
-	#TBD: timestamp txed #google doc
-	#TBD: payload #google doc
-	APPEND_PARAMETER DIR_NAME_LEN 8 UINT 0x03 0x80 0x03 "Directory Name Length (128 char max, of 'path/to'--no slashes on ends)"
-		UNITS Characters Characters
-	APPEND_PARAMETER FILE_NAME_LEN 8 UINT 0x03 0x40 0x03 "File Name Length (64 char max, of 'file.fits')"
-		UNITS Characters Characters
-	APPEND_PARAMETER DIR_NAME 1536 STRING "" "Filename: path/to/file.fits"
-	APPEND_PARAMETER PADDING 432 BLOCK '' "Padding for 256-byte packet"
-	APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
-
-	#DEMI:
-	#APPEND_ID_PARAMETER PACK_ID 8 UINT 0xFD 0xFD 0xFD "Packet ID code" #TBR - might be useful for string input...
-	#	FORMAT_STRING "0x%02X"
-	#APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros" #internal defn
-	#APPEND_PARAMETER CMD_SEQ 16 UINT 0x00 0xFFFF 0x00 "Command Sequence Number" #internal defn
-	#APPEND_PARAMETER DEL_WHEN_ACKD 8 UINT 0x00 0xFF 0x00 "Delete when gnd-receipt acknowledged?"
-	#	STATE YES 0xFF
-	#	STATE NO 0x00
-
-#Push File - RPi APID: 0x0503 (Write an RPi file) [TBR - DeMi_COSMOS_Interface.git]
-COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload File to Staging" #New packet size is less than 1002, making it 1000 
-	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
-	FORMAT_STRING "0x%08X"
-	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
-	FORMAT_STRING "0x%08X"
-	APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
-	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
-	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
-	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
-	APPEND_PARAMETER CMD_LENGTH 16 UINT 950 950 950 "Length of bytes send to payload"
-	# End header
-	APPEND_PARAMETER RPI_AP_ID 16 UINT 0x0503 0x0503 0x0503 "RPi APID" #TBR
-	APPEND_PARAMETER TRANS_ID 16 UINT 0x00 0xFFFF 0x00 "Transfer ID" LITTLE_ENDIAN
-	APPEND_PARAMETER TOT_PACKETS_NUM 16 UINT 0x00 0xFFFF 0x00 "Total Packets #" LITTLE_ENDIAN
-	APPEND_PARAMETER FILE_SEQ_NUM 16 UINT 0x00 0xFFFF 0x00 "File Sequence #" LITTLE_ENDIAN
-	APPEND_PARAMETER PL_SIZE 16 UINT 0x00 0x03DA 0x00 "Payload Size" LITTLE_ENDIAN
-	APPEND_PARAMETER OVERWRITE 8 UINT 0x00 0xFF 0x00 "Overwrite data?"
-		STATE NO 0x00
-		STATE YES 0xFF
-	APPEND_ARRAY_PARAMETER DATA 8 UINT 7472 "Data"
-	APPEND_PARAMETER CH_SUM 16 UINT 0x00 0xFFFF 0x00 "16 bit checksum"
-
-	#DEMI:
-	#APPEND_PARAMETER LENGTH 16 UINT 950 950 950 "Number of bytes in RawBytes"  # despite the bus's spec that this can be 1002, it had indeterminate behavior at 1000
-	#UNITS bytes bytes
-	#APPEND_ID_PARAMETER PACK_ID 8 UINT 0xF1 0xF1 0xF1 "Packet ID code"
-	#FORMAT_STRING "0x%02X"
-	#APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros"
-	#APPEND_PARAMETER CMD_SEQ 16 UINT 0x0000 0xFFFF 0x0000 "Command Sequence Number"
-
-#Get PAT History - RPi APID: 0x0504 (Request buffer (history) of PAT data, for ground performance analysis)
-
-#Set FPGA Memory Map Values - RPi APID: 0x0505 (Address (4B, 4B alligned), Data (size multiples of 4B) -> Ok/Not OK)
-
-#Set Time - RPi APID: 0x0506 (Set payload time using GPS from bus, so telemetry can be requested with relevant ranges)
-
-#Get Errors and Events - RPi APID: 0x0507 (Return all errors between 2 UTC times)
-
-#Get Housekeeping Data - RPi APID: 0x0508 (Return a given number of housekeeping packets after a given UTC time)
-
-#Get Telemetry Packet - RPi APID: 0x0509 (Return a given number of telemetry packets of a certain type after a given UTC time)
-
-#Get FPGA Memory Map Values - RPi APID: 0x0510 (Address (4B, 4B alligned), range (multiples of 4) -> Values)
-
-#Request Telemetry - RPi APID: 0x0511 
-
-#Turn On Subsystem - RPi APID: 0x0512
-
-#Turn Off Subsystem - RPi APID: 0x0513
-
-#Change Payload Mode - RPi APID: 0x0514
-
-#Execute File - RPi APID: 0x0515 TBR
-
-#Current Bus Mode - RPi APID: 0x0516
-
-#Echo - RPi APID: 0x0517
-
-#No-op - RPi APID: 0x0518

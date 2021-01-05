@@ -49,4 +49,4 @@ def fmt_cmd(payload_apid, data)
   cmd("UUT PAYLOAD_WRITE with RAW_BYTES #{pkt}, LENGTH #{pkt.length}")
 end
 
-#send_cmd(0x300,[5])
+#fmt_cmd(0x300,[5])
