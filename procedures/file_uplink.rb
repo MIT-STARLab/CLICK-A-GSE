@@ -1,7 +1,7 @@
 ########################## File Uplink ##############################################
 ## Script to take a file, chunk it, stage for uplink, and uplink the file to the payload
 ## Written by Rachel Morgan and Jenny Gubner
-## Last edited 5/20/20 by Jenny Gubner
+## Last edited 1/6/2021 by Peter Grenfell for CLICK
 
 # Still need to implement logic for:
     # PL not receiving first packet
@@ -13,14 +13,11 @@ require 'digest/md5'
 
 ###################### Uplink File Information (Number of chunks, file length) #################################
 # Cosmos directory on the ground station computer
-cosmos_dir = "C:/BCT/37sw4455_c_cosmos_demi"
+cosmos_dir = "C:/BCT/71sw0078_a_cosmos_click_edu"
 
 # File to be uploaded to DeMi (either specify the file name hardcoded in the script or allow a popup window to ask
-filename = "C:/Users/STAR_User/Downloads/practice_file.txt" 
+filename = "C:/Users/CLICK/Desktop/CLICK/test_file_uplink.txt" 
 #filename = ask("Enter the file path name you'd like to stage (ie C:/Users/STAR_User/Desktop/Data.fits")
-
-# Choose which pi to send the file to
-# pi_cmd = message_box("Which pi would you like to command? Pi 2 is Payload 1, Pi 3 is Payload 2.", 'PI_2', 'PI_3')
 
 chunk_size_bytes = 900 #max size of a .chk file to put in packet
 
