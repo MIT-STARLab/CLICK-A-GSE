@@ -1,4 +1,5 @@
 REQUIRE quadratic_plus_log.rb
+
 COMMANDS xb1_click_cmd.txt
 COMMANDS xb1_click_PL_cmd.txt
 
@@ -6,7 +7,7 @@ TELEMETRY xb1_cfdp_tlm.txt
 TELEMETRY xb1_click_soh_tlm.txt
 TELEMETRY xb1_click_time_of_tone_tlm.txt
 TELEMETRY xb1_click_tlm.txt
-TELEMETRY xb1_click_PL_tlm.txt 
+TELEMETRY xb1_click_PL_tlm.txt
 
 IGNORE_PARAMETER SYNC_HI
 IGNORE_PARAMETER SYNC_LO
