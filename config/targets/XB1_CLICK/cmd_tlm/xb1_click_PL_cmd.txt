@@ -125,8 +125,8 @@ COMMAND XACT PL_REQUEST_FILE BIG_ENDIAN "Request File Downlink by name"
 	#APPEND_PARAMETER DIR_NAME 1536 STRING "" "Filename: path/to/file.fits"
 	#APPEND_PARAMETER PADDING 472 BLOCK '' "Padding for 256-byte packet" #TBR if needed
 
-#FILE - PL_UPLOAD_FILE - SM-R - Send file - RPi APID: 0xCD
-COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload File to Staging" #New packet size is less than 1002, making it 1000 
+#FILE - PL_UPLOAD_FILE_TOSTAGING - SM-R - Send chunk file (refer to file_uplink.rb procedure) - RPi APID: 0xCD
+COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload Chunk File to Staging" #New packet size is less than 1002, making it 1000 
 	APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
 	FORMAT_STRING "0x%08X"
 	APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
@@ -159,7 +159,7 @@ COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload File to Staging" #New p
 	#APPEND_PARAMETER CMD_SEQ 16 UINT 0x0000 0xFFFF 0x0000 "Command Sequence Number"
 
 #PAT - PL_SET_PAT_MODE - SM - Use non-default PAT mode for next experiment (Other modes: Open-Loop = 1, Static Pointing = 2, Bus Feedback = 3) - RPi APID: 0xF0 #TBD
-COMMAND XACT PL_SINGLE_CAPTURE BIG_ENDIAN "Trigger PAT capture of a single image"
+COMMAND XACT PL_SET_PAT_MODE BIG_ENDIAN "Use non-default PAT mode for next experiment"
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
@@ -199,7 +199,7 @@ COMMAND XACT PL_SINGLE_CAPTURE BIG_ENDIAN "Trigger PAT capture of a single image
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
 #PAT - PL_CALIB_LASER_TEST - SM - Turn on calibration laser, take picture, turn off laser.  - RPi APID: 0xF2 #TBD
-COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Trigger PAT capture of a single image"
+COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Turn on calibration laser, take picture, turn off laser."
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
@@ -218,7 +218,7 @@ COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Trigger PAT capture of a single ima
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
 #PAT - PL_FSM_TEST - SM - Take pictures of cal laser spot at 4 different FSM settings.  - RPi APID: 0xF3 #TBD
-COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Trigger PAT capture of a single image"
+COMMAND XACT PL_FSM_TEST BIG_ENDIAN "Take pictures of cal laser spot at 4 different FSM settings."
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
@@ -236,8 +236,8 @@ COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Trigger PAT capture of a single ima
     UNITS MICROSECONDS US
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
-#PAT - PL_RUN_CALIBRATION - DC - Run PAT calibration independently - RPi APID: 0x32
-COMMAND XACT PL_RUN_CALIBRATION BIG_ENDIAN "Run PAT calibration independently"
+#PAT - PL_RUN_CALIBRATION - DC - Run stand-alone PAT calibration - RPi APID: 0x32
+COMMAND XACT PL_RUN_CALIBRATION BIG_ENDIAN "Run stand-alone PAT calibration"
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER SYNC_LO 32 UINT 0xDECAFBC7 0xDECAFBC7 0xDECAFBC7 "Sync Pattern (low)"
