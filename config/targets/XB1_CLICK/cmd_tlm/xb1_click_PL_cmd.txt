@@ -165,7 +165,7 @@ COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload Chunk File to Staging" 
 	#APPEND_PARAMETER CMD_SRC 8 UINT 0xCC 0xCC 0xCC "Command source. 0xCC is from COSMOS, not from BCT macros"
 	#APPEND_PARAMETER CMD_SEQ 16 UINT 0x0000 0xFFFF 0x0000 "Command Sequence Number"
 
-#PAT - PL_SET_PAT_MODE - SM - Use non-default PAT mode for next experiment (Other modes: Open-Loop = 1, Static Pointing = 2, Bus Feedback = 3) - RPi APID: 0xF0 #TBD
+#PAT - PL_SET_PAT_MODE - SM - Use non-default PAT mode for next experiment (Other modes: Open-Loop = 1, Static Pointing = 2, Bus Feedback = 3) - RPi APID: 0xB3
 COMMAND XACT PL_SET_PAT_MODE BIG_ENDIAN "Use non-default PAT mode for next experiment"
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
@@ -178,7 +178,7 @@ COMMAND XACT PL_SET_PAT_MODE BIG_ENDIAN "Use non-default PAT mode for next exper
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 5 5 5 "Length of bytes send to payload"
   #End header
-  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xF0 0xF0 0xF0 "RPi APID"
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xB3 0xB3 0xB3 "RPi APID"
   APPEND_PARAMETER PAYLOAD_SIZE 8 UINT 1 1 1 "Size of command payload data"
     UNITS BYTES B
   APPEND_PARAMETER PAT_MODE_ID 8 UINT 1 3 2 "PAT Mode ID"
@@ -207,7 +207,7 @@ COMMAND XACT PL_SINGLE_CAPTURE BIG_ENDIAN "Trigger PAT capture of a single image
     UNITS MICROSECONDS US
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
-#PAT - PL_CALIB_LASER_TEST - SM - Turn on calibration laser, take picture, turn off laser.  - RPi APID: 0xF2 #TBD
+#PAT - PL_CALIB_LASER_TEST - SM - Turn on calibration laser, take picture, turn off laser.  - RPi APID: 0x4C
 COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Turn on calibration laser, take picture, turn off laser."
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
@@ -220,14 +220,14 @@ COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Turn on calibration laser, take pic
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 7 7 7 "Length of bytes send to payload"
   #End header
-  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xF2 0xF2 0xF2 "RPi APID"
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x4C 0x4C 0x4C "RPi APID"
   APPEND_PARAMETER PAYLOAD_SIZE 8 UINT 4 4 4 "Size of command payload data"
     UNITS BYTES B
   APPEND_PARAMETER EXPOSURE 32 UINT 10 10000000 1000 "Exposure Time"
     UNITS MICROSECONDS US
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
-#PAT - PL_FSM_TEST - SM - Take pictures of cal laser spot at 4 different FSM settings.  - RPi APID: 0xF3 #TBD
+#PAT - PL_FSM_TEST - SM - Take pictures of cal laser spot at 4 different FSM settings.  - RPi APID: 0x28
 COMMAND XACT PL_FSM_TEST BIG_ENDIAN "Take pictures of cal laser spot at 4 different FSM settings."
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
@@ -240,7 +240,7 @@ COMMAND XACT PL_FSM_TEST BIG_ENDIAN "Take pictures of cal laser spot at 4 differ
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 8 8 8 "Length of bytes send to payload"
   #End header
-  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xF3 0xF3 0xF3 "RPi APID"
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x28 0x28 0x28 "RPi APID"
   APPEND_PARAMETER PAYLOAD_SIZE 8 UINT 4 4 4 "Size of command payload data"
     UNITS BYTES B
   APPEND_PARAMETER EXPOSURE 32 UINT 10 10000000 1000 "Exposure Time"
