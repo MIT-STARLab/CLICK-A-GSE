@@ -11,6 +11,7 @@ COMMAND XACT PL_REBOOT BIG_ENDIAN "Reboot Payload"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
@@ -26,6 +27,7 @@ COMMAND XACT PL_ENABLE_TIME BIG_ENDIAN "Enable updating system time from time-to
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
@@ -41,6 +43,7 @@ COMMAND XACT PL_DISABLE_TIME BIG_ENDIAN "Enable updating system time from time-t
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
@@ -56,6 +59,7 @@ COMMAND XACT PL_EXEC_FILE BIG_ENDIAN "Execute file"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 256 256 256 "Length of bytes send to payload"
@@ -80,6 +84,7 @@ COMMAND XACT PL_LIST_FILE BIG_ENDIAN "List files"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER LENGTH 16 UINT 256 256 256 "Number of bytes in RawBytes"
@@ -99,6 +104,7 @@ COMMAND XACT PL_REQUEST_FILE BIG_ENDIAN "Request File Downlink by name"
 	FORMAT_STRING "0x%08X"
 	APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
 	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
 	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
 	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
 	APPEND_PARAMETER CMD_LENGTH 16 UINT 256 256 256 "Length of bytes send to payload"
@@ -133,6 +139,7 @@ COMMAND XACT PL_UPLOAD_FILE_TOSTAGING BIG_ENDIAN "Upload Chunk File to Staging" 
 	FORMAT_STRING "0x%08X"
 	APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
 	APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
 	APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
 	APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
 	APPEND_PARAMETER CMD_LENGTH 16 UINT 950 950 950 "Length of bytes send to payload"
@@ -166,6 +173,7 @@ COMMAND XACT PL_SET_PAT_MODE BIG_ENDIAN "Use non-default PAT mode for next exper
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 5 5 5 "Length of bytes send to payload"
@@ -187,6 +195,7 @@ COMMAND XACT PL_SINGLE_CAPTURE BIG_ENDIAN "Trigger PAT capture of a single image
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 7 7 7 "Length of bytes send to payload"
@@ -206,6 +215,7 @@ COMMAND XACT PL_CALIB_LASER_TEST BIG_ENDIAN "Turn on calibration laser, take pic
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 7 7 7 "Length of bytes send to payload"
@@ -225,6 +235,7 @@ COMMAND XACT PL_FSM_TEST BIG_ENDIAN "Take pictures of cal laser spot at 4 differ
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 8 8 8 "Length of bytes send to payload"
@@ -244,6 +255,7 @@ COMMAND XACT PL_RUN_CALIBRATION BIG_ENDIAN "Run stand-alone PAT calibration"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
@@ -259,6 +271,7 @@ COMMAND XACT PL_SET_FPGA BIG_ENDIAN "Set FPGA memory map values"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 12 12 12 "Length of bytes send to payload" #TBR
@@ -280,6 +293,7 @@ COMMAND XACT PL_GET_FPGA BIG_ENDIAN "Get FPGA memory map values"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 7 7 7 "Length of bytes send to payload" #TBR
@@ -299,6 +313,7 @@ COMMAND XACT PL_SET_HK BIG_ENDIAN "Set housekeeping settings"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload" #TBR
@@ -317,6 +332,7 @@ COMMAND XACT PL_ECHO BIG_ENDIAN "Echo"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 5 5 5 "Length of bytes send to payload" #TBR
@@ -335,6 +351,7 @@ COMMAND XACT PL_NOOP BIG_ENDIAN "No-op"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
@@ -342,7 +359,7 @@ COMMAND XACT PL_NOOP BIG_ENDIAN "No-op"
   APPEND_PARAMETER RPI_AP_ID 8 UINT 0x5B 0x5B 0x5B "RPi APID"
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
-#BUS - PL_CONFIG_OPTICAL_DOWNLINK - DC - Configure Payload for Optical Downlink (Will be sent by bus macro on-orbit) - RPi APID: 0x0500
+#BUS - PL_CONFIG_OPTICAL_DOWNLINK - DC - Configure Payload for Optical Downlink (Will be sent by bus macro on-orbit) - RPi APID: 0xE0
 COMMAND XACT PL_CONFIG_OPTICAL_DOWNLINK BIG_ENDIAN "Configure the payload for optical downlink"
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
@@ -350,14 +367,15 @@ COMMAND XACT PL_CONFIG_OPTICAL_DOWNLINK BIG_ENDIAN "Configure the payload for op
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
   #End header
-  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x0500 0x0500 0x0500 "RPi APID"
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xE0 0xE0 0xE0 "RPi APID"
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
-#BUS - PL_CONFIG_DEBUG - DC - Configure Payload for Debug Mode (Will be sent by bus macro on-orbit) - RPi APID: 0x0501
+#BUS - PL_CONFIG_DEBUG - DC - Configure Payload for Debug Mode (Will be sent by bus macro on-orbit) - RPi APID: 0xD0
 COMMAND XACT PL_CONFIG_DEBUG BIG_ENDIAN "Configure the payload for debug"
   APPEND_ID_PARAMETER SYNC_HI 32 UINT 0xBC7DECAF 0xBC7DECAF 0xBC7DECAF "Sync Pattern (high)"
     FORMAT_STRING "0x%08X"
@@ -365,11 +383,12 @@ COMMAND XACT PL_CONFIG_DEBUG BIG_ENDIAN "Configure the payload for debug"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 3 3 3 "Length of bytes send to payload"
   #End header
-  APPEND_PARAMETER RPI_AP_ID 8 UINT 0x0501 0x0501 0x0501 "RPi APID"
+  APPEND_PARAMETER RPI_AP_ID 8 UINT 0xD0 0xD0 0xD0 "RPi APID"
   APPEND_PARAMETER CH_SUM 16 UINT 0x0000 0xFFFF 0x0000 "16 bit checksum"
 
 COMMAND XACT PYLD_CFDP_DL_FILE BIG_ENDIAN "Transfer payload image file"
@@ -390,7 +409,9 @@ COMMAND XACT EXAMPLE_PAYLOAD_COMMAND BIG_ENDIAN "Example one-byte command"
     FORMAT_STRING "0x%08X"
   APPEND_ID_PARAMETER LEN 32 UINT 7 7 7 "Number of bytes following this in COSMOS command"
   APPEND_PARAMETER CCSDS_AP_ID 16 UINT 1 1 1 "CCSDS Ap Id"
+  #End temp header - begin xb1 command data
   APPEND_PARAMETER AP_ID 8 UINT 15 15 15 "AP_ID of PAYLOAD_WRITE command"
   APPEND_PARAMETER OP_CODE 8 UINT 3 3 3 "Opcode of PAYLOAD_WRITE command"
   APPEND_PARAMETER CMD_LENGTH 16 UINT 1 1 1 "Length of bytes send to payload"
+  #End header
   APPEND_PARAMETER SINGLE_CMD_BYTE 8 UINT 0 255 1 "The only byte sent to payload"
