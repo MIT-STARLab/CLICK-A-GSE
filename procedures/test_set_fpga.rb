@@ -10,6 +10,7 @@ start_address = "0x0035"
 write_data = "0x0085"
 
 #define data bytes
+data = []
 data[0] = request_number
 data[1] = start_address
 data[2] = write_data.length

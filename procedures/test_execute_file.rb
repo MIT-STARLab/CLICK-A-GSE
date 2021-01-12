@@ -8,6 +8,7 @@ load 'click_cmd.rb'
 file_path = "/root/bin/pat"
 
 #define data bytes
+data = []
 data[0] = 0 #output script prints to file? [boolean]
 data[1] = 0 #file output number (if outputting script prints to file)
 data[2] = file_path.length

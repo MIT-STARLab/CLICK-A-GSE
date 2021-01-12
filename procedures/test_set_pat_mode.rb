@@ -10,6 +10,7 @@ PAT_MODE_STATIC_POINTING = 2
 PAT_MODE_BUS_FEEDBACK = 3
 
 #define data bytes
+data = []
 data[0] = PAT_MODE_STATIC_POINTING
 packing = "C"
 

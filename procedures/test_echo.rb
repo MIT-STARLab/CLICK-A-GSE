@@ -5,7 +5,12 @@ load 'pl_cmd_tlm_apids.rb'
 load 'click_cmd.rb'
 
 #define data bytes
-data = [0x01,0x02,0x03,0x04,0x05]
+data = []
+data[1] = 0x01
+data[2] = 0x02
+data[3] = 0x03
+data[4] = 0x04
+data[5] = 0x05
 packing = "C*"
 
 #SM Send via UUT PAYLOAD_WRITE

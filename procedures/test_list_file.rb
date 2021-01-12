@@ -8,6 +8,7 @@ load 'click_cmd.rb'
 directory_path = "/root/bin"
 
 #define data bytes
+data = []
 data[0] = directory_path.length
 data[1] = directory_path 
 packing = "C" + "a" + directory_path.length.to_s

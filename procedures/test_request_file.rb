@@ -8,6 +8,7 @@ load 'click_cmd.rb'
 file_path = "/root/log/pat/tbd_image_name.png" #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
 
 #define data bytes
+data = []
 data[0] = file_path.length
 data[1] = file_path 
 packing = "C" + "a" + file_path.length.to_s

@@ -8,6 +8,7 @@ load 'click_cmd.rb'
 exp_us = 1000
 
 #define data bytes
+data = []
 data[0] = exp_us
 packing = "L>"
 
