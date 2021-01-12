@@ -8,12 +8,13 @@ load 'click_cmd.rb'
 file_path = "/root/bin/pat"
 
 #define data bytes
-execute_file_data[0] = 0 #output script prints to file? [boolean]
-execute_file_data[1] = 0 #file output number (if outputting script prints to file)
-execute_file_data[2] = file_path.length
-execute_file_data[3] = file_path 
-packing_execute_file_data = "C3" + "a" + file_path.length.to_s
-execute_file_data_packed = execute_file_data.pack(packing_execute_file_data)
+data[0] = 0 #output script prints to file? [boolean]
+data[1] = 0 #file output number (if outputting script prints to file)
+data[2] = file_path.length
+data[3] = file_path 
+packing = "C3" + "a" + file_path.length.to_s
 
 #SM Send via UUT PAYLOAD_WRITE
-click_cmd(CMD_PL_EXEC_FILE, execute_file_data_packed)
+click_cmd(CMD_PL_EXEC_FILE, data, packing) 
+
+#TODO: Get file output telemetry...

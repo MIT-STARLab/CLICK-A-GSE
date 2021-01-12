@@ -4,8 +4,14 @@
 load 'pl_cmd_tlm_apids.rb'
 load 'click_cmd.rb'
 
-#define (empty) data bytes
-empty_data_packed = [].pack("C*")
+#set desired exposure time (us) (between 10 and 10000000)
+exp_us = 1000
 
-#DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
-click_cmd(CMD_PL_SINGLE_CAPTURE, empty_data_packed)
+#define data bytes
+data[0] = exp_us
+packing = "L>"
+
+#SM Send via UUT Payload Write
+click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+
+#TODO: Get image telemetry

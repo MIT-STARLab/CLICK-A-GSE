@@ -20,9 +20,12 @@ CCSDS_GRP_NONE = 0xC0 # grouping = 11b
 SECONDARY_HEADER_LEN = 5
 CRC_LEN = 2
 
-def click_cmd(cmd_id, data_packed)
+def click_cmd(cmd_id, data = [], packing = "C*")
     #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
     #data_packed is a packed data set (e.g. [0x01,0x0200].pack("CS>")): https://www.rubydoc.info/stdlib/core/1.9.3/Array:pack 
+    
+    #pack data into binary sequence
+    data_packed = data.pack(packing) 
 
     #get packet length (secondary header + data bytes + crc - 1)
     packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
