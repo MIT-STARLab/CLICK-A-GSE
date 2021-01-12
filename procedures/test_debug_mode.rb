@@ -1,10 +1,11 @@
 #Test Script - Configure Debug Mode
 #Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test_debug_mode.rb
 
+load 'pl_cmd_tlm_apids.rb'
 load 'click_cmd.rb'
 
-#define CMD_ID
-CMD_ID_PL_CONFIG_DEBUG = 0xD0 #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
+#define (empty) data bytes
+empty_data_packed = [].pack("C*")
 
-#DC Send via UUT PAYLOAD_WRITE (i.e. send CMD_ID only with empty data field)
-click_cmd(CMD_ID_PL_CONFIG_DEBUG, [].pack("C*"))
+#DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+click_cmd(CMD_PL_DEBUG_MODE, empty_data_packed)
