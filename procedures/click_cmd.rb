@@ -25,7 +25,7 @@ def click_cmd(cmd_id, data_packed)
     #data_packed is a packed data set (e.g. [0x01,0x0200].pack("CS>")): https://www.rubydoc.info/stdlib/core/1.9.3/Array:pack 
 
     #get packet length (secondary header + data bytes + crc - 1)
-    packet_length = data_bytes.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
+    packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
 
     #get time stamp
     utc_time = Time.now.utc.to_f
@@ -48,7 +48,7 @@ def click_cmd(cmd_id, data_packed)
     #compute CRC16 and append to packet
     packet_packed = header_packed + data_packed
     crc = Crc16.new.update(packet_packed.unpack("C*"))
-    packet_packed += crc.pack("S>")
+    packet_packed += [crc].pack("S>")
   
     #send PAYLOAD_WRITE command
     raw_bytes = packet_packed.unpack("C*")

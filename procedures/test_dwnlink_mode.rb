@@ -6,5 +6,5 @@ load 'click_cmd.rb'
 #define CMD_ID
 CMD_ID_PL_CONFIG_OPTICAL_DOWNLINK = 0xE0 #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
 
-#DC Send (i.e. send CMD_ID only with empty data field)
-click_cmd(CMD_ID_PL_CONFIG_OPTICAL_DOWNLINK, [])
+#DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+click_cmd(CMD_ID_PL_CONFIG_OPTICAL_DOWNLINK, [].pack("C*"))

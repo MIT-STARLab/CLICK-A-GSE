@@ -10,5 +10,5 @@ CMD_ID_PL_ECHO = 0x3D #cmd_ids defined here: https://docs.google.com/spreadsheet
 echo_data = [0x01,0x02,0x03,0x04,0x05]
 echo_data_packed = echo_data.pack("C*")
 
-#SM Send 
+#SM Send via UUT PAYLOAD_WRITE
 click_cmd(CMD_ID_PL_ECHO, echo_data_packed)
