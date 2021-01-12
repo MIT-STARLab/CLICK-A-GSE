@@ -1,36 +1,10 @@
-#Test Script - PL_CONFIG_OPTICAL_DOWNLINK
+#Test Script - Configure Debug Mode
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test_debug_mode.rb
 
-ap_id = 15
-ap_id_type = "C"
-op_code = 3
-op_code_type = "C"
-cmd_length = 3
-cmd_length_type = "S>"
-rpi_apid = 0xD0
-rpi_apid_type = "C"
+load 'click_cmd.rb'
 
-xb1_cmd_data = []
-packing_directives = ""
-xb1_cmd_data[0] = ap_id
-packing_directives += ap_id_type
-xb1_cmd_data[1] = op_code
-packing_directives += op_code_type
-xb1_cmd_data[2] = cmd_length
-packing_directives += cmd_length_type
-xb1_cmd_data[3] = rpi_apid
-packing_directives += rpi_apid_type
+#define CMD_ID
+CMD_ID_PL_CONFIG_DEBUG = 0xD0 #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
 
-xb1_cmd_data_packed = xb1_cmd_data.pack(packing_directives)
-xb1_cmd_data_unpacked = xb1_cmd_data_packed.unpack("C*")
-ch_sum = Crc16.new.update(xb1_cmd_data_unpacked)
-
-puts xb1_cmd_data
-puts packing_directives
-puts xb1_cmd_data_packed
-puts xb1_cmd_data_unpacked
-puts ch_sum
-
-cmd("UUT PL_CONFIG_DEBUG with CH_SUM #{ch_sum}")
-buffer = get_cmd_buffer("UUT","PL_CONFIG_DEBUG")
-cmd_pkt = buffer.unpack("C*")
-puts cmd_pkt[14..cmd_pkt.length()]
+#DC Send (i.e. send CMD_ID only with empty data field)
+click_cmd(CMD_ID_PL_CONFIG_DEBUG, [])

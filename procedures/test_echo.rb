@@ -1,44 +1,14 @@
-#Test Script: PL_ECHO
+#Test Script - Echo
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test_echo.rb
 
-ap_id = 15
-ap_id_type = "C"
-op_code = 3
-op_code_type = "C"
-cmd_length = 5
-cmd_length_type = "S>"
-rpi_apid = 0x3D
-rpi_apid_type = "C"
-payload_size = 1
-payload_size_type = "C"
-echo_data = 123
-echo_data_type = "C"
+load 'click_cmd.rb'
 
-xb1_cmd_data = []
-packing_directives = ""
-xb1_cmd_data[0] = ap_id
-packing_directives += ap_id_type
-xb1_cmd_data[1] = op_code
-packing_directives += op_code_type
-xb1_cmd_data[2] = cmd_length
-packing_directives += cmd_length_type
-xb1_cmd_data[3] = rpi_apid
-packing_directives += rpi_apid_type
-xb1_cmd_data[4] = payload_size
-packing_directives += payload_size_type
-xb1_cmd_data[5] = echo_data
-packing_directives += echo_data_type
+#define CMD_ID
+CMD_ID_PL_ECHO = 0x3D #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
 
-xb1_cmd_data_packed = xb1_cmd_data.pack(packing_directives)
-xb1_cmd_data_unpacked = xb1_cmd_data_packed.unpack("C*")
-ch_sum = Crc16.new.update(xb1_cmd_data_unpacked)
+#define data bytes
+echo_data = [0x01,0x02,0x03,0x04,0x05]
+echo_data_packed = echo_data.pack("C*")
 
-puts xb1_cmd_data
-puts packing_directives
-puts xb1_cmd_data_packed
-puts xb1_cmd_data_unpacked
-puts ch_sum
-
-cmd("UUT PL_ECHO with ECHO_DATA #{echo_data}, CH_SUM #{ch_sum}")
-buffer = get_cmd_buffer("UUT","PL_ECHO")
-cmd_pkt = buffer.unpack("C*")
-puts cmd_pkt[14..cmd_pkt.length()]
+#SM Send 
+click_cmd(CMD_ID_PL_ECHO, echo_data_packed)
