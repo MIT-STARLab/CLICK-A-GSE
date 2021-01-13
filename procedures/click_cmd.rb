@@ -17,7 +17,7 @@ IDX_RESERVED = 7
 CCSDS_VER = 0x18 # ver = 000b, type = 1b (cmd), sec hdr = 1b (yes)
 CCSDS_GRP_NONE = 0xC0 # grouping = 11b
 
-SECONDARY_HEADER_LEN = 5
+SECONDARY_HEADER_LEN = 6
 CRC_LEN = 2
 
 def click_cmd(cmd_id, data = [], packing = "C*")
@@ -37,10 +37,10 @@ def click_cmd(cmd_id, data = [], packing = "C*")
 
     #construct CCSDS header (primary and secondary)
     header = []
-    header[IDX_CCSDS_VER] = CCSDS_VER | (cmd_id >> 8)
-    header[IDX_CCSDS_APID] = cmd_id & 0xFF
-    header[IDX_CCSDS_GRP] = CCSDS_GRP_NONE
-    header[IDX_CCSDS_SEQ] = 0
+    header[IDX_CCSDS_VER] = CCSDS_VER | (cmd_id >> 8) #TBR
+    header[IDX_CCSDS_APID] = cmd_id & 0xFF #TBR
+    header[IDX_CCSDS_GRP] = CCSDS_GRP_NONE #TBR
+    header[IDX_CCSDS_SEQ] = 0 #TBR
     header[IDX_CCSDS_LEN] = packet_length 
     header[IDX_TIME_SEC] = utc_time_sec
     header[IDX_TIME_SUBSEC] = utc_time_subsec
