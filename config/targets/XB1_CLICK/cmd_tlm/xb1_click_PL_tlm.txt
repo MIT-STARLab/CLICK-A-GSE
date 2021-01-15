@@ -2,7 +2,7 @@
 #Reference: https://cosmosrb.com/docs/v4/telemetry
 
 # DL_FILE - File Telemetry Chunks - APID: 0x387 (TBR)
-#TELEMETRY XACT DL_FILE BIG_ENDIAN
+#TELEMETRY XACT PL_DL_FILE BIG_ENDIAN
   #...
   #End COSMOS Header
 #  APPEND_ARRAY_ITEM FILE_MD5 8 UINT 128 "Original File MD5 Hash, bytewise"
@@ -15,66 +15,28 @@
 #  APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
 
 # HK_CPU - CPU Housekeeping - APID: 0x312 (TBR)
-#TELEMETRY XACT HK_CPU BIG_ENDIAN
+#TELEMETRY XACT PL_HK_CPU BIG_ENDIAN
   #...
   #End COSMOS Header
   #TBD Data 
   #APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
 
 # HK_PAT - PAT Housekeeping - APID: 0x313 (TBR)
-#TELEMETRY XACT HK_CPU BIG_ENDIAN
+#TELEMETRY XACT PL_HK_CPU BIG_ENDIAN
 
   #End COSMOS Header
   #TBD Data 
   #APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
 
 # HK_FPGA_MAP - FPGA Map Housekeeping - APID: 0x314 (TBR)
-#TELEMETRY XACT HK_CPU BIG_ENDIAN
+#TELEMETRY XACT PL_HK_CPU BIG_ENDIAN
   #...
   #End COSMOS Header
   #TBD Data 
   #APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
 
 # ECHO - Echo test - APID: 0x3FF
-#TELEMETRY XACT ECHO BIG_ENDIAN
-  #...
-  #End Payload Header
-  #APPEND_ITEM DATA 8 UINT "Echo data" 
-  #APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
-
-#Test Telemetry (Tested & Works)
-#TELEMETRY XACT EXAMPLE_PAYLOAD_DATA BIG_ENDIAN
-  #...
-  #End Payload Header
-  #APPEND_ITEM PL_SINGLE_BYTE_TLM 8 UINT "Single byte of telemetry from payload"
-
-TELEMETRY XACT PAYLOAD_TEST_DATA_1FF BIG_ENDIAN
-  ITEM SYNC 0 64 UINT "Sync Pattern"
-    FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x1FF "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
-  ITEM LEN 96 32 UINT "Length (bytes) of packet"
-  ITEM SEQ 128 32 UINT "Sequence Counter"
-  ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
-    UNITS sec sec
-  ITEM CCSDS_TAI_SUBSECS 192 8 UINT "TAI Subseconds from CCSDS Header"
-    POLY_READ_CONVERSION 0 0.2
-    UNITS sec sec
-  ITEM CCSDS_REALTIME 200 8 UINT "Identifies data as realtime or from storage"
-    STATE REALTIME 1
-    STATE STORED 0
-  #End COSMOS Header
-  APPEND_ITEM PL_CCSDS_VER 3 UINT
-  APPEND_ITEM PL_CCSDS_TYPE 1 UINT
-  APPEND_ITEM PL_CCSDS_SECNDRY 1 UINT
-  APPEND_ITEM PL_CCSDS_APID 11 UINT "Same as message ID above"
-    FORMAT_STRING "0x%03X"
-  APPEND_ITEM PL_CCSDS_GRP 2 UINT
-  APPEND_ITEM PL_CCSDS_SEQ 14 UINT
-  APPEND_ITEM PL_CCSDS_LEN 16 UINT
-  #End Payload Header
-  APPEND_ARRAY_ITEM PL_DATA 8 UINT -0 "Payload data"
-
-TELEMETRY XACT PAYLOAD_TEST_DATA_ECHO BIG_ENDIAN
+TELEMETRY XACT PL_ECHO BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
   ID_ITEM MSG_ID 64 32 UINT 0x3FF "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
@@ -99,6 +61,12 @@ TELEMETRY XACT PAYLOAD_TEST_DATA_ECHO BIG_ENDIAN
   APPEND_ITEM PL_CCSDS_LEN 16 UINT
   #End Payload Header
   APPEND_ARRAY_ITEM PL_DATA 8 UINT -0 "Payload data"
+
+#Test Telemetry (Tested & Works)
+#TELEMETRY XACT EXAMPLE_PAYLOAD_DATA BIG_ENDIAN
+  #...
+  #End Payload Header
+  #APPEND_ITEM PL_SINGLE_BYTE_TLM 8 UINT "Single byte of telemetry from payload"
   
 #File Telemetry (e.g. camera image, csv or txt file, etc.)
 #TELEMETRY XACT PL_DWNLNK_FILE BIG_ENDIAN
