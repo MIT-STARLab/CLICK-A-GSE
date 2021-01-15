@@ -1,8 +1,8 @@
 #Definition of generic CLICK payload command format for COSMOS
 #Includes CCSDS header definitions, CRC calculation, and sending via BCT PAYLOAD_WRITE command.
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\click_cmd.rb
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\lib\click_cmd.rb
 
-load 'crc16.rb'
+load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/crc16.rb'
 
 # CCSDS constants
 IDX_CCSDS_VER = 0
