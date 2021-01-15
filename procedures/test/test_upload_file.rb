@@ -66,10 +66,10 @@ print ("new trans id: #{trans_id}\n")
 trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads attempted)
-File.open("#{cosmos_dir}/procedures/trans_id.csv", 'a+') {|f| f.write("#{trans_id}, #{filename}\n")}
+File.open("#{cosmos_dir}/procedures/trans_id.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
 
 # set the transfer ID number and name the directory/files
-chunk_name = trans_id.to_i #filename.split(".")[0].split("/")[-1]
+chunk_name = trans_id.to_i #file_name.split(".")[0].split("/")[-1]
 puts chunk_name
 
 #make a new folder in the outputs_data_uplink folder for the file chunks
@@ -77,7 +77,7 @@ FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/uplink/#{chunk_name}"
 dir = "#{cosmos_dir}/outputs/data/uplink/#{chunk_name}/"
 
 # Calculate the MD5 Hash and put in a file in the directory to read later and compare
-md5 = Digest::MD5.file filename
+md5 = Digest::MD5.file file_name
 puts "MD5: #{md5}"
 File.open(dir + "MD5.txt", 'w'){|f| f.write(md5)}
 
