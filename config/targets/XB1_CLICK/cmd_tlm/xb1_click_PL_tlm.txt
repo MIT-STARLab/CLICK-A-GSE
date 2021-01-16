@@ -35,7 +35,7 @@
   #TBD Data 
   #APPEND_ITEM CH_SUM 16 UINT "Check sum (16 bit)"
 
-# ECHO - Echo test - APID: 0x3FF
+# ECHO - Echo test - APID: 0x3FF (Tested and Works)
 TELEMETRY XACT PL_ECHO BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
@@ -60,9 +60,9 @@ TELEMETRY XACT PL_ECHO BIG_ENDIAN
   APPEND_ITEM PL_CCSDS_SEQ 14 UINT
   APPEND_ITEM PL_CCSDS_LEN 16 UINT
   #End Payload Header
-  APPEND_ARRAY_ITEM PL_DATA 8 UINT -0 "Payload data + crc"
+  APPEND_ARRAY_ITEM PL_DATA_AND_CRC 8 UINT -0 "Payload data + CRC"
 
-#Test Telemetry (Tested & Works)
+#Test Telemetry
 #TELEMETRY XACT EXAMPLE_PAYLOAD_DATA BIG_ENDIAN
   #...
   #End Payload Header
