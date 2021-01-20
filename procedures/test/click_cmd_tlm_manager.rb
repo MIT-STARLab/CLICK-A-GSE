@@ -85,7 +85,7 @@ pat_mode_names = %w[
 while true
     puts "Available Commands: "
     puts cmd_names
-    puts "Enter a command: "
+    puts "Enter a command (or enter EXIT): "
     user_cmd = gets.chomp 
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -429,6 +429,10 @@ while true
             click_cmd(CMD_PL_DEBUG_MODE)
 
         end
+
+    elsif user_cmd == "EXIT" 
+        puts 'Exiting...'
+        break 
     else
         puts 'Unrecognized Command: ' + user_cmd
     end
