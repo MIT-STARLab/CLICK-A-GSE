@@ -1,5 +1,5 @@
 #Test Script - Configure Debug Mode
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test_debug_mode.rb
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test\test_debug_mode.rb
 
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/pl_cmd_tlm_apids.rb'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/click_cmd.rb'

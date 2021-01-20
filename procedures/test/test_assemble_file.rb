@@ -1,5 +1,5 @@
 #Test Script - Check if all chunks are received, and if so, assemble the chunks into a single file, delete staging dir
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test_assemble_file.rb
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test\test_assemble_file.rb
 
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/pl_cmd_tlm_apids.rb'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/click_cmd.rb'

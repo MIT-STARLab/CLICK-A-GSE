@@ -1,5 +1,5 @@
 #Test Script - Move/rename file
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test_move_file.rb
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test\test_move_file.rb
 
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/pl_cmd_tlm_apids.rb'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/click_cmd.rb'
@@ -18,4 +18,4 @@ packing = "S>2" + "a" + source_file_name.length.to_s + "a" + source_file_name.le
 #SM Send via UUT PAYLOAD_WRITE
 click_cmd(CMD_PL_MOVE_FILE, data, packing)
 
-#TODO: Get echo telemetry...
+#TODO: Get telemetry...
