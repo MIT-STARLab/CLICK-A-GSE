@@ -24,7 +24,7 @@ def send_file_chunk(transfer_id, chunk_sequence_number, number_of_chunks_total, 
     data[1] = chunk_sequence_number
     data[2] = number_of_chunks_total 
     data[3] = chunk_data_length
-    data[4] = chunk_data
+    data += chunk_data
     packing = "S>4" + "C" + chunk_data_length.to_s 
 
     #SM Send via UUT PAYLOAD_WRITE
@@ -122,7 +122,7 @@ puts("num chunks: #{num_chunks}")
 # Make sure that the file C:\BCT\71sw0078_a_cosmos_click_edu\procedures\trans_id.csv exists to track the transfer ID numbers used
 
 # Read the last transfer ID sent and add 1 to it
-last_trans_id = File.open("#{cosmos_dir}/procedures/trans_id.csv",'r'){|f| f.readlines[-1]}
+last_trans_id = File.open("#{cosmos_dir}/procedures/test/trans_id.csv",'r'){|f| f.readlines[-1]}
 print("\nlast trans id: #{last_trans_id.to_i}\n")
 
 trans_id = last_trans_id.to_i+1 # increment the transfer ID
@@ -130,7 +130,7 @@ print ("new trans id: #{trans_id}\n")
 trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads attempted)
-File.open("#{cosmos_dir}/procedures/trans_id.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
+File.open("#{cosmos_dir}/procedures/test/trans_id.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
 
 # set the transfer ID number and name the directory/files
 chunk_name = trans_id.to_i #file_name.split(".")[0].split("/")[-1]
@@ -141,7 +141,7 @@ FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/uplink/#{chunk_name}"
 dir = "#{cosmos_dir}/outputs/data/uplink/#{chunk_name}/"
 
 # Calculate the MD5 Hash and put in a file in the directory to read later and compare
-md5 = Digest::MD5.file file_name
+md5 = Digest::MD5.file local_file_path
 puts "MD5: #{md5}"
 File.open(dir + "MD5.txt", 'w'){|f| f.write(md5)}
 
