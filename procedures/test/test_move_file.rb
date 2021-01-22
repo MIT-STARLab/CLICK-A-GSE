@@ -9,11 +9,11 @@ destination_file_name = '/root/pat'
 
 #define data bytes
 data = []
-data[0] = source_file_name.length
-data[1] = destination_file_name.length
-data[2] = source_file_name 
-data[3] = destination_file_name
-packing = "S>2" + "a" + source_file_name.length.to_s + "a" + source_file_name.length.to_s
+data[0] = source_file_path.length
+data[1] = destination_file_path.length
+data[2] = source_file_path 
+data[3] = destination_file_path
+packing = "S>2" + "a" + source_file_path.length.to_s + "a" + destination_file_path.length.to_s
 
 #SM Send via UUT PAYLOAD_WRITE
 click_cmd(CMD_PL_MOVE_FILE, data, packing)

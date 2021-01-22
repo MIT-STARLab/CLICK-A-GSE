@@ -201,18 +201,18 @@ while true
             end
 
         elsif user_cmd == 'PL_MOVE_FILE'
-            source_file_name = ask("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
-            if source_file_name != 'EXIT'
-                destination_file_name = ask("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
-                if destination_file_name != 'EXIT'
+            source_file_path = ask("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
+            if source_file_path != 'EXIT'
+                destination_file_path = ask("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
+                if destination_file_path != 'EXIT'
                     #define data bytes
                     data = []
-                    data[0] = source_file_name.length
-                    data[1] = destination_file_name.length
-                    data[2] = source_file_name 
-                    data[3] = destination_file_name
-                    packing = "S>2" + "a" + source_file_name.length.to_s + "a" + source_file_name.length.to_s
-                    
+                    data[0] = source_file_path.length
+                    data[1] = destination_file_path.length
+                    data[2] = source_file_path 
+                    data[3] = destination_file_path
+                    packing = "S>2" + "a" + source_file_path.length.to_s + "a" + destination_file_path.length.to_s
+
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_MOVE_FILE, data, packing)
                     
@@ -221,8 +221,8 @@ while true
             end
 
         elsif user_cmd == 'PL_DEL_FILE'
-            file_name = ask("For PL_DEL_FILE, input the file path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT') #TBR path or name?
-            if file_name != 'EXIT'
+            file_path = ask("For PL_DEL_FILE, input the file path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT') #TBR path or name?
+            if file_path != 'EXIT'
                 recursive_cmd = message_box("For PL_DEL_FILE, recursive delete? ", 'YES', 'NO', 'EXIT')
                 if recursive_cmd == 'YES'
                     recursive = 0xFF
@@ -238,10 +238,10 @@ while true
                     #define data bytes
                     data = []
                     data[0] = recursive
-                    data[1] = file_name.length
-                    data[2] = file_name 
-                    packing = "CS>" + "a" + file_name.length.to_s
-                    
+                    data[1] = file_path.length
+                    data[2] = file_path 
+                    packing = "CS>" + "a" + file_path.length.to_s
+
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_DEL_FILE, data, packing)
                 end
