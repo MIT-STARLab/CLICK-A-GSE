@@ -1,7 +1,7 @@
 #Test Script - Request Payload File Downlink
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\test\test_request_file.rb
+#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\test_request_file.rb
 
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/click_cmd_tlm.rb'
+load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
 
 #define file path:
 file_path = "/root/log/pat/tbd_image_name.png" #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file

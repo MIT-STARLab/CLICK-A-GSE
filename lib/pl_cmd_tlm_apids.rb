@@ -1,4 +1,5 @@
 #CLICK Payload Command & Telemetry APIDs:
+#Assumed path: C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\lib\pl_cmd_tlm_apids.rb
 #Reference: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
 
 #Ground Command IDs

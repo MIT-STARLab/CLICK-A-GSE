@@ -1,4 +1,4 @@
-#
+# Assumed path: 
 # Implements the CRC16 CCITT algorithm.
 #
 class Crc16 
