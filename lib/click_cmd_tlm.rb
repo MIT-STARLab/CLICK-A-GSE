@@ -107,6 +107,7 @@ def echo_test(echo_data_tx, tlm_id_PL_ECHO)
     error_message = ""
     if !apid_check_bool
         error_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_ECHO APID (= " + TLM_ECHO.to_s + "). "
+    end
     if !crc_check_bool
         error_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + "). "
     end
