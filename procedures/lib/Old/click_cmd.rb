@@ -2,23 +2,8 @@
 #Includes CCSDS header definitions, CRC calculation, and sending via BCT PAYLOAD_WRITE command.
 #Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\lib\click_cmd.rb
 
+load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/pl_cmd_tlm_apids.rb'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/crc16.rb'
-
-# CCSDS constants
-IDX_CCSDS_VER = 0
-IDX_CCSDS_APID = 1
-IDX_CCSDS_GRP = 2
-IDX_CCSDS_SEQ = 3
-IDX_CCSDS_LEN = 4
-IDX_TIME_SEC = 5
-IDX_TIME_SUBSEC = 6
-IDX_RESERVED = 7
-
-CCSDS_VER = 0x18 # ver = 000b, type = 1b (cmd), sec hdr = 1b (yes)
-CCSDS_GRP_NONE = 0xC0 # grouping = 11b
-
-SECONDARY_HEADER_LEN = 6
-CRC_LEN = 2
 
 def click_cmd(cmd_id, data = [], packing = "C*")
     #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728

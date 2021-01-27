@@ -45,3 +45,20 @@ PAT_MODE_DEFAULT = 0
 PAT_MODE_OPEN_LOOP = 1
 PAT_MODE_STATIC_POINTING = 2
 PAT_MODE_BUS_FEEDBACK = 3
+
+# CCSDS constants for command packets
+IDX_CCSDS_VER = 0
+IDX_CCSDS_APID = 1
+IDX_CCSDS_GRP = 2
+IDX_CCSDS_SEQ = 3
+IDX_CCSDS_LEN = 4
+IDX_TIME_SEC = 5
+IDX_TIME_SUBSEC = 6
+IDX_RESERVED = 7
+CCSDS_VER = 0x18 # ver = 000b, type = 1b (cmd), sec hdr = 1b (yes)
+CCSDS_GRP_NONE = 0xC0 # grouping = 11b
+SECONDARY_HEADER_LEN = 6
+CRC_LEN = 2
+
+#COSMOS header length for telemetry packets
+COSMOS_HEADER_LENGTH = 26 

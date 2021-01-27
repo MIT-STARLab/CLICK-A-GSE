@@ -3,8 +3,9 @@
 
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/pl_cmd_tlm_apids.rb'
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/click_cmd.rb'
+load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/lib/click_cmd_tlm.rb'
+
+cosmos_dir = "C:/BCT/71sw0078_a_cosmos_click_edu"
 
 cmd_list = [
     CMD_PL_REBOOT,
@@ -82,13 +83,16 @@ pat_mode_names = %w[
     BUS_FEEDBACK
 ]
 
+#Subscribe to telemetry packets:
+tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 1) #set queue depth to 1
+
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
     cmd_names[0], cmd_names[1], cmd_names[2], cmd_names[3], cmd_names[4], cmd_names[5], 
     cmd_names[6], cmd_names[7], cmd_names[8], cmd_names[9], cmd_names[10], cmd_names[11],
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
-    'EXIT')
+    'TEST_MULTIPLE_ECHO', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
@@ -104,7 +108,7 @@ while true
 
         elsif user_cmd == 'PL_EXEC_FILE'
             #define file path:
-            file_path = ask("For PL_EXEC_FILE, input the payload file path (e.g. /root/bin/pat). Input EXIT to escape.", 'EXIT')
+            file_path = ask_string("For PL_EXEC_FILE, input the payload file path (e.g. /root/bin/pat). Input EXIT to escape.", 'EXIT')
 
             if file_path != 'EXIT'
                 #define data bytes
@@ -123,7 +127,7 @@ while true
 
         elsif user_cmd == 'PL_LIST_FILE'
             #define directory path:
-            directory_path = ask("For PL_LIST_FILE, input the directory path (e.g. /root/bin). Input EXIT to escape.", 'EXIT')
+            directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. /root/bin). Input EXIT to escape.", 'EXIT')
 
             if directory_path != 'EXIT'
                 #define data bytes
@@ -140,7 +144,7 @@ while true
 
         elsif user_cmd == 'PL_REQUEST_FILE'
             #define file path:
-            file_path = ask("For PL_REQUEST_FILE, input the payload file path (e.g. /root/log/pat/img_file_name.png). Input EXIT to escape.", 'EXIT')
+            file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/log/pat/img_file_name.png). Input EXIT to escape.", 'EXIT')
             #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             
             if file_path != 'EXIT'
@@ -161,7 +165,7 @@ while true
             prompt("PL_UPLOAD_FILE not yet implemented.")
 
         elsif user_cmd == 'PL_ASSEMBLE_FILE'
-            file_name = ask("For PL_ASSEMBLE_FILE, input the payload file name (e.g. pat). Input EXIT to escape.", 'EXIT')
+            file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file name (e.g. pat). Input EXIT to escape.", 'EXIT')
             #TBR (should it just be the file name or the whole path?)
 
             if file_name != 'EXIT'
@@ -181,7 +185,7 @@ while true
             end
 
         elsif user_cmd == 'PL_VALIDATE_FILE'
-            file_name = ask("For PL_VALIDATE_FILE, input the payload file name (e.g. pat). Input EXIT to escape.", 'EXIT')
+            file_name = ask_string("For PL_VALIDATE_FILE, input the payload file name (e.g. pat). Input EXIT to escape.", 'EXIT')
             #TBR (should it just be the file name or the whole path?)
 
             if file_name != 'EXIT'
@@ -201,9 +205,9 @@ while true
             end
 
         elsif user_cmd == 'PL_MOVE_FILE'
-            source_file_path = ask("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
+            source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
             if source_file_path != 'EXIT'
-                destination_file_path = ask("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
+                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
                     #define data bytes
                     data = []
@@ -221,7 +225,7 @@ while true
             end
 
         elsif user_cmd == 'PL_DEL_FILE'
-            file_path = ask("For PL_DEL_FILE, input the file path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT') #TBR path or name?
+            file_path = ask_string("For PL_DEL_FILE, input the file path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT') #TBR path or name?
             if file_path != 'EXIT'
                 recursive_cmd = message_box("For PL_DEL_FILE, recursive delete? ", 'YES', 'NO', 'EXIT')
                 if recursive_cmd == 'YES'
@@ -385,7 +389,7 @@ while true
             prompt("PL_SET_HK not yet implemented.")
 
         elsif user_cmd == 'PL_ECHO'
-            user_echo_data = ask("For PL_ECHO, input string to echo. Input EXIT to escape.", 'EXIT')
+            user_echo_data = ask_string("For PL_ECHO, input string to echo. Input EXIT to escape.", 'EXIT')
             if user_echo_data != 'EXIT'
                 #define data bytes
                 data = []
@@ -395,7 +399,36 @@ while true
                 #SM Send via UUT PAYLOAD_WRITE
                 click_cmd(CMD_PL_ECHO, data, packing)
 
-                #TODO: Get echo telemetry
+                #Get telemetry packet:
+                packet = get_packet(tlm_id_PL_ECHO)   
+
+                #Parse CCSDS header:             
+                _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                apid_check_bool = pl_ccsds_apid == TLM_ECHO
+                
+                #Define variable length data packing:
+                echo_data_rx_length = pl_ccsds_length - CRC_LEN + 1 #get data size
+                packing = "a" + echo_data_rx_length.to_s + "S>" #define data packing for telemetry packet
+
+                #Read the data bytes and check CRC:
+                echo_data_rx, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+                echo_data_check_bool = echo_data_rx == echo_data #check echo data
+                
+                #Verify packet and determine if echo was successful:
+                if apid_check_bool
+                    if crc_check_bool
+                        if echo_data_check_bool
+                            prompt("Successful Echo! Transmitted Data: " + user_echo_data + ". Received data: " + echo_data_rx) 
+                        else
+                            prompt("Echo Data Error! Transmitted Data: " + user_echo_data + ". Received data: " + echo_data_rx) 
+                        end
+                    else
+                        prompt("CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ")")
+                    end
+                else
+                    prompt("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_ECHO APID (= " + TLM_ECHO.to_s + ")")
+                end
             end
 
         elsif user_cmd == 'PL_NOOP'
@@ -423,6 +456,35 @@ while true
         elsif user_cmd == 'PL_DEBUG_MODE'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_DEBUG_MODE)
+
+        elsif user_cmd == 'TEST_MULTIPLE_ECHO'
+            num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
+            start_time = Time.now.to_s #time of test start
+            error_list = []
+            for i in 0..(num_echo_tests-1)
+                echo_data_tx = "TEST " + i.to_s 
+                success_bool, error_message = echo_test(echo_data_tx, tlm_id_PL_ECHO)
+                if !success_bool
+                    error_list += "[" Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"
+                end
+            end
+            num_errors = error_list.length
+
+            #Save test results to text file:
+            file_name = "TEST_MULTIPLE_ECHO " + start_time ".txt"
+            file_path = "#{cosmos_dir}/procedures/test/#{file_name}"
+            File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + start_time + "\n")}
+            if num_errors == 0
+                summary_message = "TEST_MULTIPLE_ECHO ran successfully with no errors.\n"
+                File.open(file_path, 'a+') {|f| f.write(summary_message)}
+            else
+                summary_message = "TEST_MULTIPLE_ECHO encountered " + num_errors.to_s + " echo failures.\n"
+                File.open(file_path, 'a+') {|f| f.write(summary_message)}
+                for i in 0..(num_errors-1)
+                    File.open(file_path, 'a+') {|f| f.write(error_list[i])}
+                end
+            end
+            prompt(summary_message + "Results saved to: " + file_path)
 
         end
 
