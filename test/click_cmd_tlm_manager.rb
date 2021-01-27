@@ -457,36 +457,36 @@ while true
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_DEBUG_MODE)
 
-        elsif user_cmd == 'TEST_MULTIPLE_ECHO'
-            num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
-            current_time = Time.now.to_s #time of test start
-            error_list = []
-            for i in 0..(num_echo_tests-1)
-                echo_data_tx = "TEST " + i.to_s 
-                success_bool, error_message = echo_test(echo_data_tx, tlm_id_PL_ECHO)
-                if !success_bool
-                    error_list += "[" + Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"
-                end
-            end
-            num_errors = error_list.length
-
-            #Save test results to text file:
-            file_name = "TEST_MULTIPLE_ECHO " + current_time + ".txt"
-            file_path = test_log_dir + file_name
-            File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + current_time + "\n")}
-            if num_errors == 0
-                summary_message = "TEST_MULTIPLE_ECHO ran successfully with no errors.\n"
-                File.open(file_path, 'a+') {|f| f.write(summary_message)}
-            else
-                summary_message = "TEST_MULTIPLE_ECHO encountered " + num_errors.to_s + " echo failures.\n"
-                File.open(file_path, 'a+') {|f| f.write(summary_message)}
-                for i in 0..(num_errors-1)
-                    File.open(file_path, 'a+') {|f| f.write(error_list[i])}
-                end
-            end
-            prompt(summary_message + "Results saved to: " + file_path)
-
         end
+
+    elsif user_cmd == 'TEST_MULTIPLE_ECHO'
+        num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
+        current_time = Time.now.to_s #time of test start
+        error_list = []
+        for i in 0..(num_echo_tests-1)
+            echo_data_tx = "TEST " + i.to_s 
+            success_bool, error_message = echo_test(echo_data_tx, tlm_id_PL_ECHO)
+            if !success_bool
+                error_list += "[" + Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"
+            end
+        end
+        num_errors = error_list.length
+
+        #Save test results to text file:
+        file_name = "TEST_MULTIPLE_ECHO " + current_time + ".txt"
+        file_path = test_log_dir + file_name
+        File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + current_time + "\n")}
+        if num_errors == 0
+            summary_message = "TEST_MULTIPLE_ECHO ran successfully with no errors.\n"
+            File.open(file_path, 'a+') {|f| f.write(summary_message)}
+        else
+            summary_message = "TEST_MULTIPLE_ECHO encountered " + num_errors.to_s + " echo failures.\n"
+            File.open(file_path, 'a+') {|f| f.write(summary_message)}
+            for i in 0..(num_errors-1)
+                File.open(file_path, 'a+') {|f| f.write(error_list[i])}
+            end
+        end
+        prompt(summary_message + "Results saved to: " + file_path)
 
     else #EXIT
         break 
