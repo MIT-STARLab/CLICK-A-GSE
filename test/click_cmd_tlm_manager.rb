@@ -5,7 +5,7 @@ require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might
 require 'digest/md5'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
 
-cosmos_dir = "C:/BCT/71sw0078_a_cosmos_click_edu"
+test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/CLICK-A-GSE/test/log/"
 
 cmd_list = [
     CMD_PL_REBOOT,
@@ -413,7 +413,7 @@ while true
                 #Read the data bytes and check CRC:
                 echo_data_rx, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
                 crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
-                echo_data_check_bool = echo_data_rx == echo_data #check echo data
+                echo_data_check_bool = echo_data_rx == user_echo_data #check echo data
                 
                 #Verify packet and determine if echo was successful:
                 if apid_check_bool
@@ -459,21 +459,21 @@ while true
 
         elsif user_cmd == 'TEST_MULTIPLE_ECHO'
             num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
-            start_time = Time.now.to_s #time of test start
+            current_time = Time.now.to_s #time of test start
             error_list = []
             for i in 0..(num_echo_tests-1)
                 echo_data_tx = "TEST " + i.to_s 
                 success_bool, error_message = echo_test(echo_data_tx, tlm_id_PL_ECHO)
                 if !success_bool
-                    error_list += "[" Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"
+                    error_list += "[" + Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"
                 end
             end
             num_errors = error_list.length
 
             #Save test results to text file:
-            file_name = "TEST_MULTIPLE_ECHO " + start_time ".txt"
-            file_path = "#{cosmos_dir}/procedures/test/#{file_name}"
-            File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + start_time + "\n")}
+            file_name = "TEST_MULTIPLE_ECHO " + current_time + ".txt"
+            file_path = test_log_dir + file_name
+            File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + current_time + "\n")}
             if num_errors == 0
                 summary_message = "TEST_MULTIPLE_ECHO ran successfully with no errors.\n"
                 File.open(file_path, 'a+') {|f| f.write(summary_message)}
