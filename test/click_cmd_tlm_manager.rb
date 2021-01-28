@@ -5,7 +5,7 @@ require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might
 require 'digest/md5'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
 
-test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/CLICK-A-GSE/test/log/"
+test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/test/log/"
 
 cmd_list = [
     CMD_PL_REBOOT,
@@ -84,7 +84,7 @@ pat_mode_names = %w[
 ]
 
 #Subscribe to telemetry packets:
-tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 1) #set queue depth to 1
+tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -461,30 +461,34 @@ while true
 
     elsif user_cmd == 'TEST_MULTIPLE_ECHO'
         num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
-        current_time = Time.now.to_s #time of test start
-        error_list = []
+        current_time = Time.now #time of test start
+        current_time_str = current_time.to_s #human readable time
+        current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+        message_list = []
+        num_errors = 0
         for i in 0..(num_echo_tests-1)
             echo_data_tx = "TEST " + i.to_s 
             success_bool, error_message = echo_test(echo_data_tx, tlm_id_PL_ECHO)
-            if !success_bool
-                error_list += "[" + Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"
+            if success_bool
+                message_list += ["[" + Time.now.to_s + " " + echo_data_tx + "] Echo Success!\n"]
+            else
+                num_errors += 1
+                message_list += ["[" + Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"]
             end
         end
-        num_errors = error_list.length
 
         #Save test results to text file:
-        file_name = "TEST_MULTIPLE_ECHO " + current_time + ".txt"
+        file_name = "TEST_MULTIPLE_ECHO_" + current_timestamp + ".txt"
         file_path = test_log_dir + file_name
-        File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + current_time + "\n")}
+        File.open(file_path, 'a+') {|f| f.write("TEST_MULTIPLE_ECHO. Start Time: " + current_time_str + "\n")}
         if num_errors == 0
-            summary_message = "TEST_MULTIPLE_ECHO ran successfully with no errors.\n"
-            File.open(file_path, 'a+') {|f| f.write(summary_message)}
+            summary_message = "TEST_MULTIPLE_ECHO ran successfully with " + num_echo_tests.to_s + " packets with no errors.\n"
         else
-            summary_message = "TEST_MULTIPLE_ECHO encountered " + num_errors.to_s + " echo failures.\n"
-            File.open(file_path, 'a+') {|f| f.write(summary_message)}
-            for i in 0..(num_errors-1)
-                File.open(file_path, 'a+') {|f| f.write(error_list[i])}
-            end
+            summary_message = "TEST_MULTIPLE_ECHO with " + num_echo_tests.to_s + " packets encountered " + num_errors.to_s + " echo failures.\n"
+        end
+        File.open(file_path, 'a+') {|f| f.write(summary_message)}
+        for i in 0..(message_list.length-1)
+            File.open(file_path, 'a+') {|f| f.write(message_list[i])}
         end
         prompt(summary_message + "Results saved to: " + file_path)
 
