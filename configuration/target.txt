@@ -1,7 +1,7 @@
 REQUIRE quadratic_plus_log.rb
 
 COMMANDS xb1_click_cmd.txt
-COMMANDS xb1_click_PL_cmd.txt
+#COMMANDS xb1_click_PL_cmd.txt
 
 TELEMETRY xb1_cfdp_tlm.txt
 TELEMETRY xb1_click_soh_tlm.txt

@@ -76,6 +76,33 @@ def check_pl_tlm_crc(packet, crc_rx)
     return crc_check_bool, crc_check
 end
 
+### Move file command
+def move_file(source_file_path, destination_file_path)
+    #define data bytes
+    data = []
+    data[0] = source_file_path.length
+    data[1] = destination_file_path.length
+    data[2] = source_file_path 
+    data[3] = destination_file_path
+    packing = "S>2" + "a" + source_file_path.length.to_s + "a" + destination_file_path.length.to_s
+
+    #SM Send via UUT PAYLOAD_WRITE
+    click_cmd(CMD_PL_MOVE_FILE, data, packing)
+end
+
+### Delete file command
+def delete_file(recursive, file_path)
+    #define data bytes
+    data = []
+    data[0] = recursive
+    data[1] = file_path.length
+    data[2] = file_path 
+    packing = "CS>" + "a" + file_path.length.to_s
+
+    #SM Send via UUT PAYLOAD_WRITE
+    click_cmd(CMD_PL_DEL_FILE, data, packing)
+end
+
 ### Echo test function
 def echo_test(echo_data_tx, tlm_id_PL_ECHO)
     #define data bytes

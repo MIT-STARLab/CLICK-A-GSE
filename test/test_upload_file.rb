@@ -54,31 +54,6 @@ def validate_file(md5, file_path)
     click_cmd(CMD_PL_VALIDATE_FILE, data, packing)
 end
 
-def move_file(source_file_path, destination_file_path)
-    #define data bytes
-    data = []
-    data[0] = source_file_path.length
-    data[1] = destination_file_path.length
-    data[2] = source_file_path 
-    data[3] = destination_file_path
-    packing = "S>2" + "a" + source_file_path.length.to_s + "a" + destination_file_path.length.to_s
-
-    #SM Send via UUT PAYLOAD_WRITE
-    click_cmd(CMD_PL_MOVE_FILE, data, packing)
-end
-
-def delete_file(recursive, file_path)
-    #define data bytes
-    data = []
-    data[0] = recursive
-    data[1] = file_path.length
-    data[2] = file_path 
-    packing = "CS>" + "a" + file_path.length.to_s
-
-    #SM Send via UUT PAYLOAD_WRITE
-    click_cmd(CMD_PL_DEL_FILE, data, packing)
-end
-
 ###################### Uplink File Information (Number of chunks, file length) #################################
 
 # # User input dialog for file selection 

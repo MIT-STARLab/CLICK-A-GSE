@@ -6,11 +6,15 @@ load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tl
 #define file path:
 file_path = "/root/log/pat/tbd_image_name.png" #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
 
+transfer_id = 1 #TBR
+
 #define data bytes
 data = []
-data[0] = file_path.length
-data[1] = file_path 
-packing = "C" + "a" + file_path.length.to_s
+data[0] = transfer_id
+data[1] = chunk_size
+data[2] = file_path.length
+data[3] = file_path 
+packing = "S>3" + "a" + file_path.length.to_s
 
 #SM Send via UUT PAYLOAD_WRITE
 click_cmd(CMD_PL_REQUEST_FILE, data, packing)

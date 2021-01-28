@@ -85,6 +85,7 @@ pat_mode_names = %w[
 
 #Subscribe to telemetry packets:
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -117,7 +118,7 @@ while true
                 data[1] = 0 #file output number (if outputting script prints to file)
                 data[2] = file_path.length
                 data[3] = file_path 
-                packing = "C3" + "a" + file_path.length.to_s
+                packing = "C2S>" + "a" + file_path.length.to_s
 
                 #SM Send via UUT PAYLOAD_WRITE
                 click_cmd(CMD_PL_EXEC_FILE, data, packing) 
@@ -134,93 +135,77 @@ while true
                 data = []
                 data[0] = directory_path.length
                 data[1] = directory_path 
-                packing = "C" + "a" + directory_path.length.to_s
+                packing = "S>" + "a" + directory_path.length.to_s
 
                 #SM Send via UUT PAYLOAD_WRITE
                 click_cmd(CMD_PL_LIST_FILE, data, packing)
 
-                #TODO: Get file list telemetry...
+                #Get telemetry packet:
+                packet = get_packet(tlm_id_PL_LIST_FILE)   
+
+                #Parse CCSDS header:             
+                _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                apid_check_bool = pl_ccsds_apid == TLM_LIST_FILE
+                
+                #Define variable length data packing:
+                list_file_data_length = pl_ccsds_length - CRC_LEN + 1 #get data size
+                packing = "a" + list_file_data_length.to_s + "S>" #define data packing for telemetry packet
+
+                #Read the data bytes and check CRC:
+                list_file_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+                
+                #Output message:
+                message = ""
+                if !apid_check_bool
+                    message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_LIST_FILE APID (= " + TLM_ECHO.to_s + ").\n"
+                end
+                if !crc_check_bool
+                    message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+                end
+                message += list_file_data
+                prompt(message)
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE'
+            prompt("PL_REQUEST_FILE not yet implemented.")
             #define file path:
-            file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/log/pat/img_file_name.png). Input EXIT to escape.", 'EXIT')
-            #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
+            # file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/log/pat/img_file_name.png). Input EXIT to escape.", 'EXIT')
+            # #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             
-            if file_path != 'EXIT'
-                #define data bytes
-                data = []
-                data[0] = file_path.length
-                data[1] = file_path 
-                packing = "C" + "a" + file_path.length.to_s
-
-                #SM Send via UUT PAYLOAD_WRITE
-                click_cmd(CMD_PL_REQUEST_FILE, data, packing)
-
-                #TODO: Get file telemetry...
-            end
+            # if file_path != 'EXIT'
+            #     ###TODO: request file function
+            # end
 
         elsif user_cmd == 'PL_UPLOAD_FILE'
             ###TODO... maybe just call test_upload_file.rb
             prompt("PL_UPLOAD_FILE not yet implemented.")
 
         elsif user_cmd == 'PL_ASSEMBLE_FILE'
-            file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file name (e.g. pat). Input EXIT to escape.", 'EXIT')
-            #TBR (should it just be the file name or the whole path?)
+            prompt("PL_ASSEMBLE_FILE not yet implemented.")
 
-            if file_name != 'EXIT'
-                transfer_id = 1 #TBR
-
-                #define data bytes
-                data = []
-                data[0] = transfer_id
-                data[1] = file_name.length
-                data[2] = file_name 
-                packing = "S>2" + "a" + file_name.length.to_s
-                
-                #SM Send via UUT PAYLOAD_WRITE
-                click_cmd(CMD_PL_ASSEMBLE_FILE, data, packing)
-                
-                #TODO: Get telemetry...
-            end
+            # file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file path (e.g. /root/file_staging/1/pat). Input EXIT to escape.", 'EXIT')            
+            # if file_name != 'EXIT'
+            #     transfer_id = 1 #TODO
+            #     assemble_file(transfer_id, file_path)
+            # end
 
         elsif user_cmd == 'PL_VALIDATE_FILE'
-            file_name = ask_string("For PL_VALIDATE_FILE, input the payload file name (e.g. pat). Input EXIT to escape.", 'EXIT')
-            #TBR (should it just be the file name or the whole path?)
+            prompt("PL_VALIDATE_FILE not yet implemented.")
 
-            if file_name != 'EXIT'
-                md5 = Digest::MD5.file file_name #what's the packing type? uint8 or string...
-                
-                #define data bytes
-                data = []
-                data[0] = md5
-                data[1] = file_name.length
-                data[2] = file_name 
-                packing = "C" + md5.length.to_s + "S>" + "a" + file_name.length.to_s
-                
-                #SM Send via UUT PAYLOAD_WRITE
-                click_cmd(CMD_PL_VALIDATE_FILE, data, packing)
-                
-                #TODO: Get telemetry...
-            end
+            # file_name = ask_string("For PL_VALIDATE_FILE, input the payload file path (e.g. pat). Input EXIT to escape.", 'EXIT')
+
+            # if file_name != 'EXIT'
+            #     validate_file(md5, payload_file_path_staging)
+            # end
 
         elsif user_cmd == 'PL_MOVE_FILE'
             source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
             if source_file_path != 'EXIT'
                 destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
-                    #define data bytes
-                    data = []
-                    data[0] = source_file_path.length
-                    data[1] = destination_file_path.length
-                    data[2] = source_file_path 
-                    data[3] = destination_file_path
-                    packing = "S>2" + "a" + source_file_path.length.to_s + "a" + destination_file_path.length.to_s
-
-                    #SM Send via UUT PAYLOAD_WRITE
-                    click_cmd(CMD_PL_MOVE_FILE, data, packing)
-                    
-                    #TODO: Get telemetry...
+                    move_file(payload_file_path_staging, destination_file_path)
+                    #TODO: encapsulate list file as a function after it's tested and use it here to display the destination (and source) directory
                 end
             end
 
@@ -239,18 +224,9 @@ while true
                 end
                 
                 if execute
-                    #define data bytes
-                    data = []
-                    data[0] = recursive
-                    data[1] = file_path.length
-                    data[2] = file_path 
-                    packing = "CS>" + "a" + file_path.length.to_s
-
-                    #SM Send via UUT PAYLOAD_WRITE
-                    click_cmd(CMD_PL_DEL_FILE, data, packing)
+                    delete_file(recursive, file_path)
+                    #TODO: encapsulate list file as a function after it's tested and use it here to display the directory                 
                 end
-
-                #TODO: Get telemetry...
             end
 
         elsif user_cmd == 'PL_SET_PAT_MODE'
@@ -352,9 +328,6 @@ while true
         
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_SET_FPGA, data, packing)
-        
-                    #TODO: Get FGPA answer telemetry...
-
                 else
                     prompt("Request number out of bounds (0 to 255)")
                 end
