@@ -39,7 +39,9 @@ TLM_GET_FPGA = 0x3C0
 TLM_ECHO = 0x3FF 
 
 #Self Test IDs
-TEST_PAT_HW = 0x00
+GENERAL_SELF_TEST = 0x00
+LASER_SELF_TEST = 0x01
+PAT_SELF_TEST = 0x02
 
 #define PAT Mode IDs
 PAT_MODE_DEFAULT = 0
@@ -63,3 +65,10 @@ CRC_LEN = 2
 
 #COSMOS header length for telemetry packets
 COSMOS_HEADER_LENGTH = 26 
+
+# File Handling Options Settings
+FL_ERR_EMPTY_DIR = 0x01
+FL_ERR_FILE_NAME = 0x02
+FL_ERR_SEQ_LEN = 0x03
+FL_ERR_MISSING_CHUNK = 0x04
+FL_SUCCESS = 0xFF

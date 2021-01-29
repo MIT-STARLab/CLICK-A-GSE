@@ -66,18 +66,18 @@ end
 
 # Cosmos directory on the ground station computer
 cosmos_dir = "C:/BCT/71sw0078_a_cosmos_click_edu"
-sub_path_to_file = "/procedures/test/"
+sub_path_to_file = "/procedures/CLICK-A-GSE/test/"
 
 #define file name 
-file_name = "test_file.txt"
+file_name = "test_file_transfer.txt"
 
 #define destination file path
-destination_file_path = "/root/" + file_name 
+destination_file_path = "/root/test/" + file_name 
 
 #define local file path:
 local_file_path = cosmos_dir + sub_path_to_file + file_name 
 
-#define chunk size parameter
+#define chunk size parameter (PL_UPLOAD_FILE packet def)
 chunk_size_bytes = 927 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
 
 # Open the uplink file and get content information
@@ -93,10 +93,10 @@ num_chunks = (fullfile_length/chunk_size_bytes.to_f).ceil
 puts("num chunks: #{num_chunks}")
 
 ###################### Transfer ID Information ###############################
-# Make sure that the file C:\BCT\71sw0078_a_cosmos_click_edu\procedures\trans_id.csv exists to track the transfer ID numbers used
+# Make sure that the file C:\BCT\71sw0078_a_cosmos_click_edu\procedures\trans_id_ul.csv exists to track the transfer ID numbers used
 
 # Read the last transfer ID sent and add 1 to it
-last_trans_id = File.open("#{cosmos_dir}/procedures/test/trans_id.csv",'r'){|f| f.readlines[-1]}
+last_trans_id = File.open("#{cosmos_dir}/procedures/test/trans_id_ul.csv",'r'){|f| f.readlines[-1]}
 print("\nlast trans id: #{last_trans_id.to_i}\n")
 
 trans_id = last_trans_id.to_i+1 # increment the transfer ID
@@ -104,7 +104,7 @@ print ("new trans id: #{trans_id}\n")
 trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads attempted)
-File.open("#{cosmos_dir}/procedures/test/trans_id.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
+File.open("#{cosmos_dir}/procedures/test/trans_id_ul.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
 
 # set the transfer ID number and name the directory/files
 chunk_name = trans_id.to_i #file_name.split(".")[0].split("/")[-1]
@@ -171,24 +171,80 @@ end
 full_file.close
 
 prompt("All Chunks Sent. Press Continue to assemble remote file in staging: " + payload_file_path_staging)
+tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 ### Assemble File
 #define payload file path:
 staging_directory_path = '/root/file_staging/'+str(trans_id)
 payload_file_path_staging = staging_directory_path + '/' + file_name 
 assemble_file(trans_id, payload_file_path_staging)
-#TODO: get telemetry
+#Get telemetry packet:
+packet = get_packet(tlm_id_PL_ASSEMBLE_FILE)   
 
-prompt("File assembled in staging. Press Continue to validate.")
-### Validate File
-validate_file(md5, payload_file_path_staging)
+#Parse CCSDS header:             
+_, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+apid_check_bool = pl_ccsds_apid == TLM_ASSEMBLE_FILE
 
-prompt("File validated in staging. Press Continue to move file from staging to final destination: " + destination_file_path)
-### Move File
-move_file(payload_file_path_staging, destination_file_path)
+#Get assembly data
+trans_id_rx = packet.read('TRANSFER_ID') 
+trans_id_bool = trans_id == trans_id_rx
+if !trans_id_bool
+    puts "Transfer ID Error! Transmitted ID: " + trans_id.to_s + ". Received ID: " + trans_id_rx.to_s + ".\n"
+end
+status = packet.read('STATUS')
+missing_packets_num = packet.read('MISSING_PACKETS_NUM')
 
-prompt("File moved to final destination. Press Continue to delete staging directory: " + staging_directory_path)
-### Delete staging directory
-delete_file(0xFF, staging_directory_path)
+#get missing packet ids (if any) and crc
+missing_packets_check_bool = missing_packets_num == 0
+if !missing_packets_check_bool
+    packing = "S>" + missing_packets_num.to_s + "S>" #define data packing for variable length data
+    missing_packet_ids, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+else
+    crc_rx = parse_empty_data_and_crc(packet) #parse crc
+end
+crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+
+error_message = ""
+if !apid_check_bool
+    error_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to TLM_ASSEMBLE_FILE APID (= " + TLM_ASSEMBLE_FILE.to_s + ").\n"
+end
+if !crc_check_bool
+    error_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+end
+status_check_bool = status == FL_SUCCESS
+if status_check_bool
+    if status == FL_ERR_EMPTY_DIR
+        error_message += "Assembly Error! Empty directory. \n"
+    elsif status == FL_ERR_FILE_NAME
+        error_message += "Assembly Error! Chunk file name is not correct \n"
+    elsif status == FL_ERR_SEQ_LEN
+        error_message += "Assembly Error! Sequence length doesn't match. \n"
+    elsif status == FL_ERR_MISSING_CHUNK
+        error_message += "Assembly Error! Missing chunks. \n"
+    else
+        error_message += "Assembly Error! Unrecognized status = " + status.to_s 
+    end
+if !missing_packets_check_bool
+    for i in 1..missing_packets_num
+        error_message += "Missing Packet Error! Packet ID: " + missing_packet_ids.to_s + "\n"
+    end
+end
+
+success_bool = apid_check_bool and crc_check and status_check_bool and missing_packets_check_bool
+if success_bool
+    prompt("File assembled in staging without errors. Press Continue to validate.")
+    ### Validate File
+    validate_file(md5, payload_file_path_staging)
+
+    prompt("File validated in staging. Press Continue to move file from staging to final destination: " + destination_file_path)
+    ### Move File
+    move_file(payload_file_path_staging, destination_file_path)
+
+    prompt("File moved to final destination. Press Continue to delete staging directory: " + staging_directory_path)
+    ### Delete staging directory
+    delete_file(0xFF, staging_directory_path)
+else
+    prompt("File assembly produced errors:\n" + error_message)
+end
 
 # Send the command twice for each packet (TBR) 
 #sendAgain = 'yes' #leave this as 'yes' to automatically send the chunk twice

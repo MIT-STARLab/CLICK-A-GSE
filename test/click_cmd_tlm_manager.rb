@@ -62,11 +62,15 @@ cmd_names = %w[
 ]
 
 self_test_list = [
-    TEST_PAT_HW,
+    GENERAL_SELF_TEST,
+    LASER_SELF_TEST,
+    PAT_SELF_TEST,
 ]
 
 self_test_names = %w[
-    PAT_HW
+    PL_GENERAL_SELF_TEST
+    PL_LASER_SELF_TEST
+    PL_PAT_SELF_TEST
 ]
 
 pat_mode_list = [

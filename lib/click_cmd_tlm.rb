@@ -67,6 +67,16 @@ def parse_variable_data_and_crc(packet, packing)
     return pl_var_data, crc 
 end
 
+### Parse variable length data and crc in payload telemetry packet
+def parse_empty_data_and_crc(packet)
+    #Read the data bytes:
+    pl_data_and_crc_bytes = packet.read('PL_VAR_DATA_AND_CRC')
+    pl_data_and_crc_packed = pl_data_and_crc_bytes.pack("C*") #convert to packed string
+    pl_data_and_crc_list = pl_data_and_crc_packed.unpack("S>") #unpack data to list
+    crc = pl_data_and_crc_list[0] #get crc from list
+    return crc 
+end
+
 ### Check CRC received in payload telemetry packet
 def check_pl_tlm_crc(packet, crc_rx)
     #Check the CRC:
