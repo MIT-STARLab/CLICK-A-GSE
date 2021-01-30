@@ -413,7 +413,7 @@ while true
             click_cmd(CMD_PL_NOOP)
 
         elsif user_cmd == 'PL_SELF_TEST'
-            user_test_name = combo_box("Select test (or EXIT): ", self_test_names[0], 'EXIT')
+            user_test_name = combo_box("Select test (or EXIT): ", self_test_names[0], self_test_names[1], self_test_names[2], 'EXIT')
             if self_test_names.include? user_test_name
                 test_id = self_test_list[self_test_names.find_index(user_test_name)]                
 
