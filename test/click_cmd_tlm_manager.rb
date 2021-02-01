@@ -5,7 +5,7 @@ require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might
 require 'digest/md5'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
 
-test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/test/log/"
+test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/outputs/logs/xb1_click/"
 
 cmd_list = [
     CMD_PL_REBOOT,
@@ -77,14 +77,16 @@ pat_mode_list = [
     PAT_MODE_DEFAULT,
     PAT_MODE_OPEN_LOOP,
     PAT_MODE_STATIC_POINTING,
-    PAT_MODE_BUS_FEEDBACK,
+    PAT_MODE_DEFAULT_BUS_FEEDBACK,
+    PAT_MODE_OPEN_LOOP_BUS_FEEDBACK
 ]
 
 pat_mode_names = %w[
     DEFAULT
     OPEN_LOOP
     STATIC_POINTING
-    BUS_FEEDBACK
+    DEFAULT_BUS_FEEDBACK
+    OPEN_LOOP_BUS_FEEDBACK
 ]
 
 #Subscribe to telemetry packets:
@@ -235,7 +237,7 @@ while true
 
         elsif user_cmd == 'PL_SET_PAT_MODE'
             user_pat_mode = combo_box("Select PAT mode (or EXIT).", 
-            pat_mode_names[0], pat_mode_names[1], pat_mode_names[2], pat_mode_names[3], 'EXIT')
+            pat_mode_names[0], pat_mode_names[1], pat_mode_names[2], pat_mode_names[3], pat_mode_names[4], 'EXIT')
             if pat_mode_names.include? user_pat_mode
                 pat_mode = pat_mode_list[pat_mode_names.find_index(user_pat_mode)]                
 
