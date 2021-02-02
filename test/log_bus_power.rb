@@ -1,9 +1,11 @@
 #Logging Script - Save Bus Power Telemetry to Text File
+#To Exit: press Stop button (preferably during wait period between saves - line 90)
 #Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\log_bus_power.rb
 require "csv"
 
 tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 40000) #set queue depth to 40000 (default is 1000)
 
+save_period_sec = 5
 current_time = Time.now #time of test start
 current_time_str = current_time.to_s #human readable time
 current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
@@ -66,7 +68,7 @@ power_pkt_data_fields = %w[
 power_pkt_data_fields_len = power_pkt_data_fields.length
 
 csv = CSV.open(file_path, "a+")
-CSV.open('file.csv', 'a+') do |row|
+CSV.open(file_path, 'a+') do |row|
     row << power_pkt_data_fields
 end
 
@@ -84,4 +86,6 @@ while true
     CSV.open(file_path, 'a+') do |row|
         row << packet_data
     end
+    
+    sleep(save_period_sec)
 end
