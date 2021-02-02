@@ -247,11 +247,11 @@ TELEMETRY XACT PL_ECHO BIG_ENDIAN
   #End Payload Header
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "Echo string is variable length payload data + CRC"
 
-# GENERAL_SELF_TEST - Payload general self test - APID: 0x315 (TBR)
+# GENERAL_SELF_TEST - Payload general self test - APID: 0x3D0 (TBR)
 TELEMETRY XACT PL_GENERAL_SELF_TEST BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x315 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3D0 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
@@ -274,11 +274,11 @@ TELEMETRY XACT PL_GENERAL_SELF_TEST BIG_ENDIAN
   #End Payload Header
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "TBD variable length payload data + CRC"
 
-# LASER_SELF_TEST - Payload laser self test - APID: 0x316 (TBR)
+# LASER_SELF_TEST - Payload laser self test - APID: 0x3D1 (TBR)
 TELEMETRY XACT PL_GENERAL_SELF_TEST BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x316 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3D1 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
@@ -301,11 +301,11 @@ TELEMETRY XACT PL_GENERAL_SELF_TEST BIG_ENDIAN
   #End Payload Header
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "TBD variable length payload data + CRC"
 
-# PAT_SELF_TEST - Payload PAT self test (uses calibration laser) - APID: 0x317 (TBR)
+# PAT_SELF_TEST - Payload PAT self test (uses calibration laser) - APID: 0x3D2 (TBR)
 TELEMETRY XACT PL_GENERAL_SELF_TEST BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x317 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3D2 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
