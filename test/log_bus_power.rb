@@ -3,9 +3,9 @@
 #Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\log_bus_power.rb
 require "csv"
 
-tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 40000) #set queue depth to 40000 (default is 1000)
+tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 100000) #set queue depth to 100000 (default is 1000)
 
-save_period_sec = 5
+#save_period_sec = 1
 current_time = Time.now #time of test start
 current_time_str = current_time.to_s #human readable time
 current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
@@ -87,5 +87,5 @@ while true
         row << packet_data
     end
     
-    sleep(save_period_sec)
+    #sleep(save_period_sec)
 end
