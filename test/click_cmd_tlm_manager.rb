@@ -24,6 +24,9 @@ cmd_list = [
     CMD_PL_CALIB_LASER_TEST,
     CMD_PL_FSM_TEST,
     CMD_PL_RUN_CALIBRATION,
+    CMD_PL_PAT_TEST,
+    CMD_PL_END_PAT_PROCESS,
+    CMD_PL_RESTART_PAT_PROCESS,
     CMD_PL_SET_FPGA,
     CMD_PL_GET_FPGA,
     CMD_PL_SET_HK,
@@ -51,6 +54,9 @@ cmd_names = %w[
     PL_CALIB_LASER_TEST
     PL_FSM_TEST
     PL_RUN_CALIBRATION
+    PL_PAT_TEST
+    PL_END_PAT_PROCESS
+    PL_RESTART_PAT_PROCESS
     PL_SET_FPGA
     PL_GET_FPGA
     PL_SET_HK
@@ -78,7 +84,8 @@ pat_mode_list = [
     PAT_MODE_OPEN_LOOP,
     PAT_MODE_STATIC_POINTING,
     PAT_MODE_DEFAULT_BUS_FEEDBACK,
-    PAT_MODE_OPEN_LOOP_BUS_FEEDBACK
+    PAT_MODE_OPEN_LOOP_BUS_FEEDBACK,
+    PAT_MODE_BEACON_ALIGN,
 ]
 
 pat_mode_names = %w[
@@ -87,6 +94,7 @@ pat_mode_names = %w[
     STATIC_POINTING
     DEFAULT_BUS_FEEDBACK
     OPEN_LOOP_BUS_FEEDBACK
+    BEACON_ALIGN
 ]
 
 #Subscribe to telemetry packets:
@@ -99,6 +107,7 @@ while true
     cmd_names[6], cmd_names[7], cmd_names[8], cmd_names[9], cmd_names[10], cmd_names[11],
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
+    cmd_names[24], cmd_names[25], cmd_names[26],
     'TEST_MULTIPLE_ECHO', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -310,6 +319,41 @@ while true
         elsif user_cmd == 'PL_RUN_CALIBRATION'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_RUN_CALIBRATION)
+
+        elsif user_cmd == 'PL_PAT_TEST'
+            prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
+
+            #Run Calibration
+            click_cmd(CMD_PL_RUN_CALIBRATION)
+
+            #Get confirmation of calibration (User Prompt) #TODO: automate this
+            prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
+
+            #Turn on Beacon (User Prompt)
+            prompt("Turn ON Beacon Laser via GSE before proceeding.")
+
+            #Start Main Pat Loop via DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_PAT_TEST)
+
+            #Turn on Dithering (User Prompt)
+            prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to end PAT process.")
+
+            #End PAT process
+            click_cmd(CMD_PL_END_PAT_PROCESS)
+
+            #Get telemetry from payload (User Prompt ) #TODO: automate this
+            prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
+
+            #Restart PAT process?
+            click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+
+        elsif user_cmd == 'PL_END_PAT_PROCESS'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_END_PAT_PROCESS)
+
+        elsif user_cmd == 'PL_RESTART_PAT_PROCESS'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_RESTART_PAT_PROCESS)
 
         elsif user_cmd == 'PL_SET_FPGA'
             #define request number, start address, and data to write
