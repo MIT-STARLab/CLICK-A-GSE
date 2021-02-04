@@ -108,6 +108,7 @@ end
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_GET_FPGA = subscribe_packet_data([['UUT', 'PL_GET_FPGA']], 10000) #set queue depth to 10000 (default is 1000)
 
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -132,7 +133,7 @@ while true
 
         elsif user_cmd == 'PL_EXEC_FILE'
             #define file path:
-            file_path = ask_string("For PL_EXEC_FILE, input the payload file path (e.g. /root/bin/pat). Input EXIT to escape.", 'EXIT')
+            file_path = ask_string("For PL_EXEC_FILE, input the payload file path (e.g. 'python /root/test/test_file_exc.py'). Input EXIT to escape.", 'EXIT')
 
             if file_path != 'EXIT'
                 #define data bytes
@@ -151,7 +152,7 @@ while true
 
         elsif user_cmd == 'PL_LIST_FILE'
             #define directory path:
-            directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. /root/bin). Input EXIT to escape.", 'EXIT')
+            directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. '/root/test'). Input EXIT to escape.", 'EXIT')
 
             if directory_path != 'EXIT'
                 #define data bytes
@@ -223,9 +224,9 @@ while true
             # end
 
         elsif user_cmd == 'PL_MOVE_FILE'
-            source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
+            source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/test/test_tlm.txt'). Input EXIT to escape.", 'EXIT')
             if source_file_path != 'EXIT'
-                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
+                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/log'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
                     move_file(payload_file_path_staging, destination_file_path)
                     #TODO: encapsulate list file as a function after it's tested and use it here to display the destination (and source) directory
@@ -233,7 +234,7 @@ while true
             end
 
         elsif user_cmd == 'PL_DEL_FILE'
-            file_path = ask_string("For PL_DEL_FILE, input the file path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT') #TBR path or name?
+            file_path = ask_string("For PL_DEL_FILE, input the file path (e.g. '/root/test/test_tlm.txt'). Input EXIT to escape.", 'EXIT') #TBR path or name?
             if file_path != 'EXIT'
                 recursive_cmd = message_box("For PL_DEL_FILE, recursive delete? ", 'YES', 'NO', 'EXIT')
                 if recursive_cmd == 'YES'
@@ -409,8 +410,50 @@ while true
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_GET_FPGA, data, packing)
 
-                    #TODO: Get FGPA answer telemetry...
+                    #Get telemetry packet:
+                    packet = get_packet(tlm_id_PL_GET_FPGA)   
 
+                    #Parse CCSDS header:             
+                    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                    apid_check_bool = pl_ccsds_apid == TLM_GET_FPGA
+
+                    request_num_rx = packet.read('REQUEST_NUM')
+                    start_addr_rx = packet.read('START_ADDRESS')
+                    num_registers_rx = packet.read('SIZE')
+
+                    request_num_check = request_num_rx == user_request_number
+                    start_addr_check = start_addr_rx == user_start_address
+                    num_registers_check = num_registers_rx == user_num_registers
+                    
+                    #Define variable length data packing:
+                    packing = "L>" + num_registers_rx.to_s + "S>" #define data packing for telemetry packet
+
+                    #Read the data bytes and check CRC:
+                    read_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+                    
+                    summary_message = "PL_GET_FPGA: \n"
+                    if !apid_check_bool
+                        summary_message += ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_GET_FPGA APID (= " + TLM_GET_FPGA.to_s + ").\n")
+                    end
+                    if !crc_check_bool
+                        summary_message += ("CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n")
+                    end
+                    if !request_num_check
+                        summary_message += ("Request Number Error! Received request number (= " + request_num_rx.to_s + ") not equal to transmitted request number (= " + user_request_number.to_s + ").\n")
+                    end
+                    if !request_num_check
+                        summary_message += ("Request Number Error! Received start address (= " + start_addr_check.to_s + ") not equal to transmitted start address (= " + user_start_address.to_s + ").\n")
+                    end
+                    if !request_num_check
+                        summary_message += ("Request Number Error! Received number of registers (= " + num_registers_rx.to_s + ") not equal to requested number of registers (= " + user_num_registers.to_s + ").\n")
+                    end
+                    summary_message += "Read Data: \n"
+                    for i in 0..(num_registers_rx-1)
+                        register = start_addr_rx + i
+                        summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                    end
+                    prompt(summary_message)
                 else
                     prompt("Request number out of bounds (0 to 255)")
                 end
