@@ -24,6 +24,9 @@ cmd_list = [
     CMD_PL_CALIB_LASER_TEST,
     CMD_PL_FSM_TEST,
     CMD_PL_RUN_CALIBRATION,
+    CMD_PL_PAT_TEST,
+    CMD_PL_END_PAT_PROCESS,
+    CMD_PL_RESTART_PAT_PROCESS,
     CMD_PL_SET_FPGA,
     CMD_PL_GET_FPGA,
     CMD_PL_SET_HK,
@@ -51,6 +54,9 @@ cmd_names = %w[
     PL_CALIB_LASER_TEST
     PL_FSM_TEST
     PL_RUN_CALIBRATION
+    PL_PAT_TEST
+    PL_END_PAT_PROCESS
+    PL_RESTART_PAT_PROCESS
     PL_SET_FPGA
     PL_GET_FPGA
     PL_SET_HK
@@ -79,6 +85,7 @@ pat_mode_list = [
     PAT_MODE_STATIC_POINTING,
     PAT_MODE_DEFAULT_BUS_FEEDBACK,
     PAT_MODE_OPEN_LOOP_BUS_FEEDBACK,
+    PAT_MODE_BEACON_ALIGN,
 ]
 
 pat_mode_names = %w[
@@ -87,11 +94,21 @@ pat_mode_names = %w[
     STATIC_POINTING
     DEFAULT_BUS_FEEDBACK
     OPEN_LOOP_BUS_FEEDBACK
+    BEACON_ALIGN
 ]
+
+def get_timestamp()
+    current_time = Time.now #time of test start
+    current_time_str = current_time.to_s #human readable time
+    current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+    return current_timestamp, current_time_str
+end
 
 #Subscribe to telemetry packets:
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_GET_FPGA = subscribe_packet_data([['UUT', 'PL_GET_FPGA']], 10000) #set queue depth to 10000 (default is 1000)
 
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -99,6 +116,7 @@ while true
     cmd_names[6], cmd_names[7], cmd_names[8], cmd_names[9], cmd_names[10], cmd_names[11],
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
+    cmd_names[24], cmd_names[25], cmd_names[26],
     'TEST_MULTIPLE_ECHO', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -115,7 +133,7 @@ while true
 
         elsif user_cmd == 'PL_EXEC_FILE'
             #define file path:
-            file_path = ask_string("For PL_EXEC_FILE, input the payload file path (e.g. /root/bin/pat). Input EXIT to escape.", 'EXIT')
+            file_path = ask_string("For PL_EXEC_FILE, input the payload file path (e.g. 'python /root/test/test_file_exc.py'). Input EXIT to escape.", 'EXIT')
 
             if file_path != 'EXIT'
                 #define data bytes
@@ -134,7 +152,7 @@ while true
 
         elsif user_cmd == 'PL_LIST_FILE'
             #define directory path:
-            directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. /root/bin). Input EXIT to escape.", 'EXIT')
+            directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. '/root/test'). Input EXIT to escape.", 'EXIT')
 
             if directory_path != 'EXIT'
                 #define data bytes
@@ -206,9 +224,9 @@ while true
             # end
 
         elsif user_cmd == 'PL_MOVE_FILE'
-            source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT')
+            source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/test/test_tlm.txt'). Input EXIT to escape.", 'EXIT')
             if source_file_path != 'EXIT'
-                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/pat'). Input EXIT to escape.", 'EXIT')
+                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/log'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
                     move_file(payload_file_path_staging, destination_file_path)
                     #TODO: encapsulate list file as a function after it's tested and use it here to display the destination (and source) directory
@@ -216,7 +234,7 @@ while true
             end
 
         elsif user_cmd == 'PL_DEL_FILE'
-            file_path = ask_string("For PL_DEL_FILE, input the file path (e.g. '/root/bin/pat'). Input EXIT to escape.", 'EXIT') #TBR path or name?
+            file_path = ask_string("For PL_DEL_FILE, input the file path (e.g. '/root/test/test_tlm.txt'). Input EXIT to escape.", 'EXIT') #TBR path or name?
             if file_path != 'EXIT'
                 recursive_cmd = message_box("For PL_DEL_FILE, recursive delete? ", 'YES', 'NO', 'EXIT')
                 if recursive_cmd == 'YES'
@@ -311,6 +329,41 @@ while true
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_RUN_CALIBRATION)
 
+        elsif user_cmd == 'PL_PAT_TEST'
+            prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
+
+            #Run Calibration
+            click_cmd(CMD_PL_RUN_CALIBRATION)
+
+            #Get confirmation of calibration (User Prompt) #TODO: automate this
+            prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
+
+            #Turn on Beacon (User Prompt)
+            prompt("Turn ON Beacon Laser via GSE before proceeding.")
+
+            #Start Main Pat Loop via DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_PAT_TEST)
+
+            #Turn on Dithering (User Prompt)
+            prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to end PAT process.")
+
+            #End PAT process
+            click_cmd(CMD_PL_END_PAT_PROCESS)
+
+            #Get telemetry from payload (User Prompt ) #TODO: automate this
+            prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
+
+            #Restart PAT process?
+            click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+
+        elsif user_cmd == 'PL_END_PAT_PROCESS'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_END_PAT_PROCESS)
+
+        elsif user_cmd == 'PL_RESTART_PAT_PROCESS'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+
         elsif user_cmd == 'PL_SET_FPGA'
             #define request number, start address, and data to write
             user_request_number = ask("For PL_SET_FPGA, input request number (between 0 and 255). Input EXIT to escape.", 'EXIT')
@@ -357,8 +410,50 @@ while true
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_GET_FPGA, data, packing)
 
-                    #TODO: Get FGPA answer telemetry...
+                    #Get telemetry packet:
+                    packet = get_packet(tlm_id_PL_GET_FPGA)   
 
+                    #Parse CCSDS header:             
+                    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                    apid_check_bool = pl_ccsds_apid == TLM_GET_FPGA
+
+                    request_num_rx = packet.read('REQUEST_NUM')
+                    start_addr_rx = packet.read('START_ADDRESS')
+                    num_registers_rx = packet.read('SIZE')
+
+                    request_num_check = request_num_rx == user_request_number
+                    start_addr_check = start_addr_rx == user_start_address
+                    num_registers_check = num_registers_rx == user_num_registers
+                    
+                    #Define variable length data packing:
+                    packing = "L>" + num_registers_rx.to_s + "S>" #define data packing for telemetry packet
+
+                    #Read the data bytes and check CRC:
+                    read_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+                    
+                    summary_message = "PL_GET_FPGA: \n"
+                    if !apid_check_bool
+                        summary_message += ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_GET_FPGA APID (= " + TLM_GET_FPGA.to_s + ").\n")
+                    end
+                    if !crc_check_bool
+                        summary_message += ("CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n")
+                    end
+                    if !request_num_check
+                        summary_message += ("Request Number Error! Received request number (= " + request_num_rx.to_s + ") not equal to transmitted request number (= " + user_request_number.to_s + ").\n")
+                    end
+                    if !request_num_check
+                        summary_message += ("Request Number Error! Received start address (= " + start_addr_check.to_s + ") not equal to transmitted start address (= " + user_start_address.to_s + ").\n")
+                    end
+                    if !request_num_check
+                        summary_message += ("Request Number Error! Received number of registers (= " + num_registers_rx.to_s + ") not equal to requested number of registers (= " + user_num_registers.to_s + ").\n")
+                    end
+                    summary_message += "Read Data: \n"
+                    for i in 0..(num_registers_rx-1)
+                        register = start_addr_rx + i
+                        summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                    end
+                    prompt(summary_message)
                 else
                     prompt("Request number out of bounds (0 to 255)")
                 end
@@ -426,6 +521,75 @@ while true
 
                 #SM Send via UUT PAYLOAD_WRITE
                 click_cmd(CMD_PL_SELF_TEST, data, packing)
+
+                if test_id == PAT_SELF_TEST
+                    #Get telemetry packet:
+                    packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
+                    current_timestamp, current_time_str = get_timestamp()
+
+                    #Parse CCSDS header:             
+                    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                    apid_check_bool = pl_ccsds_apid == TLM_PAT_SELF_TEST
+
+                    #Get Test Flags
+                    camera_test_flag = packet.read('CAMERA_TEST_FLAG')
+                    fpga_ipc_test_flag = packet.read('FPGA_IPC_TEST_FLAG')
+                    laser_test_flag = packet.read('LASER_TEST_FLAG')
+                    fsm_test_flag = packet.read('FSM_TEST_FLAG')
+                    calibration_test_flag = packet.read('CALIBRATION_TEST_FLAG')
+                    test_results = [camera_test_flag, fpga_ipc_test_flag, laser_test_flag, fsm_test_flag, calibration_test_flag]
+                    test_names = ["Camera", "FPGA IPC", "Calibration Laser", "FSM", "Calibration"]
+                    summary_message = ""
+                    for i in 0..(test_results.length-1)
+                        if test_results[i] == PAT_PASS_SELF_TEST
+                            summary_message += (test_names[i] + " Test: PASSED\n")
+                            self_test_pass_bool = true
+                        elsif test_results[i] == PAT_NULL_SELF_TEST
+                            summary_message += (test_names[i] + " Test: N/A\n")
+                            self_test_pass_bool = false
+                        elsif test_results[i] == PAT_FAIL_SELF_TEST
+                            summary_message += (test_names[i] + " Test: FAILED\n")
+                            self_test_pass_bool = false
+                        else
+                            summary_message += (test_names[i] + " Test: Unrecognized Result = " + camera_test_flag.to_s + "\n")
+                            self_test_pass_bool = false
+                    end
+                    
+                    #Get test error message if available
+                    if !self_test_pass_bool
+                        error_data_length = pl_ccsds_length - 5 - CRC_LEN + 1 #get data size
+                        packing = "a" + error_data_length.to_s + "S>" #define data packing for telemetry packet
+                        error_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                    else
+                        crc_rx = parse_empty_data_and_crc(packet) #parse crc
+                    end
+                    #Check CRC:
+                    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC                    
+                    
+                    #Determine if self test was successful and if not, generate error message:
+                    success_bool = apid_check_bool and crc_check_bool and self_test_pass_bool
+                    if success_bool
+                        summary_message = "PAT Self Test: PASSED.\n" + summary_message
+                    else
+                        summary_message = "PAT Self Test: FAILED.\n" + summary_message
+                        if !apid_check_bool
+                            summary_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_PAT_SELF_TEST APID (= " + TLM_PAT_SELF_TEST.to_s + ").\n"
+                        end
+                        if !crc_check_bool
+                            summary_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+                        end
+                        if !self_test_pass_bool
+                            summary_message += (error_data + "\n")
+                        end
+                    end
+
+                    #Save test results to text file:
+                    file_name = "PAT_SELF_TEST_RESULTS_" + current_timestamp + ".txt"
+                    file_path = test_log_dir + file_name
+                    File.open(file_path, 'a+') {|f| f.write("PAT_SELF_TEST. Start Time: " + current_time_str + "\n")}
+                    File.open(file_path, 'a+') {|f| f.write(summary_message)}
+                    prompt(summary_message + "Results saved to: " + file_path)
+                end
             end
 
         elsif user_cmd == 'PL_DWNLINK_MODE'
@@ -440,9 +604,7 @@ while true
 
     elsif user_cmd == 'TEST_MULTIPLE_ECHO'
         num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
-        current_time = Time.now #time of test start
-        current_time_str = current_time.to_s #human readable time
-        current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+        current_timestamp, current_time_str = get_timestamp()
         message_list = []
         num_errors = 0
         for i in 0..(num_echo_tests-1)
