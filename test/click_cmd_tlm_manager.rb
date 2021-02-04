@@ -100,6 +100,7 @@ pat_mode_names = %w[
 #Subscribe to telemetry packets:
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 10000) #set queue depth to 10000 (default is 1000)
 
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -470,6 +471,52 @@ while true
 
                 #SM Send via UUT PAYLOAD_WRITE
                 click_cmd(CMD_PL_SELF_TEST, data, packing)
+
+                if test_id == PAT_SELF_TEST
+                    #Get telemetry packet:
+                    packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
+
+                    #Parse CCSDS header:             
+                    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                    apid_check_bool = pl_ccsds_apid == TLM_PAT_SELF_TEST
+
+                    #Get Test Flags
+                    camera_test_flag = packet.read('CAMERA_TEST_FLAG')
+                    fpga_ipc_test_flag = packet.read('FPGA_IPC_TEST_FLAG')
+                    laser_test_flag = packet.read('LASER_TEST_FLAG')
+                    fsm_test_flag = packet.read('FSM_TEST_FLAG')
+                    calibration_test_flag = packet.read('CALIBRATION_TEST_FLAG')
+                    self_test_pass_bool = (camera_test_flag == PAT_PASS_SELF_TEST) and (fpga_ipc_test_flag == PAT_PASS_SELF_TEST) and (laser_test_flag == PAT_PASS_SELF_TEST) and (fsm_test_flag == PAT_PASS_SELF_TEST) and (calibration_test_flag == PAT_PASS_SELF_TEST)
+                    
+                    #Get test error message if available
+                    if !self_test_pass_bool
+                        error_data_length = pl_ccsds_length - 5 - CRC_LEN + 1 #get data size
+                        packing = "a" + error_data_length.to_s + "S>" #define data packing for telemetry packet
+                        error_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                    else
+                        crc_rx = parse_empty_data_and_crc(packet) #parse crc
+                    end
+                    #Check CRC:
+                    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC                    
+                    
+                    #Determine if self test was successful and if not, generate error message:
+                    success_bool = apid_check_bool and crc_check_bool and self_test_pass_bool
+                    if success_bool
+                        prompt("PAT Self Test PASSED.")
+                    else
+                        error_message = ""
+                        if !apid_check_bool
+                            error_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_PAT_SELF_TEST APID (= " + TLM_PAT_SELF_TEST.to_s + ").\n"
+                        end
+                        if !crc_check_bool
+                            error_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+                        end
+                        if !self_test_pass_bool
+                            error_message += error_data
+                        end
+                        prompt("PAT Self Test FAILED. Errors: \n" + error_message)
+                    end
+                end
             end
 
         elsif user_cmd == 'PL_DWNLINK_MODE'
