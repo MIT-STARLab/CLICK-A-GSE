@@ -97,6 +97,13 @@ pat_mode_names = %w[
     BEACON_ALIGN
 ]
 
+def get_timestamp()
+    current_time = Time.now #time of test start
+    current_time_str = current_time.to_s #human readable time
+    current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+    return current_timestamp, current_time_str
+end
+
 #Subscribe to telemetry packets:
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)
@@ -475,6 +482,7 @@ while true
                 if test_id == PAT_SELF_TEST
                     #Get telemetry packet:
                     packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
+                    current_timestamp, current_time_str = get_timestamp()
 
                     #Parse CCSDS header:             
                     _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
@@ -486,7 +494,23 @@ while true
                     laser_test_flag = packet.read('LASER_TEST_FLAG')
                     fsm_test_flag = packet.read('FSM_TEST_FLAG')
                     calibration_test_flag = packet.read('CALIBRATION_TEST_FLAG')
-                    self_test_pass_bool = (camera_test_flag == PAT_PASS_SELF_TEST) and (fpga_ipc_test_flag == PAT_PASS_SELF_TEST) and (laser_test_flag == PAT_PASS_SELF_TEST) and (fsm_test_flag == PAT_PASS_SELF_TEST) and (calibration_test_flag == PAT_PASS_SELF_TEST)
+                    test_results = [camera_test_flag, fpga_ipc_test_flag, laser_test_flag, fsm_test_flag, calibration_test_flag]
+                    test_names = ["Camera", "FPGA IPC", "Calibration Laser", "FSM", "Calibration"]
+                    summary_message = ""
+                    for i in 0..(test_results.length-1)
+                        if test_results[i] == PAT_PASS_SELF_TEST
+                            summary_message += (test_names[i] + " Test: PASSED\n")
+                            self_test_pass_bool = true
+                        elsif test_results[i] == PAT_NULL_SELF_TEST
+                            summary_message += (test_names[i] + " Test: N/A\n")
+                            self_test_pass_bool = false
+                        elsif test_results[i] == PAT_FAIL_SELF_TEST
+                            summary_message += (test_names[i] + " Test: FAILED\n")
+                            self_test_pass_bool = false
+                        else
+                            summary_message += (test_names[i] + " Test: Unrecognized Result = " + camera_test_flag.to_s + "\n")
+                            self_test_pass_bool = false
+                    end
                     
                     #Get test error message if available
                     if !self_test_pass_bool
@@ -502,20 +526,26 @@ while true
                     #Determine if self test was successful and if not, generate error message:
                     success_bool = apid_check_bool and crc_check_bool and self_test_pass_bool
                     if success_bool
-                        prompt("PAT Self Test PASSED.")
+                        summary_message = "PAT Self Test: PASSED.\n" + summary_message
                     else
-                        error_message = ""
+                        summary_message = "PAT Self Test: FAILED.\n" + summary_message
                         if !apid_check_bool
-                            error_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_PAT_SELF_TEST APID (= " + TLM_PAT_SELF_TEST.to_s + ").\n"
+                            summary_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_PAT_SELF_TEST APID (= " + TLM_PAT_SELF_TEST.to_s + ").\n"
                         end
                         if !crc_check_bool
-                            error_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+                            summary_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
                         end
                         if !self_test_pass_bool
-                            error_message += error_data
+                            summary_message += (error_data + "\n")
                         end
-                        prompt("PAT Self Test FAILED. Errors: \n" + error_message)
                     end
+
+                    #Save test results to text file:
+                    file_name = "PAT_SELF_TEST_RESULTS_" + current_timestamp + ".txt"
+                    file_path = test_log_dir + file_name
+                    File.open(file_path, 'a+') {|f| f.write("PAT_SELF_TEST. Start Time: " + current_time_str + "\n")}
+                    File.open(file_path, 'a+') {|f| f.write(summary_message)}
+                    prompt(summary_message + "Results saved to: " + file_path)
                 end
             end
 
@@ -531,9 +561,7 @@ while true
 
     elsif user_cmd == 'TEST_MULTIPLE_ECHO'
         num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
-        current_time = Time.now #time of test start
-        current_time_str = current_time.to_s #human readable time
-        current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+        current_timestamp, current_time_str = get_timestamp()
         message_list = []
         num_errors = 0
         for i in 0..(num_echo_tests-1)
