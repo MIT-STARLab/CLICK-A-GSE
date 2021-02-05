@@ -198,35 +198,35 @@ while true
             # #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             
             # if file_path != 'EXIT'
-            #     ###TODO: request file function
+            #     ###TODO: call request file function
             # end
+
+            ###TODO: add a "request directory" option to download a directory, or specific file types in a directory (call list files, then use repeated request file commands) 
 
         elsif user_cmd == 'PL_UPLOAD_FILE'
-            ###TODO... maybe just call test_upload_file.rb
             prompt("PL_UPLOAD_FILE not yet implemented.")
+            ###TODO... call upload file function to go to file selection step and all remaining steps
 
         elsif user_cmd == 'PL_ASSEMBLE_FILE'
-            prompt("PL_ASSEMBLE_FILE not yet implemented.")
-
-            # file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file path (e.g. /root/file_staging/1/pat). Input EXIT to escape.", 'EXIT')            
-            # if file_name != 'EXIT'
-            #     transfer_id = 1 #TODO
-            #     assemble_file(transfer_id, file_path)
-            # end
+            file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file path (e.g. /root/file_staging/1/pat). Input EXIT to escape.", 'EXIT')            
+            if file_name != 'EXIT'
+                transfer_id = ask("For PL_ASSEMBLE_FILE, input the transfer id (use list file cmd on /root/file_staging to see available ids). Input EXIT to escape.", 'EXIT')
+                if transfer_id != 'EXIT'
+                    assemble_file(transfer_id, file_path)
+                end
+            end
 
         elsif user_cmd == 'PL_VALIDATE_FILE'
-            prompt("PL_VALIDATE_FILE not yet implemented.")
-
-            # file_name = ask_string("For PL_VALIDATE_FILE, input the payload file path (e.g. pat). Input EXIT to escape.", 'EXIT')
-
-            # if file_name != 'EXIT'
-            #     validate_file(md5, payload_file_path_staging)
-            # end
+            file_name = ask_string("For PL_VALIDATE_FILE, input the payload file path (e.g. /root/commandhandler/test_file.txt). Input EXIT to escape.", 'EXIT')
+            if file_name != 'EXIT'
+                md5 = Digest::MD5.file file_name
+                validate_file(md5, payload_file_path_staging)
+            end
 
         elsif user_cmd == 'PL_MOVE_FILE'
             source_file_path = ask_string("For PL_MOVE_FILE, input the file source path (e.g. '/root/test/test_tlm.txt'). Input EXIT to escape.", 'EXIT')
             if source_file_path != 'EXIT'
-                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/log'). Input EXIT to escape.", 'EXIT')
+                destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/log/test_tlm.txt'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
                     move_file(payload_file_path_staging, destination_file_path)
                     #TODO: encapsulate list file as a function after it's tested and use it here to display the destination (and source) directory
@@ -279,9 +279,6 @@ while true
 
                     #SM Send via UUT Payload Write
                     click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
-
-                    #TODO: Get image telemetry
-
                 else
                     prompt("Exposure time out of bounds (10 to 10000000).")
                 end
@@ -298,9 +295,6 @@ while true
 
                     #SM Send via UUT Payload Write
                     click_cmd(CMD_PL_CALIB_LASER_TEST, data, packing)
-
-                    #TODO: Get image telemetry
-
                 else
                     prompt("Exposure time out of bounds (10 to 10000000).")
                 end
@@ -317,8 +311,6 @@ while true
 
                     #SM Send via UUT Payload Write
                     click_cmd(CMD_PL_FSM_TEST, data, packing)
-
-                    #TODO: Get image telemetry
                 else
                     prompt("Exposure time out of bounds (10 to 10000000).")
                 end
