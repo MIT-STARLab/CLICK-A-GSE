@@ -243,7 +243,7 @@ while true
             if source_file_path != 'EXIT'
                 destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/log'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
-                    move_file(payload_file_path_staging, destination_file_path)
+                    move_file(source_file_path, destination_file_path)
                     #TODO: encapsulate list file as a function after it's tested and use it here to display the destination (and source) directory
                 end
             end
