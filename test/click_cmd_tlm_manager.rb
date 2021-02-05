@@ -136,18 +136,33 @@ while true
             file_path = ask_string("For PL_EXEC_FILE, input the payload file path (e.g. 'python /root/test/test_file_exc.py'). Input EXIT to escape.", 'EXIT')
 
             if file_path != 'EXIT'
-                #define data bytes
-                data = []
-                data[0] = 0x00 #output script prints to file? Enable = 0xFF, Disable = 0x00
-                data[1] = 0 #file output number (if outputting script prints to file)
-                data[2] = file_path.length
-                data[3] = file_path 
-                packing = "C2S>" + "a" + file_path.length.to_s
-
-                #SM Send via UUT PAYLOAD_WRITE
-                click_cmd(CMD_PL_EXEC_FILE, data, packing) 
-
-                #TODO: Get file output telemetry...
+                out_to_file_cmd = message_box("For PL_EXEC_FILE, output to file? ", 'YES', 'NO', 'EXIT')
+                if out_to_file_cmd == 'YES'
+                    out_to_file = 0xFF
+                    file_out_num = ask("For PL_EXEC_FILE, input the file output number (e.g. 1 saves output to /root/log/1.log). Input EXIT to escape.", 'EXIT')
+                    execute = file_out_num != 'EXIT'
+                elsif out_to_file_cmd == 'NO'
+                    out_to_file = 0x00
+                    file_out_num = 0
+                    execute = true
+                elsif out_to_file_cmd == 'EXIT'
+                    execute = false
+                end
+                
+                if execute
+                  #define data bytes
+                  data = []
+                  data[0] = out_to_file #output script prints to file? Enable = 0xFF, Disable = 0x00
+                  data[1] = file_out_num #file output number (if outputting script prints to file)
+                  data[2] = file_path.length
+                  data[3] = file_path 
+                  packing = "C2S>" + "a" + file_path.length.to_s
+  
+                  #SM Send via UUT PAYLOAD_WRITE
+                  click_cmd(CMD_PL_EXEC_FILE, data, packing) 
+  
+                  #TODO: Get file output telemetry...
+                end
             end
 
         elsif user_cmd == 'PL_LIST_FILE'
