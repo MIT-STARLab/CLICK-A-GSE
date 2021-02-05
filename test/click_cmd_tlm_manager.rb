@@ -319,7 +319,6 @@ while true
                     click_cmd(CMD_PL_FSM_TEST, data, packing)
 
                     #TODO: Get image telemetry
-
                 else
                     prompt("Exposure time out of bounds (10 to 10000000).")
                 end
@@ -345,7 +344,7 @@ while true
             click_cmd(CMD_PL_PAT_TEST)
 
             #Turn on Dithering (User Prompt)
-            prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to end PAT process.")
+            prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to END PAT process.")
 
             #End PAT process
             click_cmd(CMD_PL_END_PAT_PROCESS)
