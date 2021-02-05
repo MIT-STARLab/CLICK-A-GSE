@@ -1,6 +1,8 @@
 #Test Script - Request Payload File Downlink
 #Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\test_request_file.rb
 
+require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
+require 'digest/md5'
 load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
 
 def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
@@ -16,7 +18,6 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_F
         trans_id_bool = trans_id_rx == trans_id 
     
         md5_rx = packet.read('FILE_MD5')
-        #TODO: check md5 hash...
     
         chunk_seq_num_rx = packet.read('CHUNK_SEQ_NUM')
         chunk_seq_num_bool = chunk_seq_num == chunk_seq_num_rx
@@ -48,7 +49,7 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_F
         if !chunk_seq_num_bool
             chunk_error_message += "[CHUNK " + chunk_seq_num_rx.to_s + "] Chunk Sequence Error! Expected Chunk Number: " + chunk_seq_num.to_s + ". Received Chunk Number: " + chunk_seq_num_rx.to_s + ".\n"
         end
-        return chunk_error_message, chunk_total_count
+        return chunk_error_message, chunk_total_count, md5_rx
 end
 
 tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
@@ -97,7 +98,7 @@ error_message = ""
 chunk_seq_num = 0
 while !download_complete
     chunk_seq_num += 1
-    chunk_error_message, chunk_total_count = download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
+    chunk_error_message, chunk_total_count, md5_rx = download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
     if chunk_error_message.length > 0
         puts chunk_error_message 
         error_message += chunk_error_message
@@ -132,4 +133,12 @@ if assemble_cmd == 'YES'
     i+=1
     end 
     }
+
+    #check md5 hash
+    md5 = Digest::MD5.file reconstructed_filename
+    if md5 != md5_rx
+        prompt('ERROR: Calculated MD5 hash does not match received MD5 hash.')
+        puts 'md5 calculated: ', md5
+        puts 'md5 received: ', md5_rx
+    end
 end
