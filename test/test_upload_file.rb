@@ -1,6 +1,6 @@
 #Test Script - Uplink File to Payload 
 #Note: this, like scp in Linux, will overwrite a pre-existing file with the same path on the payload
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\test_upload_file.rb
+#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_upload_file.rb
 
 # 1. upload file chunks to staging (receive_file_chunk)
 # 2. assemble file chunks (assemble_file) -> returns telemetry packet with status/errors/missing packet ids (staging directory isn't automatically deleted)
@@ -14,7 +14,7 @@
 # Specify what packages the script needs
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
+load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 def send_file_chunk(transfer_id, chunk_sequence_number, number_of_chunks_total, chunk_data_length, chunk_data)
     #define data bytes
@@ -65,7 +65,7 @@ end
 # # selected_file = open_file_dialog(Cosmos::USERPATH, "Open File", "Text (*.txt);;All (*.*)")
 
 # Cosmos directory on the ground station computer
-cosmos_dir = "C:/BCT/71sw0078_a_cosmos_click_edu"
+cosmos_dir = Cosmos::USERPATH
 sub_path_to_file = "/procedures/CLICK-A-GSE/test/"
 
 #define file name 

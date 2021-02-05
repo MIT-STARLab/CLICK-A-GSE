@@ -1,5 +1,5 @@
 #Test Script - Payload PAT Housekeeping Telemetry
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\test_hk_pat_tlm.rb
+#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_hk_pat_tlm.rb
 
 #Subscribe to telemetry packets:
 tlm_id_PL_HK_PAT = subscribe_packet_data([['UUT', 'PL_HK_PAT']], 10000) #set queue depth to 10000 (default is 1000)

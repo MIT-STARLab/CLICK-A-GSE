@@ -1,6 +1,6 @@
 #Logging Script - Save Bus Power Telemetry to Text File
 #To Exit: press Stop button (preferably during wait period between saves - line 90)
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\log_bus_power.rb
+#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\log_bus_power.rb
 require "csv"
 
 tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 100000) #set queue depth to 100000 (default is 1000)
@@ -11,7 +11,7 @@ current_time_str = current_time.to_s #human readable time
 current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
 
 #Save test results to text file:
-test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/outputs/logs/xb1_click/"
+test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 file_name = "LOG_POWER_" + current_timestamp + ".csv"
 file_path = test_log_dir + file_name
 

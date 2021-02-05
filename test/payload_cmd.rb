@@ -1,7 +1,7 @@
 #Deprecated Payload Command - Used by test_reprogramming.rb (see click_cmd_tlm.rb for up-to-date click_cmd function)
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\payload_cmd.rb
+#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\payload_cmd.rb
 
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/crc16.rb'
+load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/crc16.rb')
 
 class PayloadCmd
 

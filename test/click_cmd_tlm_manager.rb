@@ -1,11 +1,11 @@
 #Test Script - CLICK Command and Telemetry Manager
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\test\click_cmd_tlm_manager.rb
+#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\click_cmd_tlm_manager.rb
 
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb'
+load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
-test_log_dir = "C:/BCT/71sw0078_a_cosmos_click_edu/outputs/logs/xb1_click/"
+test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 
 cmd_list = [
     CMD_PL_REBOOT,

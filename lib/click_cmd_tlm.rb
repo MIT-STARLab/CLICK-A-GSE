@@ -1,8 +1,8 @@
 #Library for CLICK A payload command and telemetry 
-#Assumed Path: #C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\lib\crc16.rb
+#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\lib\crc16.rb
 
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb'
-load 'C:/BCT/71sw0078_a_cosmos_click_edu/procedures/CLICK-A-GSE/lib/crc16.rb'
+load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb')
+load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/crc16.rb')
 
 ### Send command to payload via PAYLOAD_WRITE
 def click_cmd(cmd_id, data = [], packing = "C*")
