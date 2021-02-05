@@ -83,7 +83,7 @@ pat_mode_list = [
     PAT_MODE_DEFAULT,
     PAT_MODE_OPEN_LOOP,
     PAT_MODE_STATIC_POINTING,
-    PAT_MODE_DEFAULT_BUS_FEEDBACK,
+    PAT_MODE_BUS_FEEDBACK,
     PAT_MODE_OPEN_LOOP_BUS_FEEDBACK,
     PAT_MODE_BEACON_ALIGN,
 ]
@@ -552,6 +552,7 @@ while true
                         else
                             summary_message += (test_names[i] + " Test: Unrecognized Result = " + camera_test_flag.to_s + "\n")
                             self_test_pass_bool = false
+                        end
                     end
                     
                     #Get test error message if available
