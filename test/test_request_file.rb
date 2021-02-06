@@ -6,7 +6,7 @@ require 'digest/md5'
 load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 cosmos_dir = Cosmos::USERPATH
 
-def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
+def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
         #Get telemetry packet:
         packet = get_packet(tlm_id_PL_DL_FILE)   
 
@@ -31,7 +31,7 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_F
         crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
     
         #Save data
-        chunk_filename = save_dir + "#{chunk_name}_#{chunk_seq_num_rx}.chk"
+        chunk_filename = save_dir + "#{trans_id}_#{chunk_seq_num_rx}.chk"
         puts "chunk filename: #{chunk_filename}"
         chunk_file = File.open(chunk_filename, 'wb') {|f| f.write(chunk_data)}
 
@@ -74,13 +74,9 @@ trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
 File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
 
-# set the transfer ID number and name the directory/files
-chunk_name = trans_id.to_i #file_name.split(".")[0].split("/")[-1]
-puts chunk_name
-
 #make a new folder in the outputs/data/downlink folder for the file chunks
-FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{chunk_name}"
-save_dir = "#{cosmos_dir}/outputs/data/downlink/#{chunk_name}/"
+FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{trans_id}"
+save_dir = "#{cosmos_dir}/outputs/data/downlink/#{trans_id}/"
 
 #define data bytes
 data = []
@@ -99,7 +95,7 @@ error_message = ""
 chunk_seq_num = 0
 while !download_complete
     chunk_seq_num += 1
-    chunk_error_message, chunk_total_count, md5_rx_bytes = download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
+    chunk_error_message, chunk_total_count, md5_rx_bytes = download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
     if chunk_error_message.length > 0
         puts chunk_error_message 
         error_message += chunk_error_message
@@ -125,7 +121,7 @@ if assemble_cmd == 'YES'
     seq_num=1
     File.open(reconstructed_filename, 'wb') {|f| 
     while seq_num<=chunk_total_count do
-      chunk_filename = save_dir + chunk_name.to_s + "_" + seq_num.to_s + ".chk"
+      chunk_filename = save_dir + trans_id.to_s + "_" + seq_num.to_s + ".chk"
       file = File.open("#{chunk_filename}", "rb")
       chunk_contents = file.read
       puts "chunk contents: ", chunk_contents

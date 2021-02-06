@@ -109,13 +109,9 @@ trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads attempted)
 File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_ul.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
 
-# set the transfer ID number and name the directory/files
-chunk_name = trans_id.to_i #file_name.split(".")[0].split("/")[-1]
-puts chunk_name
-
 #make a new folder in the outputs_data_uplink folder for the file chunks
-FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/uplink/#{chunk_name}"
-dir = "#{cosmos_dir}/outputs/data/uplink/#{chunk_name}/"
+FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/uplink/#{trans_id}"
+dir = "#{cosmos_dir}/outputs/data/uplink/#{trans_id}/"
 
 # Calculate the MD5 Hash and put in a file in the directory to read later and compare
 md5 = Digest::MD5.file local_file_path
@@ -131,27 +127,27 @@ prompt("Computed File Transfer Information.")
 ########################## Chunking ##################################
 ## CHUNK DATA into .chk files: 
 #iterate over data and split into .chk binary files
-i = 0
+seq_num = 1
 # For all of the full chunks, add the contents
-while i<num_chunks - 1 do 
-  chunk_contents = fullfile_contents[i*chunk_size_bytes..(i+1)*chunk_size_bytes-1]
+while seq_num <= num_chunks do 
+  chunk_contents = fullfile_contents[(seq_num-1)*chunk_size_bytes..seq_num*chunk_size_bytes-1]
   puts "chunk contents length: #{chunk_contents.length}" #, contents: #{chunk_contents}"
-  chunk_filename = dir + "#{chunk_name}_#{i}.chk"
+  chunk_filename = dir + "#{trans_id}_#{seq_num}.chk"
   puts "chunk filename: #{chunk_filename}"
   chunk_file = File.open(chunk_filename, 'wb') {|f| f.write(chunk_contents.pack('C*'))}
   puts chunk_contents.length
-  i+=1
+  seq_num += 1
 end 
 
 #put rest of file in last chunk: 
 chunk_contents = fullfile_contents[i*chunk_size_bytes..-1]
 puts "last chunk length: #{chunk_contents.length}" #, contents: #{chunk_contents}"
-chunk_filename = dir + "#{chunk_name}_#{i}.chk"
+chunk_filename = dir + "#{trans_id}_#{i}.chk"
 puts "chunk filename: #{chunk_filename}"
 chunk_file = File.open(chunk_filename, 'wb') {|f| f.write(chunk_contents.pack('C*'))}
 
 # retrieve list of chunks to uplink: 
-filelist =  Dir[dir + "#{chunk_name}*.chk"].sort
+filelist =  Dir[dir + "#{trans_id}*.chk"].sort
 print filelist
 
 # stage chunks and properties for uplink: 
@@ -163,7 +159,7 @@ prompt("Local File Chunking Complete. Press Continue to send all chunks.")
 file_seq_num = 1
 while file_seq_num <= num_chunks do
     # Prepare the contents for uplink
-    chunk_filename = dir + "#{chunk_name}_#{file_seq_num}.chk" #define the chunk filename starting with chunk 0
+    chunk_filename = dir + "#{trans_id}_#{file_seq_num}.chk" #define the chunk filename starting with chunk 0
     chunk_file = File.open(chunk_filename, "rb") #open the chunk file
     chunk_file_contents = chunk_file.read.bytes #read the chunk file contents
     chunk_file_length = chunk_file_contents.length #measure the length of the chunk file
@@ -207,10 +203,10 @@ crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
 
 error_message = ""
 if !apid_check_bool
-    error_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to TLM_ASSEMBLE_FILE APID (= " + TLM_ASSEMBLE_FILE.to_s + ").\n"
+    error_message += ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to TLM_ASSEMBLE_FILE APID (= " + TLM_ASSEMBLE_FILE.to_s + ").\n")
 end
 if !crc_check_bool
-    error_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+    error_message += ("CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n")
 end
 status_check_bool = status == FL_SUCCESS
 if status_check_bool
@@ -223,13 +219,13 @@ if status_check_bool
     elsif status == FL_ERR_MISSING_CHUNK
         error_message += "Assembly Error! Missing chunks. \n"
     else
-        error_message += "Assembly Error! Unrecognized status = " + status.to_s 
+        error_message += ("Assembly Error! Unrecognized status = " + status.to_s)
     end
 end
 
 if !missing_packets_check_bool
     for i in 1..missing_packets_num
-        error_message += "Missing Packet Error! Packet ID: " + missing_packet_ids.to_s + "\n"
+        error_message += ("Missing Packet Error! Packet ID: " + missing_packet_ids.to_s + "\n")
     end
 end
 
