@@ -4,6 +4,7 @@
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
 load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+cosmos_dir = Cosmos::USERPATH
 
 def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
         #Get telemetry packet:
@@ -17,7 +18,7 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_F
         trans_id_rx = packet.read('TRANSFER_ID')
         trans_id_bool = trans_id_rx == trans_id 
     
-        md5_rx = packet.read('FILE_MD5')
+        md5_rx_bytes = packet.read('FILE_MD5')
     
         chunk_seq_num_rx = packet.read('CHUNK_SEQ_NUM')
         chunk_seq_num_bool = chunk_seq_num == chunk_seq_num_rx
@@ -49,21 +50,21 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_F
         if !chunk_seq_num_bool
             chunk_error_message += "[CHUNK " + chunk_seq_num_rx.to_s + "] Chunk Sequence Error! Expected Chunk Number: " + chunk_seq_num.to_s + ". Received Chunk Number: " + chunk_seq_num_rx.to_s + ".\n"
         end
-        return chunk_error_message, chunk_total_count, md5_rx
+        return chunk_error_message, chunk_total_count, md5_rx_bytes
 end
 
 tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 
 #define file path:
-remote_directory = "/root/test/"
-file_name = "test_tlm.txt"
+remote_directory = "/root/log/pat/" #"/root/test/"
+file_name = "2020-09-12-15-46-33_CALIBRATION_exp_49.png" #"test_tlm.txt"
 file_path = remote_directory + file_name #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
 
 #define chunk size parameter (PL_DL_FILE packet def)
 chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
 
 # Read the last transfer ID and add 1 to it
-last_trans_id = File.open("#{cosmos_dir}/procedures/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
+last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
 print("\nlast trans id: #{last_trans_id.to_i}\n")
 
 trans_id = last_trans_id.to_i+1 # increment the transfer ID
@@ -71,7 +72,7 @@ print ("new trans id: #{trans_id}\n")
 trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
-File.open("#{cosmos_dir}/procedures/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
+File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
 
 # set the transfer ID number and name the directory/files
 chunk_name = trans_id.to_i #file_name.split(".")[0].split("/")[-1]
@@ -98,7 +99,7 @@ error_message = ""
 chunk_seq_num = 0
 while !download_complete
     chunk_seq_num += 1
-    chunk_error_message, chunk_total_count, md5_rx = download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
+    chunk_error_message, chunk_total_count, md5_rx_bytes = download_chunk(chunk_seq_num, trans_id, save_dir, chunk_name, tlm_id_PL_DL_FILE)
     if chunk_error_message.length > 0
         puts chunk_error_message 
         error_message += chunk_error_message
@@ -115,30 +116,30 @@ end
 
 if assemble_cmd == 'YES'
     ## Re-assemble file...
-    # Cosmos directory on the ground station computer
-    cosmos_dir = "C:/BCT/71sw0078_a_cosmos_click_edu"
             
     # input the filename you want to chunk together: 
     reconstructed_filename = save_dir + file_name
     puts reconstructed_filename
 
     ## put file back together based on chunks in chunks folder: 
-    i=0
+    seq_num=1
     File.open(reconstructed_filename, 'wb') {|f| 
-    while i<chunk_total_count do
-    chunk_filename = save_dir + chunk_name + "_" + i.to_s + ".chk"
-    file = File.open("#{chunk_filename}", "rb")
-    chunk_contents = file.read
-    f.write(chunk_contents)
-    i+=1
+    while seq_num<=chunk_total_count do
+      chunk_filename = save_dir + chunk_name.to_s + "_" + seq_num.to_s + ".chk"
+      file = File.open("#{chunk_filename}", "rb")
+      chunk_contents = file.read
+      puts "chunk contents: ", chunk_contents
+      f.write(chunk_contents)
+      seq_num+=1
     end 
     }
 
     #check md5 hash
     md5 = Digest::MD5.file reconstructed_filename
-    if md5 != md5_rx
-        prompt('ERROR: Calculated MD5 hash does not match received MD5 hash.')
-        puts 'md5 calculated: ', md5
-        puts 'md5 received: ', md5_rx
+    md5_bytes = md5.digest.bytes
+    if md5_bytes != md5_rx_bytes
+      prompt('ERROR: Calculated MD5 hash does not match received MD5 hash.')
+      puts "md5 bytes calculated: ", md5_bytes
+      puts "md5 bytes received: ", md5_rx_bytes
     end
 end
