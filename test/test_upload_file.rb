@@ -129,7 +129,7 @@ prompt("Computed File Transfer Information.")
 #iterate over data and split into .chk binary files
 seq_num = 1
 # For all of the full chunks, add the contents
-while seq_num <= num_chunks do 
+while seq_num < num_chunks do 
   chunk_contents = fullfile_contents[(seq_num-1)*chunk_size_bytes..seq_num*chunk_size_bytes-1]
   puts "chunk contents length: #{chunk_contents.length}" #, contents: #{chunk_contents}"
   chunk_filename = dir + "#{trans_id}_#{seq_num}.chk"
@@ -140,9 +140,9 @@ while seq_num <= num_chunks do
 end 
 
 #put rest of file in last chunk: 
-chunk_contents = fullfile_contents[i*chunk_size_bytes..-1]
+chunk_contents = fullfile_contents[(seq_num-1)*chunk_size_bytes..-1]
 puts "last chunk length: #{chunk_contents.length}" #, contents: #{chunk_contents}"
-chunk_filename = dir + "#{trans_id}_#{i}.chk"
+chunk_filename = dir + "#{trans_id}_#{seq_num}.chk"
 puts "chunk filename: #{chunk_filename}"
 chunk_file = File.open(chunk_filename, 'wb') {|f| f.write(chunk_contents.pack('C*'))}
 
