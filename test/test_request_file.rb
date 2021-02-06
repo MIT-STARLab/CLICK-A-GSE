@@ -4,7 +4,6 @@
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
 load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
-cosmos_dir = Cosmos::USERPATH
 
 def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
         #Get telemetry packet:
@@ -55,6 +54,7 @@ end
 
 tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 
+cosmos_dir = Cosmos::USERPATH
 #define file path:
 remote_directory = "/root/test/"
 file_name = "test_file_transfer.txt" #"test_tlm.txt"

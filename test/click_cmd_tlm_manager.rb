@@ -109,6 +109,8 @@ tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue d
 tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_GET_FPGA = subscribe_packet_data([['UUT', 'PL_GET_FPGA']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -209,24 +211,22 @@ while true
         elsif user_cmd == 'PL_REQUEST_FILE'
             prompt("PL_REQUEST_FILE not yet implemented.")
             #define file path:
-            # file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/log/pat/img_file_name.png). Input EXIT to escape.", 'EXIT')
-            # #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
-            
-            # if file_path != 'EXIT'
-            #     ###TODO: call request file function
-            # end
-
+            file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/test/test_tlm.txt). Input EXIT to escape.", 'EXIT')
+            #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
+            if file_path != 'EXIT'
+                request_file(file_path, tlm_id_PL_DL_FILE)
+            end
             ###TODO: add a "request directory" option to download a directory, or specific file types in a directory (call list files, then use repeated request file commands) 
 
         elsif user_cmd == 'PL_UPLOAD_FILE'
-            prompt("PL_UPLOAD_FILE not yet implemented.")
-            ###TODO... call upload file function to go to file selection step and all remaining steps
+            upload_file(tlm_id_PL_ASSEMBLE_FILE) #prompts user via file explorer to select file to upload, then walks user through sequence
 
         elsif user_cmd == 'PL_ASSEMBLE_FILE'
-            file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file path (e.g. /root/file_staging/1/pat). Input EXIT to escape.", 'EXIT')            
+            file_name = ask_string("For PL_ASSEMBLE_FILE, input the payload file path (e.g. test_file_transfer.txt). Input EXIT to escape.", 'EXIT') 
             if file_name != 'EXIT'
                 transfer_id = ask("For PL_ASSEMBLE_FILE, input the transfer id (use list file cmd on /root/file_staging to see available ids). Input EXIT to escape.", 'EXIT')
                 if transfer_id != 'EXIT'
+                    file_path = "/root/file_staging/" + transfer_id.to_s + "/" + file_name
                     assemble_file(transfer_id, file_path)
                 end
             end
@@ -244,7 +244,6 @@ while true
                 destination_file_path = ask_string("For PL_MOVE_FILE, input the file destination path (e.g. '/root/log/test_tlm.txt'). Input EXIT to escape.", 'EXIT')
                 if destination_file_path != 'EXIT'
                     move_file(source_file_path, destination_file_path)
-                    #TODO: encapsulate list file as a function after it's tested and use it here to display the destination (and source) directory
                 end
             end
 
@@ -263,8 +262,7 @@ while true
                 end
                 
                 if execute
-                    delete_file(recursive, file_path)
-                    #TODO: encapsulate list file as a function after it's tested and use it here to display the directory                 
+                    delete_file(recursive, file_path)               
                 end
             end
 
