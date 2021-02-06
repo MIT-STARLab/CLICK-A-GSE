@@ -57,7 +57,7 @@ tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set q
 
 #define file path:
 remote_directory = "/root/test/"
-file_name = "test_tlm.txt"
+file_name = "test_file_transfer.txt" #"test_tlm.txt"
 file_path = remote_directory + file_name #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
 
 #define chunk size parameter (PL_DL_FILE packet def)

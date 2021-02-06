@@ -203,6 +203,7 @@ crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
 
 error_message = ""
 if !apid_check_bool
+    puts ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to TLM_ASSEMBLE_FILE APID (= " + TLM_ASSEMBLE_FILE.to_s + ").\n")
     error_message += ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to TLM_ASSEMBLE_FILE APID (= " + TLM_ASSEMBLE_FILE.to_s + ").\n")
 end
 if !crc_check_bool
