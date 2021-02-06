@@ -16,6 +16,8 @@ require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might
 require 'digest/md5'
 load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
+tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
+
 def send_file_chunk(transfer_id, chunk_sequence_number, number_of_chunks_total, chunk_data_length, chunk_data)
     #define data bytes
     data = []
@@ -44,11 +46,12 @@ end
 
 def validate_file(md5, file_path)
     #define data bytes
+    md5_bytes = md5.digest.bytes
     data = []
-    data[0] = md5
-    data[1] = file_path.length
-    data[2] = file_path 
-    packing = "C" + md5.length.to_s + "S>" + "a" + file_path.length.to_s
+    data += md5_bytes
+    data += [file_path.length]
+    data += [file_path]
+    packing = "C" + md5_bytes.length.to_s + "S>" + "a" + file_path.length.to_s
 
     #SM Send via UUT PAYLOAD_WRITE
     click_cmd(CMD_PL_VALIDATE_FILE, data, packing)
@@ -90,17 +93,17 @@ puts "full file length: #{fullfile_length}"
 
 # Calculate the number of chunks (file length divided by chunk size)
 num_chunks = (fullfile_length/chunk_size_bytes.to_f).ceil
-puts("num chunks: #{num_chunks}")
+puts "num chunks: #{num_chunks}"
 
 ###################### Transfer ID Information ###############################
 # Make sure that the file C:\BCT\71sw0078_a_cosmos_click_edu\procedures\trans_id_ul.csv exists to track the transfer ID numbers used
 
 # Read the last transfer ID sent and add 1 to it
 last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_ul.csv",'r'){|f| f.readlines[-1]}
-print("\nlast trans id: #{last_trans_id.to_i}\n")
+puts "\nlast trans id: #{last_trans_id.to_i}\n"
 
 trans_id = last_trans_id.to_i+1 # increment the transfer ID
-print ("new trans id: #{trans_id}\n")
+puts "new trans id: #{trans_id}\n"
 trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads attempted)
@@ -131,13 +134,13 @@ prompt("Computed File Transfer Information.")
 i = 0
 # For all of the full chunks, add the contents
 while i<num_chunks - 1 do 
-	chunk_contents = fullfile_contents[i*chunk_size_bytes..(i+1)*chunk_size_bytes-1]
-	puts "chunk contents length: #{chunk_contents.length}" #, contents: #{chunk_contents}"
-	chunk_filename = dir + "#{chunk_name}_#{i}.chk"
-	puts "chunk filename: #{chunk_filename}"
-	chunk_file = File.open(chunk_filename, 'wb') {|f| f.write(chunk_contents.pack('C*'))}
-          puts chunk_contents.length
-	i+=1
+  chunk_contents = fullfile_contents[i*chunk_size_bytes..(i+1)*chunk_size_bytes-1]
+  puts "chunk contents length: #{chunk_contents.length}" #, contents: #{chunk_contents}"
+  chunk_filename = dir + "#{chunk_name}_#{i}.chk"
+  puts "chunk filename: #{chunk_filename}"
+  chunk_file = File.open(chunk_filename, 'wb') {|f| f.write(chunk_contents.pack('C*'))}
+  puts chunk_contents.length
+  i+=1
 end 
 
 #put rest of file in last chunk: 
@@ -157,10 +160,10 @@ total_packets = filelist.length
 prompt("Local File Chunking Complete. Press Continue to send all chunks.")
 
 # Send the file chunks
-file_seq_num = 0 
-while file_seq_num < num_chunks do
+file_seq_num = 1
+while file_seq_num <= num_chunks do
     # Prepare the contents for uplink
-    chunk_filename = dir + "#{chunk_name}_#{i}.chk" #define the chunk filename starting with chunk 0
+    chunk_filename = dir + "#{chunk_name}_#{file_seq_num}.chk" #define the chunk filename starting with chunk 0
     chunk_file = File.open(chunk_filename, "rb") #open the chunk file
     chunk_file_contents = chunk_file.read.bytes #read the chunk file contents
     chunk_file_length = chunk_file_contents.length #measure the length of the chunk file
@@ -170,12 +173,11 @@ while file_seq_num < num_chunks do
 end 
 full_file.close
 
-prompt("All Chunks Sent. Press Continue to assemble remote file in staging: " + payload_file_path_staging)
-tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 ### Assemble File
 #define payload file path:
-staging_directory_path = '/root/file_staging/'+str(trans_id)
+staging_directory_path = '/root/file_staging/'+ trans_id.to_s
 payload_file_path_staging = staging_directory_path + '/' + file_name 
+prompt("All Chunks Sent. Press Continue to assemble remote file in staging: " + payload_file_path_staging)
 assemble_file(trans_id, payload_file_path_staging)
 #Get telemetry packet:
 packet = get_packet(tlm_id_PL_ASSEMBLE_FILE)   
@@ -223,6 +225,8 @@ if status_check_bool
     else
         error_message += "Assembly Error! Unrecognized status = " + status.to_s 
     end
+end
+
 if !missing_packets_check_bool
     for i in 1..missing_packets_num
         error_message += "Missing Packet Error! Packet ID: " + missing_packet_ids.to_s + "\n"
