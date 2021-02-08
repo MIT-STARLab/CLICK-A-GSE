@@ -27,7 +27,7 @@ cmd_list = [
     CMD_PL_TX_ALIGN,
     CMD_PL_UPDATE_TX_OFFSETS,
     CMD_PL_UPDATE_FSM_ANGLES,
-    CMD_PL_PAT_TEST,
+    CMD_PL_ENTER_PAT_MAIN,
     CMD_PL_EXIT_PAT_MAIN,
     CMD_PL_END_PAT_PROCESS,
     CMD_PL_SET_FPGA,
@@ -60,7 +60,7 @@ cmd_names = %w[
     PL_TX_ALIGN
     PL_UPDATE_TX_OFFSETS
     PL_UPDATE_FSM_ANGLES
-    PL_PAT_TEST
+    PL_ENTER_PAT_MAIN
     PL_EXIT_PAT_MAIN
     PL_END_PAT_PROCESS
     PL_SET_FPGA
@@ -125,7 +125,7 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26],
-    'TEST_MULTIPLE_ECHO', 'EXIT')
+    'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
@@ -384,32 +384,9 @@ while true
                 end
             end
 
-        elsif user_cmd == 'PL_PAT_TEST'
-            #prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
-
-            #Run Calibration
-            #click_cmd(CMD_PL_RUN_CALIBRATION)
-
-            #Get confirmation of calibration (User Prompt) #TODO: automate this
-            #prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
-
-            #Turn on Beacon (User Prompt)
-            #prompt("Turn ON Beacon Laser via GSE before proceeding.")
-
+        elsif user_cmd == 'PL_ENTER_PAT_MAIN'
             #Start Main Pat Loop via DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
-            click_cmd(CMD_PL_PAT_TEST)
-
-            #Turn on Dithering (User Prompt)
-            #prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to END PAT process.")
-
-            #End PAT process
-            #click_cmd(CMD_PL_END_PAT_PROCESS)
-
-            #Get telemetry from payload (User Prompt ) #TODO: automate this
-            #prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
-
-            #Restart PAT process?
-            #click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+            click_cmd(CMD_PL_ENTER_PAT_MAIN)
             
         elsif user_cmd == 'PL_EXIT_PAT_MAIN'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
@@ -688,6 +665,34 @@ while true
             File.open(file_path, 'a+') {|f| f.write(message_list[i])}
         end
         prompt(summary_message + "Results saved to: " + file_path)
+
+    elsif user_cmd == 'TEST_PAT'
+        ###TODO: move this formal test procedure to the end, and add a command for just entering PAT main loop
+        prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
+
+        #Run Calibration
+        click_cmd(CMD_PL_RUN_CALIBRATION)
+
+        #Get confirmation of calibration (User Prompt) #TODO: automate this
+        prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
+
+        #Turn on Beacon (User Prompt)
+        prompt("Turn ON Beacon Laser via GSE before proceeding.")
+
+        #Start Main Pat Loop via DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+        click_cmd(CMD_PL_ENTER_PAT_MAIN)
+
+        #Turn on Dithering (User Prompt)
+        prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to END PAT process.")
+
+        #End PAT process
+        click_cmd(CMD_PL_END_PAT_PROCESS)
+
+        #Get telemetry from payload (User Prompt ) #TODO: automate this
+        prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
+
+        #Restart PAT process?
+        click_cmd(CMD_PL_RESTART_PAT_PROCESS)
 
     else #EXIT
         break 
