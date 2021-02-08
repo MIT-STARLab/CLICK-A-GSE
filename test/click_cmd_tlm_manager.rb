@@ -24,6 +24,9 @@ cmd_list = [
     CMD_PL_CALIB_LASER_TEST,
     CMD_PL_FSM_TEST,
     CMD_PL_RUN_CALIBRATION,
+    CMD_PL_TX_ALIGN,
+    CMD_PL_UPDATE_TX_OFFSETS,
+    CMD_PL_UPDATE_FSM_ANGLES,
     CMD_PL_PAT_TEST,
     CMD_PL_EXIT_PAT_MAIN,
     CMD_PL_END_PAT_PROCESS,
@@ -54,6 +57,9 @@ cmd_names = %w[
     PL_CALIB_LASER_TEST
     PL_FSM_TEST
     PL_RUN_CALIBRATION
+    PL_TX_ALIGN
+    PL_UPDATE_TX_OFFSETS
+    PL_UPDATE_FSM_ANGLES
     PL_PAT_TEST
     PL_EXIT_PAT_MAIN
     PL_END_PAT_PROCESS
@@ -268,7 +274,7 @@ while true
 
         elsif user_cmd == 'PL_SET_PAT_MODE'
             user_pat_mode = combo_box("Select PAT mode (or EXIT).", 
-            pat_mode_names[0], pat_mode_names[1], pat_mode_names[2], pat_mode_names[3], pat_mode_names[4], 'EXIT')
+            pat_mode_names[0], pat_mode_names[1], pat_mode_names[2], pat_mode_names[3], pat_mode_names[4], pat_mode_names[5], 'EXIT')
             if pat_mode_names.include? user_pat_mode
                 pat_mode = pat_mode_list[pat_mode_names.find_index(user_pat_mode)]                
 
@@ -285,6 +291,7 @@ while true
             user_exp = ask("For PL_SINGLE_CAPTURE, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT') 
             if user_exp != 'EXIT'
                 if user_exp >= 10 and user_exp <= 10000000
+                    puts "user_exp: ", user_exp
                     #define data bytes
                     data = []
                     data[0] = user_exp
@@ -332,41 +339,85 @@ while true
         elsif user_cmd == 'PL_RUN_CALIBRATION'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_RUN_CALIBRATION)
+            
+        elsif user_cmd == 'PL_TX_ALIGN'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_TX_ALIGN)
+            
+        elsif user_cmd == 'PL_UPDATE_TX_OFFSETS'
+            user_x_update = ask("For PL_UPDATE_TX_OFFSETS, input X displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
+            if user_x_update != 'EXIT'
+                user_y_update = ask("For PL_UPDATE_TX_OFFSETS, input Y displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
+                if user_y_update != 'EXIT'
+                    if user_x_update <= 1000 and user_y_update <= 1000
+                        #define data bytes
+                        data = []
+                        data[0] = user_x_update
+                        data[1] = user_y_update
+                        packing = "s>2"
+    
+                        #SM Send via UUT Payload Write
+                        click_cmd(CMD_PL_UPDATE_TX_OFFSETS, data, packing)
+                    else
+                        prompt("Displacement out of bounds (< 1000 pixels).")
+                    end
+                end
+            end
+            
+        elsif user_cmd == 'PL_UPDATE_FSM_ANGLES'
+            user_x_update = ask("For PL_UPDATE_FSM_ANGLES, input X displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
+            if user_x_update != 'EXIT'
+                user_y_update = ask("For PL_UPDATE_FSM_ANGLES, input Y displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
+                if user_y_update != 'EXIT'
+                    if user_x_update <= 1000 and user_y_update <= 1000
+                        #define data bytes
+                        data = []
+                        data[0] = user_x_update
+                        data[1] = user_y_update
+                        packing = "s>2"
+    
+                        #SM Send via UUT Payload Write
+                        click_cmd(CMD_PL_UPDATE_FSM_ANGLES, data, packing)
+                    else
+                        prompt("Displacement out of bounds (< 1000 pixels).")
+                    end
+                end
+            end
 
         elsif user_cmd == 'PL_PAT_TEST'
-            prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
+            #prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
 
             #Run Calibration
-            click_cmd(CMD_PL_RUN_CALIBRATION)
+            #click_cmd(CMD_PL_RUN_CALIBRATION)
 
             #Get confirmation of calibration (User Prompt) #TODO: automate this
-            prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
+            #prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
 
             #Turn on Beacon (User Prompt)
-            prompt("Turn ON Beacon Laser via GSE before proceeding.")
+            #prompt("Turn ON Beacon Laser via GSE before proceeding.")
 
             #Start Main Pat Loop via DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_PAT_TEST)
 
             #Turn on Dithering (User Prompt)
-            prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to END PAT process.")
+            #prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to END PAT process.")
 
             #End PAT process
-            click_cmd(CMD_PL_END_PAT_PROCESS)
+            #click_cmd(CMD_PL_END_PAT_PROCESS)
 
             #Get telemetry from payload (User Prompt ) #TODO: automate this
-            prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
+            #prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
 
             #Restart PAT process?
-            click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+            #click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+            
+        elsif user_cmd == 'PL_EXIT_PAT_MAIN'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_EXIT_PAT_MAIN)
 
         elsif user_cmd == 'PL_END_PAT_PROCESS'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_END_PAT_PROCESS)
-
-        elsif user_cmd == 'PL_RESTART_PAT_PROCESS'
-            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
-            click_cmd(CMD_PL_RESTART_PAT_PROCESS)
 
         elsif user_cmd == 'PL_SET_FPGA'
             #define request number, start address, and data to write
