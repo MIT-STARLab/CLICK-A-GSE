@@ -125,7 +125,7 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26],
-    'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'EXIT')
+    'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
@@ -168,8 +168,6 @@ while true
   
                   #SM Send via UUT PAYLOAD_WRITE
                   click_cmd(CMD_PL_EXEC_FILE, data, packing) 
-  
-                  #TODO: Get file output telemetry...
                 end
             end
 
@@ -178,51 +176,21 @@ while true
             directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. '/root/test'). Input EXIT to escape.", 'EXIT')
 
             if directory_path != 'EXIT'
-                #define data bytes
-                data = []
-                data[0] = directory_path.length
-                data[1] = directory_path 
-                packing = "S>" + "a" + directory_path.length.to_s
-
-                #SM Send via UUT PAYLOAD_WRITE
-                click_cmd(CMD_PL_LIST_FILE, data, packing)
-
-                #Get telemetry packet:
-                packet = get_packet(tlm_id_PL_LIST_FILE)   
-
-                #Parse CCSDS header:             
-                _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
-                apid_check_bool = pl_ccsds_apid == TLM_LIST_FILE
-                
-                #Define variable length data packing:
-                list_file_data_length = pl_ccsds_length - CRC_LEN + 1 #get data size
-                packing = "a" + list_file_data_length.to_s + "S>" #define data packing for telemetry packet
-
-                #Read the data bytes and check CRC:
-                list_file_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
-                crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
-                
-                #Output message:
-                message = ""
-                if !apid_check_bool
-                    message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_LIST_FILE APID (= " + TLM_ECHO.to_s + ").\n"
+                success_bool, list_file_data, error_message = list_file(directory_path)
+                if(success_bool)
+                    prompt(list_file_data)
+                else
+                    prompt(error_message + list_file_data)
                 end
-                if !crc_check_bool
-                    message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
-                end
-                message += list_file_data
-                prompt(message)
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE'
-            prompt("PL_REQUEST_FILE not yet implemented.")
             #define file path:
             file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/test/test_tlm.txt). Input EXIT to escape.", 'EXIT')
             #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             if file_path != 'EXIT'
                 request_file(file_path, tlm_id_PL_DL_FILE)
             end
-            ###TODO: add a "request directory" option to download a directory, or specific file types in a directory (call list files, then use repeated request file commands) 
 
         elsif user_cmd == 'PL_UPLOAD_FILE'
             upload_file(tlm_id_PL_ASSEMBLE_FILE) #prompts user via file explorer to select file to upload, then walks user through sequence
@@ -667,7 +635,6 @@ while true
         prompt(summary_message + "Results saved to: " + file_path)
 
     elsif user_cmd == 'TEST_PAT'
-        ###TODO: move this formal test procedure to the end, and add a command for just entering PAT main loop
         prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
 
         #Run Calibration
@@ -693,6 +660,30 @@ while true
 
         #Restart PAT process?
         click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+    
+    elsif user_cmd == 'REQUEST_DIRECTORY_FILES'
+        #define directory path:
+        directory_path = ask_string("For REQUEST_DIRECTORY_FILES, input the directory path (e.g. '/root/log/pat'). Input EXIT to escape.", 'EXIT')
+
+        if directory_path != 'EXIT'
+            success_bool, list_file_data, error_message = list_file(directory_path)
+            if(success_bool)
+                directory_list = list_file_data.split["\n"]
+                if(directory_list.length > 0)
+                    for i in 0..directory_list.length
+                        file_path = directory_list[i]
+                        execute_cmd = message_box("Download this file?\n" + file_path, 'YES', 'NO')
+                        if execute_cmd == 'YES'
+                            request_file(file_path, tlm_id_PL_DL_FILE)  
+                        end
+                    end
+                else
+                    prompt(directory_path + " is empty.")
+                end
+            else
+                prompt(error_message + list_file_data)
+            end
+        end
 
     else #EXIT
         break 

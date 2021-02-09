@@ -123,6 +123,45 @@ def delete_file(recursive, file_path)
     click_cmd(CMD_PL_DEL_FILE, data, packing)
 end
 
+### List file command
+def list_file(directory_path)
+    #define data bytes
+    data = []
+    data[0] = directory_path.length
+    data[1] = directory_path 
+    packing = "S>" + "a" + directory_path.length.to_s
+
+    #SM Send via UUT PAYLOAD_WRITE
+    click_cmd(CMD_PL_LIST_FILE, data, packing)
+
+    #Get telemetry packet:
+    packet = get_packet(tlm_id_PL_LIST_FILE)   
+
+    #Parse CCSDS header:             
+    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+    apid_check_bool = pl_ccsds_apid == TLM_LIST_FILE
+    
+    #Define variable length data packing:
+    list_file_data_length = pl_ccsds_length - CRC_LEN + 1 #get data size
+    packing = "a" + list_file_data_length.to_s + "S>" #define data packing for telemetry packet
+
+    #Read the data bytes and check CRC:
+    list_file_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+
+    success_bool = apid_check_bool and crc_check_bool
+
+    error_message = ""
+    if !apid_check_bool
+        error_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_LIST_FILE APID (= " + TLM_ECHO.to_s + ").\n"
+    end
+    if !crc_check_bool
+        error_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+    end
+
+    return  success_bool, list_file_data, error_message
+end
+
 ### Echo test function
 def echo_test(echo_data_tx, tlm_id_PL_ECHO)
     #define data bytes
