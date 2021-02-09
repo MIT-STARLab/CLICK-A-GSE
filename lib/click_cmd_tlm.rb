@@ -472,7 +472,7 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
     return chunk_error_message, chunk_total_count, md5_rx_bytes
 end
 
-def request_file(file_path, tlm_id_PL_DL_FILE)
+def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
     cosmos_dir = Cosmos::USERPATH
 
     #define file name
@@ -525,7 +525,11 @@ def request_file(file_path, tlm_id_PL_DL_FILE)
     if error_message.length == 0
         ## Re-assemble file...
         # input the filename you want to chunk together: 
-        reconstructed_filename = save_dir + file_name
+        if(user_save_dir.length > 0)
+            reconstructed_filename = user_save_dir + "/" + file_name
+        else
+            reconstructed_filename = save_dir + file_name
+        end
     
         ## put file back together based on chunks in chunks folder: 
         seq_num=1
@@ -552,5 +556,27 @@ def request_file(file_path, tlm_id_PL_DL_FILE)
         end
     else
         prompt("Chunk download complete with errors: \n" + error_message)
+    end
+end
+
+def request_directory_files(directory_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+    user_save_dir = open_directory_dialog(Cosmos::USERPATH, "Select Directory To Save Downloads To")
+    success_bool, list_file_data, error_message = list_file(directory_path, tlm_id_PL_LIST_FILE)
+    if(success_bool)
+        directory_list = list_file_data.split("\n")
+        if(directory_list.length > 0)
+            for i in 0..(directory_list.length-1)
+                file_name = directory_list[i]
+                file_path = directory_path + "/" + file_name
+                execute_cmd = message_box("Download this file?\n" + file_path, 'YES', 'NO')
+                if execute_cmd == 'YES'
+                    request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir)  
+                end
+            end
+        else
+            prompt(directory_path + " is empty.")
+        end
+    else
+        prompt(error_message + list_file_data)
     end
 end

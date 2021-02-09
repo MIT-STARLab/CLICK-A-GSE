@@ -520,7 +520,14 @@ while true
                 #SM Send via UUT PAYLOAD_WRITE
                 click_cmd(CMD_PL_SELF_TEST, data, packing)
 
-                if test_id == PAT_SELF_TEST
+                #Get Telemetry:
+                if test_id == GENERAL_SELF_TEST
+                    prompt("PL_GENERAL_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
+
+                elsif test_id == LASER_SELF_TEST
+                    prompt("PL_LASER_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
+
+                elsif test_id == PAT_SELF_TEST
                     #Get telemetry packet:
                     packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
                     current_timestamp, current_time_str = get_timestamp()
@@ -589,7 +596,36 @@ while true
                     File.open(file_path, 'a+') {|f| f.write(summary_message)}
                     prompt(summary_message + "Results saved to: " + file_path)
                     
-                    ###TODO: add auto log file retrieval... e.g. look up the experiment number, end the pat process, download the exp folder contents to a local folder
+                    #look up pat experiment number
+                    success_bool, list_file_data, error_message = list_file("/root/log/pat", tlm_id_PL_LIST_FILE)
+                    download_bool = false
+                    if(success_bool)
+                        directory_list = list_file_data.split("\n")
+                        if(directory_list.length > 0)
+                            exp_num = 1
+                            for i in 0..(directory_list.length-1)
+                                exp_folder_num = directory_list[i].to_i
+                                if(exp_folder_num > exp_num)
+                                    exp_num = exp_folder_num
+                                end
+                            end
+                            current_exp_folder_path = "/root/log/pat/" + exp_num.to_s 
+                            prompt("Path to current experiment PAT log directory is: " + current_exp_folder_path + "\nPress Continue to restart PAT and download log files.")
+                            download_bool = true
+                        else
+                            prompt("PAT log directory is empty.")
+                        end
+                    else
+                        prompt("Error in looking up PAT experiment number: " + error_message + list_file_data)
+                    end
+
+                    if(download_bool)
+                        #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
+                        click_cmd(CMD_PL_END_PAT_PROCESS)
+
+                        #download the experiment folder contents
+                        request_directory_files(current_exp_folder_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+                    end
                 end
             end
 
@@ -650,40 +686,20 @@ while true
         click_cmd(CMD_PL_ENTER_PAT_MAIN)
 
         #Turn on Dithering (User Prompt)
-        prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to END PAT process.")
+        prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to restart PAT and download log files.")
 
+        ###TODO: package the pat self test log retrieval code above and put here too
         #End PAT process
         click_cmd(CMD_PL_END_PAT_PROCESS)
-
         #Get telemetry from payload (User Prompt ) #TODO: automate this
-        prompt("Pull PAT telemetry files from payload. \nPress Continue to restart PAT process.")
-
-        #Restart PAT process?
-        click_cmd(CMD_PL_RESTART_PAT_PROCESS)
+        prompt("Pull PAT telemetry files from payload.")
     
     elsif user_cmd == 'REQUEST_DIRECTORY_FILES'
         #define directory path:
-        directory_path = ask_string("For REQUEST_DIRECTORY_FILES, input the directory path (e.g. '/root/log/pat'). Input EXIT to escape.", 'EXIT')
+        directory_path = ask_string("For REQUEST_DIRECTORY_FILES, input the payload directory path (e.g. '/root/log/pat/<experiment id>'). Input EXIT to escape.", 'EXIT')
 
         if directory_path != 'EXIT'
-            success_bool, list_file_data, error_message = list_file(directory_path, tlm_id_PL_LIST_FILE)
-            if(success_bool)
-                directory_list = list_file_data.split("\n")
-                if(directory_list.length > 0)
-                    for i in 0..(directory_list.length-1)
-                        file_name = directory_list[i]
-                        file_path = directory_path + "/" + file_name
-                        execute_cmd = message_box("Download this file?\n" + file_path, 'YES', 'NO')
-                        if execute_cmd == 'YES'
-                            request_file(file_path, tlm_id_PL_DL_FILE)  
-                        end
-                    end
-                else
-                    prompt(directory_path + " is empty.")
-                end
-            else
-                prompt(error_message + list_file_data)
-            end
+            request_directory_files(directory_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
         end
 
     else #EXIT
