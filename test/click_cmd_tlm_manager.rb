@@ -371,7 +371,7 @@ while true
                     user_num_registers = ask("For PL_SET_FPGA, input number of registers to write.")
                     user_write_data = []
                     for i in 0..(user_num_registers-1)
-                        user_write_data_i = ask("For PL_SET_FPGA, input data to write to register #{start_address + i}.")
+                        user_write_data_i = ask("For PL_SET_FPGA, input data to write to register " + (user_start_address + i).to_s)
                         user_write_data += [user_write_data_i] 
                     end               
                     
@@ -381,7 +381,7 @@ while true
                     data[1] = user_start_address
                     data[2] = user_write_data.length
                     data += user_write_data
-                    packing = "CL>C" + "L>" + user_write_data.length.to_s
+                    packing = "CS>C" + "L>" + user_write_data.length.to_s
         
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_SET_FPGA, data, packing)
@@ -403,7 +403,7 @@ while true
                     data[0] = user_request_number
                     data[1] = user_start_address
                     data[2] = user_num_registers
-                    packing = "CL>C"
+                    packing = "CS>C"
 
                     #SM Send via UUT PAYLOAD_WRITE
                     click_cmd(CMD_PL_GET_FPGA, data, packing)
@@ -588,6 +588,8 @@ while true
                     File.open(file_path, 'a+') {|f| f.write("PAT_SELF_TEST. Start Time: " + current_time_str + "\n")}
                     File.open(file_path, 'a+') {|f| f.write(summary_message)}
                     prompt(summary_message + "Results saved to: " + file_path)
+                    
+                    ###TODO: add auto log file retrieval... e.g. look up the experiment number, end the pat process, download the exp folder contents to a local folder
                 end
             end
 
