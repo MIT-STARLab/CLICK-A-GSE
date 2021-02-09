@@ -545,21 +545,20 @@ while true
                     test_results = [camera_test_flag, fpga_ipc_test_flag, laser_test_flag, fsm_test_flag, calibration_test_flag]
                     test_names = ["Camera", "FPGA IPC", "Calibration Laser", "FSM", "Calibration"]
                     summary_message = ""
+                    num_tests_passed = 0
                     for i in 0..(test_results.length-1)
                         if test_results[i] == PAT_PASS_SELF_TEST
                             summary_message += (test_names[i] + " Test: PASSED\n")
-                            self_test_pass_bool = true
+                            num_tests_passed += 1
                         elsif test_results[i] == PAT_NULL_SELF_TEST
                             summary_message += (test_names[i] + " Test: N/A\n")
-                            self_test_pass_bool = false
                         elsif test_results[i] == PAT_FAIL_SELF_TEST
                             summary_message += (test_names[i] + " Test: FAILED\n")
-                            self_test_pass_bool = false
                         else
                             summary_message += (test_names[i] + " Test: Unrecognized Result = " + camera_test_flag.to_s + "\n")
-                            self_test_pass_bool = false
                         end
                     end
+                    self_test_pass_bool = num_tests_passed == test_results.length
                     
                     #Get test error message if available
                     if !self_test_pass_bool
@@ -594,37 +593,38 @@ while true
                     file_path = test_log_dir + file_name
                     File.open(file_path, 'a+') {|f| f.write("PAT_SELF_TEST. Start Time: " + current_time_str + "\n")}
                     File.open(file_path, 'a+') {|f| f.write(summary_message)}
-                    prompt(summary_message + "Results saved to: " + file_path)
-                    
-                    #look up pat experiment number
-                    success_bool, list_file_data, error_message = list_file("/root/log/pat", tlm_id_PL_LIST_FILE)
-                    download_bool = false
-                    if(success_bool)
-                        directory_list = list_file_data.split("\n")
-                        if(directory_list.length > 0)
-                            exp_num = 1
-                            for i in 0..(directory_list.length-1)
-                                exp_folder_num = directory_list[i].to_i
-                                if(exp_folder_num > exp_num)
-                                    exp_num = exp_folder_num
+                    download_files_cmd = message_box(summary_message + "Test summary saved to: " + file_path + "\nDownload PAT logs?", 'YES', 'NO')
+                    if download_files_cmd == 'YES'
+                        #look up pat experiment number
+                        success_bool, list_file_data, error_message = list_file("/root/log/pat", tlm_id_PL_LIST_FILE)
+                        download_bool = false
+                        if(success_bool)
+                            directory_list = list_file_data.split("\n")
+                            if(directory_list.length > 0)
+                                exp_num = 1
+                                for i in 0..(directory_list.length-1)
+                                    exp_folder_num = directory_list[i].to_i
+                                    if(exp_folder_num > exp_num)
+                                        exp_num = exp_folder_num
+                                    end
                                 end
+                                current_exp_folder_path = "/root/log/pat/" + exp_num.to_s 
+                                prompt("Path to current experiment PAT log directory is: " + current_exp_folder_path + "\nPress Continue to restart PAT and download log files.")
+                                download_bool = true
+                            else
+                                prompt("PAT log directory is empty.")
                             end
-                            current_exp_folder_path = "/root/log/pat/" + exp_num.to_s 
-                            prompt("Path to current experiment PAT log directory is: " + current_exp_folder_path + "\nPress Continue to restart PAT and download log files.")
-                            download_bool = true
                         else
-                            prompt("PAT log directory is empty.")
+                            prompt("Error in looking up PAT experiment number: " + error_message + list_file_data)
                         end
-                    else
-                        prompt("Error in looking up PAT experiment number: " + error_message + list_file_data)
-                    end
-
-                    if(download_bool)
-                        #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
-                        click_cmd(CMD_PL_END_PAT_PROCESS)
-
-                        #download the experiment folder contents
-                        request_directory_files(current_exp_folder_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+    
+                        if(download_bool)
+                            #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
+                            click_cmd(CMD_PL_END_PAT_PROCESS)
+    
+                            #download the experiment folder contents
+                            request_directory_files(current_exp_folder_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+                        end
                     end
                 end
             end
