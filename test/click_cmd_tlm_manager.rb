@@ -10,7 +10,6 @@ test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 cmd_list = [
     CMD_PL_REBOOT,
     CMD_PL_ENABLE_TIME,
-    CMD_PL_DISABLE_TIME,
     CMD_PL_EXEC_FILE,
     CMD_PL_LIST_FILE,
     CMD_PL_REQUEST_FILE,
@@ -43,7 +42,6 @@ cmd_list = [
 cmd_names = %w[
     PL_REBOOT
     PL_ENABLE_TIME
-    PL_DISABLE_TIME
     PL_EXEC_FILE
     PL_LIST_FILE
     PL_REQUEST_FILE
@@ -124,7 +122,7 @@ while true
     cmd_names[6], cmd_names[7], cmd_names[8], cmd_names[9], cmd_names[10], cmd_names[11],
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
-    cmd_names[24], cmd_names[25], cmd_names[26],
+    cmd_names[24], cmd_names[25], cmd_names[26], 
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -176,7 +174,7 @@ while true
             directory_path = ask_string("For PL_LIST_FILE, input the directory path (e.g. '/root/test'). Input EXIT to escape.", 'EXIT')
 
             if directory_path != 'EXIT'
-                success_bool, list_file_data, error_message = list_file(directory_path)
+                success_bool, list_file_data, error_message = list_file(directory_path, tlm_id_PL_LIST_FILE)
                 if(success_bool)
                     prompt(list_file_data)
                 else
@@ -666,12 +664,13 @@ while true
         directory_path = ask_string("For REQUEST_DIRECTORY_FILES, input the directory path (e.g. '/root/log/pat'). Input EXIT to escape.", 'EXIT')
 
         if directory_path != 'EXIT'
-            success_bool, list_file_data, error_message = list_file(directory_path)
+            success_bool, list_file_data, error_message = list_file(directory_path, tlm_id_PL_LIST_FILE)
             if(success_bool)
-                directory_list = list_file_data.split["\n"]
+                directory_list = list_file_data.split("\n")
                 if(directory_list.length > 0)
-                    for i in 0..directory_list.length
-                        file_path = directory_list[i]
+                    for i in 0..(directory_list.length-1)
+                        file_name = directory_list[i]
+                        file_path = directory_path + "/" + file_name
                         execute_cmd = message_box("Download this file?\n" + file_path, 'YES', 'NO')
                         if execute_cmd == 'YES'
                             request_file(file_path, tlm_id_PL_DL_FILE)  

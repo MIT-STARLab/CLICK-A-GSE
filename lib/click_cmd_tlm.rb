@@ -124,7 +124,7 @@ def delete_file(recursive, file_path)
 end
 
 ### List file command
-def list_file(directory_path)
+def list_file(directory_path, tlm_id_PL_LIST_FILE)
     #define data bytes
     data = []
     data[0] = directory_path.length
@@ -523,15 +523,7 @@ def request_file(file_path, tlm_id_PL_DL_FILE)
     end
     
     if error_message.length == 0
-        prompt("Chunk download complete with no errors. Press Okay to proceed to file assembly.")
-        assemble_cmd = 'YES'
-    else
-        assemble_cmd = message_box("Chunk download complete with errors: \n" + error_message + "Proceed to file assembly?", 'YES', 'NO')
-    end
-    
-    if assemble_cmd == 'YES'
         ## Re-assemble file...
-                
         # input the filename you want to chunk together: 
         reconstructed_filename = save_dir + file_name
     
@@ -558,5 +550,7 @@ def request_file(file_path, tlm_id_PL_DL_FILE)
         else 
             prompt("File assembly completed with no errors. File location: " + reconstructed_filename)
         end
+    else
+        prompt("Chunk download complete with errors: \n" + error_message)
     end
 end

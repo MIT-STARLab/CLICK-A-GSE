@@ -3,7 +3,7 @@
 #Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\log_bus_power.rb
 require "csv"
 
-tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 100000) #set queue depth to 100000 (default is 1000)
+tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 500000) #set queue depth to 100000 (default is 1000)
 
 #save_period_sec = 1
 current_time = Time.now #time of test start
