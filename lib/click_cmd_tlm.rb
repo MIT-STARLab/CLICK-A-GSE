@@ -580,3 +580,42 @@ def request_directory_files(directory_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FI
         prompt(error_message + list_file_data)
     end
 end
+
+def request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, exp_num_str = "")
+    if(exp_num_str.length == 0)
+        #look up pat experiment number
+        success_bool, list_file_data, error_message = list_file("/root/log/pat", tlm_id_PL_LIST_FILE)
+        download_bool = false
+        if(success_bool)
+            directory_list = list_file_data.split("\n")
+            if(directory_list.length > 0)
+                exp_num = 1
+                for i in 0..(directory_list.length-1)
+                    exp_folder_num = directory_list[i].to_i
+                    if(exp_folder_num > exp_num)
+                        exp_num = exp_folder_num
+                    end
+                end
+                exp_num_str = exp_num.to_s 
+                exp_folder_path = "/root/log/pat/" + exp_num_str 
+                prompt("Path to current PAT log directory is: " + exp_folder_path + "\nPress Continue to restart PAT and download log files.")
+                download_bool = true
+                #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
+                click_cmd(CMD_PL_END_PAT_PROCESS)
+            else
+                prompt("PAT log directory is empty.")
+            end
+        else
+            prompt("Error in looking up PAT experiment number: " + error_message + list_file_data)
+        end
+    else
+        exp_folder_path = "/root/log/pat/" + exp_num_str 
+        prompt("Path to PAT log directory is: " + exp_folder_path + "\nPress Continue to download log files.")
+        download_bool = true
+    end
+
+    if(download_bool)
+        #download the experiment folder contents
+        request_directory_files(exp_folder_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+    end
+end

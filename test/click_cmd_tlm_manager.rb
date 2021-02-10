@@ -123,7 +123,7 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], 
-    'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'EXIT')
+    'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
@@ -595,36 +595,7 @@ while true
                     File.open(file_path, 'a+') {|f| f.write(summary_message)}
                     download_files_cmd = message_box(summary_message + "Test summary saved to: " + file_path + "\nDownload PAT logs?", 'YES', 'NO')
                     if download_files_cmd == 'YES'
-                        #look up pat experiment number
-                        success_bool, list_file_data, error_message = list_file("/root/log/pat", tlm_id_PL_LIST_FILE)
-                        download_bool = false
-                        if(success_bool)
-                            directory_list = list_file_data.split("\n")
-                            if(directory_list.length > 0)
-                                exp_num = 1
-                                for i in 0..(directory_list.length-1)
-                                    exp_folder_num = directory_list[i].to_i
-                                    if(exp_folder_num > exp_num)
-                                        exp_num = exp_folder_num
-                                    end
-                                end
-                                current_exp_folder_path = "/root/log/pat/" + exp_num.to_s 
-                                prompt("Path to current experiment PAT log directory is: " + current_exp_folder_path + "\nPress Continue to restart PAT and download log files.")
-                                download_bool = true
-                            else
-                                prompt("PAT log directory is empty.")
-                            end
-                        else
-                            prompt("Error in looking up PAT experiment number: " + error_message + list_file_data)
-                        end
-    
-                        if(download_bool)
-                            #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
-                            click_cmd(CMD_PL_END_PAT_PROCESS)
-    
-                            #download the experiment folder contents
-                            request_directory_files(current_exp_folder_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
-                        end
+                        request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
                     end
                 end
             end
@@ -671,7 +642,7 @@ while true
         prompt(summary_message + "Results saved to: " + file_path)
 
     elsif user_cmd == 'TEST_PAT'
-        prompt("Ensure PAT Health Telemetry stream is running before proceeding.\n(i.e. Run test_hk_pat_tlm.rb in a separate window.)")
+        prompt("Ensure PAT Health Telemetry stream is running before proceeding (i.e. run test_hk_pat_tlm.rb in a separate window).\n Press Continue to execute calibration.")
 
         #Run Calibration
         click_cmd(CMD_PL_RUN_CALIBRATION)
@@ -680,19 +651,16 @@ while true
         prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
 
         #Turn on Beacon (User Prompt)
-        prompt("Turn ON Beacon Laser via GSE before proceeding.")
+        prompt("Turn ON Beacon Laser via GSE AlphaNov program before proceeding.")
 
         #Start Main Pat Loop via DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
         click_cmd(CMD_PL_ENTER_PAT_MAIN)
 
         #Turn on Dithering (User Prompt)
-        prompt("Start Beacon Dithering via GSE GUI.\nWait for dithering script to complete.\nPress Continue to restart PAT and download log files.")
+        prompt("1. Start Beacon Dithering via CSV command on GSE GUI.\n2. Wait for dithering script to complete.\n3. Press Continue to restart PAT and download log files.")
 
-        ###TODO: package the pat self test log retrieval code above and put here too
-        #End PAT process
-        click_cmd(CMD_PL_END_PAT_PROCESS)
-        #Get telemetry from payload (User Prompt ) #TODO: automate this
-        prompt("Pull PAT telemetry files from payload.")
+        #Restart PAT and get most recent PAT telemetry data
+        request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
     
     elsif user_cmd == 'REQUEST_DIRECTORY_FILES'
         #define directory path:
@@ -701,6 +669,14 @@ while true
         if directory_path != 'EXIT'
             request_directory_files(directory_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
         end
+
+    elsif user_cmd == 'REQUEST_PAT_FILES'
+        #define directory path:
+        exp_id_str = ask_string("For REQUEST_PAT_FILES, input the experiment id number (i.e. the desired directory number in /root/log/pat). Input EXIT to escape.", 'EXIT')
+
+        if exp_id_str != 'EXIT'
+            request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, exp_id_str)
+        end   
 
     else #EXIT
         break 
