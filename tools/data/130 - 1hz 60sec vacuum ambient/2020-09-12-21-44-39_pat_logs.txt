@@ -1,0 +1,567 @@
+[0.48] In camera.cpp Camera::Initialize - device found 
+[0.48] In main.cpp Camera Connection Initialized 
+[0.48] Initializing FSM DAC - Commanding DAC_FULL_RESET =  2621441 
+[0.49] In fsm.cpp FSM::fsmWrite - LD bias ON check did not pass. Commanding LD bias ON... 
+[0.49] Initializing FSM DAC - Commanding DAC_ENABLE_INTERNAL_REFERENCE =  3670017 
+[0.50] Initializing FSM DAC - Commanding DAC_ENABLE_ALL_DAC_CHANNELS =  2097167 
+[0.50] Initializing FSM DAC - Commanding DAC_ENABLE_SOFTWARE_LDAC =  3145728 
+[0.50] Initializing FSM DAC - Commanding Normalized Angles to (0,0). 
+[0.52] In main.cpp - Standby - Standing by for command... 
+[0.53] In main.cpp - Standby - Standing by for command... 
+[0.53] In main.cpp - Standby - Standing by for command... 
+[0.54] In main.cpp - Standby - Standing by for command... 
+[0.54] In main.cpp - Standby - Standing by for command... 
+[0.54] In main.cpp - Standby - Standing by for command... 
+[0.55] In main.cpp - Standby - Standing by for command... 
+[0.55] In main.cpp - Standby - Standing by for command... 
+[0.56] In main.cpp - Standby - Standing by for command... 
+[0.56] In main.cpp - Standby - Standing by for command... 
+[0.57] In main.cpp - Standby - Standing by for command... 
+[0.57] In main.cpp - Standby - Standing by for command... 
+[0.57] In main.cpp - Standby - Standing by for command... 
+[0.58] In main.cpp - Standby - Standing by for command... 
+[0.58] In main.cpp - Standby - Standing by for command... 
+[0.59] In main.cpp - Standby - Standing by for command... 
+[0.59] In main.cpp - Standby - Standing by for command... 
+[0.59] In main.cpp - Standby - Standing by for command... 
+[0.60] In main.cpp - Standby - Standing by for command... 
+[0.60] In main.cpp - Standby - Standing by for command... 
+[0.61] In main.cpp - Standby - Standing by for command... 
+[0.61] In main.cpp - Standby - Standing by for command... 
+[0.62] In main.cpp - Standby - Standing by for command... 
+[0.62] In main.cpp - Standby - Standing by for command... 
+[0.62] In main.cpp - Standby - Standing by for command... 
+[0.63] In main.cpp - Standby - Standing by for command... 
+[0.63] In main.cpp - Standby - Standing by for command... 
+[0.64] In main.cpp - Standby - Standing by for command... 
+[0.64] In main.cpp - Standby - Standing by for command... 
+[0.65] In main.cpp - Standby - Standing by for command... 
+[0.65] In main.cpp - Standby - Standing by for command... 
+[0.65] In main.cpp - Standby - Standing by for command... 
+[0.66] In main.cpp - Standby - Standing by for command... 
+[0.66] In main.cpp - Standby - Standing by for command... 
+[0.67] In main.cpp - Standby - Standing by for command... 
+[0.67] In main.cpp - Standby - Standing by for command... 
+[0.68] In main.cpp - Standby - Standing by for command... 
+[0.68] In main.cpp - Standby - Standing by for command... 
+[0.68] In main.cpp - Standby - Standing by for command... 
+[0.69] In main.cpp - Standby - Standing by for command... 
+[0.69] In main.cpp - Standby - Standing by for command... 
+[0.70] In main.cpp - Standby - Standing by for command... 
+[0.70] In main.cpp - Standby - Standing by for command... 
+[0.70] In main.cpp - Standby - Received CMD_CALIB_TEST command. 
+[0.76] In calibration.cpp Calibration::verifyFrame - Frame verified at exp =  15 . Tuning camera parameters. 
+[0.76] In calibration.cpp Calibration::windowAndTune - Tuning calib exposure, starting with expo =  15 us at [ 1296 , 972 , window size:  600 ] 
+[0.79] In calibration.cpp Calibration::windowAndTune -  (spot.valueMax =  130 ) <= (CALIB_HAPPY_BRIGHTNESS =  300 ). Increasing exposure... 
+[2.32] In calibration.cpp Calibration::windowAndTune - Exposure tuning successful. exposure =  158 
+[2.36] In calibration.cpp Calibration::run -  centerOffsetX =  -16 , centerOffsetY =  88 
+[2.36] In calibration.cpp Calibration::run - Saving image telemetry as:  /root/log/pat/130/2020-09-12-21-45-06_CALIBRATION_exp_158.png 
+[3.42] In calibration.cpp Calibration::run - Pair 0 [ 1279.66305 , 1060.70883 ] for FSM [ 0.00000 , 0.00000 ] 
+[3.56] In calibration.cpp Calibration::run - Pair 5 [ 1279.83723 , 1051.54273 ] for FSM [ -0.00000 , 0.05000 ] 
+[3.69] In calibration.cpp Calibration::run - Pair 10 [ 1304.53684 , 1060.30176 ] for FSM [ -0.10000 , -0.00000 ] 
+[3.83] In calibration.cpp Calibration::run - Pair 15 [ 1279.53278 , 1086.13020 ] for FSM [ 0.00000 , -0.15000 ] 
+[3.97] In calibration.cpp Calibration::run - Pair 20 [ 1230.62611 , 1059.84856 ] for FSM [ 0.20000 , 0.00000 ] 
+[4.10] In calibration.cpp Calibration::run - Pair 25 [ 1280.09494 , 1017.26448 ] for FSM [ -0.00000 , 0.25000 ] 
+[4.25] In calibration.cpp Calibration::run - Pair 30 [ 1353.93220 , 1061.18662 ] for FSM [ -0.30000 , -0.00000 ] 
+[4.38] In calibration.cpp Calibration::run - Pair 35 [ 1279.40251 , 1121.44276 ] for FSM [ 0.00000 , -0.35000 ] 
+[4.52] In calibration.cpp Calibration::run - Pair 40 [ 1180.90026 , 1059.39011 ] for FSM [ 0.40000 , 0.00000 ] 
+[4.65] In calibration.cpp Calibration::run - Pair 45 [ 1280.88744 , 982.29217 ] for FSM [ -0.00000 , 0.45000 ] 
+[4.80] In calibration.cpp Calibration::run - Pair 50 [ 1403.69010 , 1061.82981 ] for FSM [ -0.50000 , -0.00000 ] 
+[4.93] In calibration.cpp Calibration::run - Pair 55 [ 1279.28809 , 1156.07267 ] for FSM [ 0.00000 , -0.55000 ] 
+[5.07] In calibration.cpp Calibration::run - Pair 60 [ 1131.49883 , 1058.83029 ] for FSM [ 0.60000 , 0.00000 ] 
+[5.20] In calibration.cpp Calibration::run - Pair 65 [ 1281.33961 , 947.98371 ] for FSM [ -0.00000 , 0.65000 ] 
+[5.34] In calibration.cpp Calibration::run - Pair 70 [ 1452.27699 , 1062.01079 ] for FSM [ -0.70000 , -0.00000 ] 
+[5.47] In calibration.cpp Calibration::run - Pair 75 [ 1279.35730 , 1189.93109 ] for FSM [ 0.00000 , -0.75000 ] 
+[5.61] In calibration.cpp Calibration::run - Pair 80 [ 1083.76977 , 1059.17264 ] for FSM [ 0.80000 , 0.00000 ] 
+[5.74] In calibration.cpp Calibration::run - Pair 85 [ 1282.07313 , 914.13915 ] for FSM [ -0.00000 , 0.85000 ] 
+[5.88] In calibration.cpp Calibration::run - Pair 90 [ 1498.96091 , 1063.37415 ] for FSM [ -0.90000 , -0.00000 ] 
+[6.02] In calibration.cpp Calibration::run - Pair 95 [ 1279.28841 , 1220.66723 ] for FSM [ 0.00000 , -0.95000 ] 
+[6.14] In calibration.cpp Calibration::run - Calculated sensitivity matrix [ -0.00407 -0.00005 ; 0.00008 -0.00577 ] 
+[6.14] In calibration.cpp Calibration::run - Calculated affine transform [ -0.00406 -0.00004 ; 0.00006 -0.00579 ] + [ 5.23666 ; 6.06439 ] 
+[6.14] In main.cpp - Standby - CMD_CALIB_TEST - Calibration complete. Calib Exposure =  158  us. 
+[6.14] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.14] In main.cpp - Standby - Standing by for command... 
+[6.15] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.15] In main.cpp - Standby - Standing by for command... 
+[6.15] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.15] In main.cpp - Standby - Standing by for command... 
+[6.16] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.16] In main.cpp - Standby - Standing by for command... 
+[6.16] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.16] In main.cpp - Standby - Standing by for command... 
+[6.17] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.17] In main.cpp - Standby - Standing by for command... 
+[6.17] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.17] In main.cpp - Standby - Standing by for command... 
+[6.17] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.18] In main.cpp - Standby - Standing by for command... 
+[6.18] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.18] In main.cpp - Standby - Standing by for command... 
+[6.18] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.19] In main.cpp - Standby - Standing by for command... 
+[6.19] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.19] In main.cpp - Standby - Standing by for command... 
+[6.19] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.19] In main.cpp - Standby - Standing by for command... 
+[6.20] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.20] In main.cpp - Standby - Standing by for command... 
+[6.20] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.20] In main.cpp - Standby - Standing by for command... 
+[6.21] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.21] In main.cpp - Standby - Standing by for command... 
+[6.21] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.21] In main.cpp - Standby - Standing by for command... 
+[6.22] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.22] In main.cpp - Standby - Standing by for command... 
+[6.22] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.22] In main.cpp - Standby - Standing by for command... 
+[6.23] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.23] In main.cpp - Standby - Standing by for command... 
+[6.23] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.23] In main.cpp - Standby - Standing by for command... 
+[6.24] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.24] In main.cpp - Standby - Standing by for command... 
+[6.24] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.24] In main.cpp - Standby - Standing by for command... 
+[6.25] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.25] In main.cpp - Standby - Standing by for command... 
+[6.25] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.25] In main.cpp - Standby - Standing by for command... 
+[6.25] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.26] In main.cpp - Standby - Standing by for command... 
+[6.26] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.26] In main.cpp - Standby - Standing by for command... 
+[6.26] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.27] In main.cpp - Standby - Standing by for command... 
+[6.27] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.27] In main.cpp - Standby - Standing by for command... 
+[6.27] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.27] In main.cpp - Standby - Standing by for command... 
+[6.28] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.28] In main.cpp - Standby - Standing by for command... 
+[6.28] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.28] In main.cpp - Standby - Standing by for command... 
+[6.29] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.29] In main.cpp - Standby - Standing by for command... 
+[6.29] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.29] In main.cpp - Standby - Standing by for command... 
+[6.30] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.30] In main.cpp - Standby - Standing by for command... 
+[6.30] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.30] In main.cpp - Standby - Standing by for command... 
+[6.31] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.31] In main.cpp - Standby - Standing by for command... 
+[6.31] In main.cpp - Standby - Calib is at [ 1279.66305 , 1060.70883 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.31] In main.cpp - Standby - Standing by for command... 
+[6.32] In main.cpp - Standby - Received CMD_START_PAT command in test configuration. Proceeding to ACQUISITION... 
+[6.32] In main.cpp phase  ACQUISITION  - No idea where beacon is. 
+[6.32] In main.cpp phase  ACQUISITION  - Calib is at [ -16.33695 , 88.70883  rel-to-center, exp =  158 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.32] In main.cpp phase ACQUISITION - Beacon Acquisition Beginning. Switching off Cal Laser. 
+[6.32] In tracking.cpp Tracking::runAcquisition - Attemping acquisition with exposure =  10000 at  0.00000 0.00000  rel-to-center w/ size  1944 
+[6.40] In tracking.cpp Tracking::verifyFrame - Frame verified, tuning camera parameters 
+[6.40] In tracking.cpp Tracking::windowAndTune - Prepared windowed tuning frame at  -14.50210 14.17752  rel-to-center, w = h = 30 ] 
+[6.41] In tracking.cpp Tracking::updateTrackingWindow - Updated window to 64 x 64  at  -48 -20  rel-to-center] 
+[6.41] In tracking.cpp Tracking::autoTuneExposure -  (spot.valueMax =  379 ) <= (TRACK_HAPPY_BRIGHTNESS =  700 ). Increasing exposure... 
+[6.44] In tracking.cpp Tracking::autoTuneExposure - Exposure tuning successful. exposure =  19486 
+[6.52] In tracking.cpp Tracking::windowAndTune - Final test check failed:  abs(fullX_test - fullX) >= TRACK_TUNING_POSITION_TOLERANCE:  0.87856 >= 2  OR  abs(fullY_test - fullY) >= TRACK_TUNING_POSITION_TOLERANCE:  0.28968 >= 2  OR  abs((int)test.groups[0].valueMax - maxValue) >= TRACK_TUNING_BRIGHTNESS_TOLERANCE):  351 >= 20 
+[6.52] In tracking.cpp Tracking::windowAndTune - Prepared windowed tuning frame at  -15.38065 14.46721  rel-to-center, w = h = 30 ] 
+[6.53] In tracking.cpp Tracking::autoTuneExposure - Tuning unneccessary. Exiting... 
+[6.61] In tracking.cpp Tracking::windowAndTune - Final test check failed:  abs(fullX_test - fullX) >= TRACK_TUNING_POSITION_TOLERANCE:  0.04260 >= 2  OR  abs(fullY_test - fullY) >= TRACK_TUNING_POSITION_TOLERANCE:  0.48095 >= 2  OR  abs((int)test.groups[0].valueMax - maxValue) >= TRACK_TUNING_BRIGHTNESS_TOLERANCE):  21 >= 20 
+[6.61] In tracking.cpp Tracking::windowAndTune - Prepared windowed tuning frame at  -15.42325 14.94816  rel-to-center, w = h = 30 ] 
+[6.61] In tracking.cpp Tracking::autoTuneExposure - Tuning unneccessary. Exiting... 
+[6.70] In main.cpp phase ACQUISITION - Acquisition complete.  Beacon is at [ 1282.35905 , 986.70813 , exp =  19486 , valueMax =  694 , valueSum =  8024 , pixelCount =  44 ] gain =  0 
+[6.70] In main.cpp phase ACQUISITION - Beacon Frame is at [x =  1264 , y =  968 , w =  32 , h =  32 ] 
+[6.70] In processing.cpp logImage - Saving image telemetry as:  /root/log/pat/130/2020-09-12-21-45-59_ACQUISITION_exp_19486.png 
+[6.71] In main.cpp phase ACQUISITION - Setting Calib to: [ 1284.64095 , 1087.29187 , exp =  158 ], gain =  0 
+[6.72] In main.cpp phase  CL_INIT  - Beacon is at [ -13.64095 , 14.70813  rel-to-center, exp =  19486 valueMax =  694 valueSum =  8024 pixelCount =  44 ] 
+[6.72] In main.cpp phase  CL_INIT  - Calib is at [ -11.35905 , 115.29187  rel-to-center, exp =  158 , valueMax =  315 , valueSum =  96480 , pixelCount =  674 ] 
+[6.72] In main.cpp phase CL_INIT -  calibWindow.x =  1269 calibWindow.y =  1072 calibWindow.w =  30 calibWindow.h =  30 
+[6.73] In tracking.cpp Tracking::updateTrackingWindow - Updated window to 64 x 64  at  -48 -20  rel-to-center] 
+[6.73] In main.cpp phase CL_CALIB - Switching Failure:  (frame.histBrightest =  16 ) <= (CALIB_MIN_BRIGHTNESS/4 =  25 ) 
+[6.73] In main.cpp phase CL_CALIB - Calib spot vanished! 
+[6.75] In tracking.cpp Tracking::updateTrackingWindow - Updated window to 80 x 80  at  -48 76  rel-to-center] 
+[6.81] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.81647 , 14.72512  rel-to-center, exp =  19486 valueMax =  690 valueSum =  8680 pixelCount =  55 ] 
+[6.81] In main.cpp phase  CL_BEACON  - Calib is at [ -11.28933 , 115.29154  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  69931 , pixelCount =  496 ] 
+[6.92] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.84670 , 14.79922  rel-to-center, exp =  19486 valueMax =  638 valueSum =  8676 pixelCount =  57 ] 
+[6.92] In main.cpp phase  CL_BEACON  - Calib is at [ -11.54018 , 115.31179  rel-to-center, exp =  158 , valueMax =  258 , valueSum =  70179 , pixelCount =  501 ] 
+[7.03] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73651 , 14.74871  rel-to-center, exp =  19486 valueMax =  642 valueSum =  8691 pixelCount =  57 ] 
+[7.03] In main.cpp phase  CL_BEACON  - Calib is at [ -11.15001 , 115.18921  rel-to-center, exp =  158 , valueMax =  258 , valueSum =  71530 , pixelCount =  506 ] 
+[7.13] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73808 , 14.75982  rel-to-center, exp =  19486 valueMax =  609 valueSum =  8323 pixelCount =  56 ] 
+[7.13] In main.cpp phase  CL_BEACON  - Calib is at [ -11.29648 , 115.20081  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  71874 , pixelCount =  511 ] 
+[7.24] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65715 , 14.62503  rel-to-center, exp =  19486 valueMax =  605 valueSum =  8438 pixelCount =  57 ] 
+[7.24] In main.cpp phase  CL_BEACON  - Calib is at [ -11.34140 , 115.31096  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  72745 , pixelCount =  516 ] 
+[7.34] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74601 , 14.72488  rel-to-center, exp =  19486 valueMax =  620 valueSum =  8280 pixelCount =  55 ] 
+[7.34] In main.cpp phase  CL_BEACON  - Calib is at [ -11.33193 , 115.34210  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  74417 , pixelCount =  526 ] 
+[7.44] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.64712 , 14.58131  rel-to-center, exp =  19486 valueMax =  606 valueSum =  8252 pixelCount =  55 ] 
+[7.44] In main.cpp phase  CL_BEACON  - Calib is at [ -11.44250 , 115.41427  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  71815 , pixelCount =  509 ] 
+[7.54] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70582 , 14.65490  rel-to-center, exp =  19486 valueMax =  604 valueSum =  8131 pixelCount =  54 ] 
+[7.54] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27950 , 115.45108  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  73251 , pixelCount =  517 ] 
+[7.64] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.60334 , 14.69218  rel-to-center, exp =  19486 valueMax =  593 valueSum =  7969 pixelCount =  52 ] 
+[7.64] In main.cpp phase  CL_BEACON  - Calib is at [ -11.30675 , 115.37912  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  72244 , pixelCount =  508 ] 
+[7.74] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.64400 , 14.67300  rel-to-center, exp =  19486 valueMax =  611 valueSum =  8000 pixelCount =  53 ] 
+[7.75] In main.cpp phase  CL_BEACON  - Calib is at [ -11.17791 , 115.29451  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  72805 , pixelCount =  513 ] 
+[7.85] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.62094 , 14.69351  rel-to-center, exp =  19486 valueMax =  581 valueSum =  7909 pixelCount =  52 ] 
+[7.85] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32498 , 115.36786  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  72985 , pixelCount =  516 ] 
+[7.95] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.66820 , 14.69353  rel-to-center, exp =  19486 valueMax =  592 valueSum =  8053 pixelCount =  53 ] 
+[7.95] In main.cpp phase  CL_BEACON  - Calib is at [ -11.30740 , 115.41273  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  72610 , pixelCount =  513 ] 
+[8.05] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67019 , 14.66749  rel-to-center, exp =  19486 valueMax =  604 valueSum =  8129 pixelCount =  54 ] 
+[8.05] In main.cpp phase  CL_BEACON  - Calib is at [ -11.28308 , 115.36676  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  70686 , pixelCount =  500 ] 
+[8.16] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67802 , 14.66363  rel-to-center, exp =  19486 valueMax =  607 valueSum =  8131 pixelCount =  54 ] 
+[8.16] In main.cpp phase  CL_BEACON  - Calib is at [ -11.36586 , 115.19238  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  73553 , pixelCount =  515 ] 
+[8.25] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.74119 , 14.72233  rel-to-center, exp =  19486 valueMax =  620 valueSum =  8114 pixelCount =  54 ] 
+[8.25] In main.cpp phase  CL_CALIB  - Calib is at [ -11.26712 , 115.45314  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  75785 , pixelCount =  527 ] 
+[8.35] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73175 , 14.65665  rel-to-center, exp =  19486 valueMax =  615 valueSum =  8190 pixelCount =  56 ] 
+[8.35] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19925 , 115.31732  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  68451 , pixelCount =  495 ] 
+[8.45] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74615 , 14.65641  rel-to-center, exp =  19486 valueMax =  599 valueSum =  8257 pixelCount =  56 ] 
+[8.45] In main.cpp phase  CL_BEACON  - Calib is at [ -11.24917 , 115.38036  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  74070 , pixelCount =  524 ] 
+[8.56] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67920 , 14.72256  rel-to-center, exp =  19486 valueMax =  608 valueSum =  8164 pixelCount =  55 ] 
+[8.56] In main.cpp phase  CL_BEACON  - Calib is at [ -11.39811 , 115.43694  rel-to-center, exp =  158 , valueMax =  277 , valueSum =  73380 , pixelCount =  513 ] 
+[8.65] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.76682 , 14.69371  rel-to-center, exp =  19486 valueMax =  613 valueSum =  8221 pixelCount =  55 ] 
+[8.65] In main.cpp phase  CL_BEACON  - Calib is at [ -11.08065 , 115.37690  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  71461 , pixelCount =  505 ] 
+[8.76] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67458 , 14.71530  rel-to-center, exp =  19486 valueMax =  605 valueSum =  8177 pixelCount =  54 ] 
+[8.76] In main.cpp phase  CL_BEACON  - Calib is at [ -11.07658 , 115.28895  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  71798 , pixelCount =  505 ] 
+[8.85] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.60609 , 14.68071  rel-to-center, exp =  19486 valueMax =  603 valueSum =  7880 pixelCount =  51 ] 
+[8.85] In main.cpp phase  CL_BEACON  - Calib is at [ -11.46616 , 115.28207  rel-to-center, exp =  158 , valueMax =  277 , valueSum =  72653 , pixelCount =  513 ] 
+[8.95] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75257 , 14.74229  rel-to-center, exp =  19486 valueMax =  628 valueSum =  8071 pixelCount =  54 ] 
+[8.95] In main.cpp phase  CL_BEACON  - Calib is at [ -11.56115 , 115.25828  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  73820 , pixelCount =  522 ] 
+[9.06] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69243 , 14.67320  rel-to-center, exp =  19486 valueMax =  609 valueSum =  8216 pixelCount =  55 ] 
+[9.06] In main.cpp phase  CL_BEACON  - Calib is at [ -11.57931 , 115.26452  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  73261 , pixelCount =  516 ] 
+[9.16] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75342 , 14.70655  rel-to-center, exp =  19486 valueMax =  589 valueSum =  8107 pixelCount =  55 ] 
+[9.17] In main.cpp phase  CL_BEACON  - Calib is at [ -11.67855 , 115.39306  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  70508 , pixelCount =  500 ] 
+[9.26] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.64832 , 14.66828  rel-to-center, exp =  19486 valueMax =  602 valueSum =  8067 pixelCount =  54 ] 
+[9.26] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21872 , 115.38416  rel-to-center, exp =  158 , valueMax =  280 , valueSum =  73574 , pixelCount =  518 ] 
+[9.37] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71759 , 14.64224  rel-to-center, exp =  19486 valueMax =  611 valueSum =  8162 pixelCount =  54 ] 
+[9.37] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32257 , 115.39729  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  73410 , pixelCount =  518 ] 
+[9.47] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65996 , 14.62632  rel-to-center, exp =  19486 valueMax =  597 valueSum =  8055 pixelCount =  54 ] 
+[9.47] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27669 , 115.16619  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  74073 , pixelCount =  521 ] 
+[9.58] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73601 , 14.68129  rel-to-center, exp =  19486 valueMax =  609 valueSum =  7932 pixelCount =  53 ] 
+[9.58] In main.cpp phase  CL_BEACON  - Calib is at [ -11.39329 , 115.44646  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  70246 , pixelCount =  498 ] 
+[9.69] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67132 , 14.70539  rel-to-center, exp =  19486 valueMax =  607 valueSum =  7953 pixelCount =  53 ] 
+[9.69] In main.cpp phase  CL_BEACON  - Calib is at [ -11.29592 , 115.22070  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  70608 , pixelCount =  501 ] 
+[9.79] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75120 , 14.63767  rel-to-center, exp =  19486 valueMax =  610 valueSum =  7910 pixelCount =  53 ] 
+[9.80] In main.cpp phase  CL_BEACON  - Calib is at [ -11.18782 , 115.38001  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  69848 , pixelCount =  496 ] 
+[9.90] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67059 , 14.68694  rel-to-center, exp =  19486 valueMax =  604 valueSum =  7826 pixelCount =  52 ] 
+[9.90] In main.cpp phase  CL_BEACON  - Calib is at [ -11.35116 , 115.41730  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  73875 , pixelCount =  520 ] 
+[10.01] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74338 , 14.75782  rel-to-center, exp =  19486 valueMax =  591 valueSum =  7895 pixelCount =  52 ] 
+[10.01] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26736 , 115.28133  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  73070 , pixelCount =  515 ] 
+[10.11] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72510 , 14.68071  rel-to-center, exp =  19486 valueMax =  621 valueSum =  8021 pixelCount =  53 ] 
+[10.11] In main.cpp phase  CL_BEACON  - Calib is at [ -11.14201 , 115.26326  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  72756 , pixelCount =  508 ] 
+[10.22] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67207 , 14.63663  rel-to-center, exp =  19486 valueMax =  598 valueSum =  7956 pixelCount =  53 ] 
+[10.22] In main.cpp phase  CL_BEACON  - Calib is at [ -11.29917 , 115.24064  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  72892 , pixelCount =  512 ] 
+[10.32] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74142 , 14.71191  rel-to-center, exp =  19486 valueMax =  605 valueSum =  8133 pixelCount =  55 ] 
+[10.32] In main.cpp phase  CL_BEACON  - Calib is at [ -11.37376 , 115.33769  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  71615 , pixelCount =  507 ] 
+[10.43] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73649 , 14.71894  rel-to-center, exp =  19486 valueMax =  611 valueSum =  7977 pixelCount =  53 ] 
+[10.43] In main.cpp phase  CL_BEACON  - Calib is at [ -11.29291 , 115.34956  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  71731 , pixelCount =  505 ] 
+[10.53] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75949 , 14.75244  rel-to-center, exp =  19486 valueMax =  600 valueSum =  8087 pixelCount =  54 ] 
+[10.53] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21250 , 115.27440  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  73450 , pixelCount =  517 ] 
+[10.64] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73069 , 14.61440  rel-to-center, exp =  19486 valueMax =  610 valueSum =  8195 pixelCount =  56 ] 
+[10.64] In main.cpp phase  CL_BEACON  - Calib is at [ -11.36783 , 115.42491  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  72616 , pixelCount =  516 ] 
+[10.74] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.82798 , 14.74882  rel-to-center, exp =  19486 valueMax =  613 valueSum =  8249 pixelCount =  57 ] 
+[10.74] In main.cpp phase  CL_BEACON  - Calib is at [ -11.25441 , 115.22377  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  73795 , pixelCount =  516 ] 
+[10.83] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80311 , 14.73429  rel-to-center, exp =  19486 valueMax =  605 valueSum =  8050 pixelCount =  54 ] 
+[10.83] In main.cpp phase  CL_BEACON  - Calib is at [ -11.42642 , 115.34339  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  71315 , pixelCount =  507 ] 
+[10.94] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.89148 , 14.73008  rel-to-center, exp =  19486 valueMax =  624 valueSum =  8247 pixelCount =  56 ] 
+[10.94] In main.cpp phase  CL_BEACON  - Calib is at [ -11.40898 , 115.29835  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  72955 , pixelCount =  513 ] 
+[11.04] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.82033 , 14.68881  rel-to-center, exp =  19486 valueMax =  613 valueSum =  8098 pixelCount =  55 ] 
+[11.04] In main.cpp phase  CL_BEACON  - Calib is at [ -11.13802 , 115.30558  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  72642 , pixelCount =  515 ] 
+[11.15] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.91000 , 14.72622  rel-to-center, exp =  19486 valueMax =  622 valueSum =  8178 pixelCount =  56 ] 
+[11.15] In main.cpp phase  CL_BEACON  - Calib is at [ -11.03641 , 115.33236  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  73309 , pixelCount =  516 ] 
+[11.26] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.81578 , 14.74791  rel-to-center, exp =  19486 valueMax =  608 valueSum =  8148 pixelCount =  55 ] 
+[11.26] In main.cpp phase  CL_BEACON  - Calib is at [ -11.23496 , 115.23489  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  73153 , pixelCount =  515 ] 
+[11.37] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70988 , 14.73773  rel-to-center, exp =  19486 valueMax =  630 valueSum =  8007 pixelCount =  53 ] 
+[11.37] In main.cpp phase  CL_BEACON  - Calib is at [ -11.33984 , 115.21956  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  72905 , pixelCount =  518 ] 
+[11.47] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.89977 , 14.69870  rel-to-center, exp =  19486 valueMax =  646 valueSum =  8241 pixelCount =  55 ] 
+[11.47] In main.cpp phase  CL_BEACON  - Calib is at [ -11.23750 , 115.21598  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  73246 , pixelCount =  519 ] 
+[11.58] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.60619 , 14.77162  rel-to-center, exp =  19486 valueMax =  626 valueSum =  7816 pixelCount =  50 ] 
+[11.58] In main.cpp phase  CL_BEACON  - Calib is at [ -11.12493 , 115.30702  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  72688 , pixelCount =  515 ] 
+[11.69] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.83331 , 14.71455  rel-to-center, exp =  19486 valueMax =  634 valueSum =  8117 pixelCount =  55 ] 
+[11.69] In main.cpp phase  CL_BEACON  - Calib is at [ -11.30488 , 115.32368  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  69884 , pixelCount =  498 ] 
+[11.80] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.68380 , 14.74269  rel-to-center, exp =  19486 valueMax =  624 valueSum =  7998 pixelCount =  53 ] 
+[11.80] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27794 , 115.19774  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  71494 , pixelCount =  507 ] 
+[11.88] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.67921 , 14.75627  rel-to-center, exp =  19486 valueMax =  617 valueSum =  7890 pixelCount =  52 ] 
+[11.88] In main.cpp phase  CL_CALIB  - Calib is at [ -11.23460 , 115.41737  rel-to-center, exp =  158 , valueMax =  279 , valueSum =  73107 , pixelCount =  519 ] 
+[11.98] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.66393 , 14.74313  rel-to-center, exp =  19486 valueMax =  608 valueSum =  7930 pixelCount =  53 ] 
+[11.99] In main.cpp phase  CL_BEACON  - Calib is at [ -11.23038 , 115.21993  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  72479 , pixelCount =  514 ] 
+[12.09] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.90905 , 14.71592  rel-to-center, exp =  19486 valueMax =  634 valueSum =  8202 pixelCount =  56 ] 
+[12.09] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26707 , 115.34876  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  73055 , pixelCount =  516 ] 
+[12.20] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.68357 , 14.66490  rel-to-center, exp =  19486 valueMax =  590 valueSum =  7926 pixelCount =  54 ] 
+[12.20] In main.cpp phase  CL_BEACON  - Calib is at [ -11.23591 , 115.29493  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  71393 , pixelCount =  504 ] 
+[12.30] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70919 , 14.81891  rel-to-center, exp =  19486 valueMax =  609 valueSum =  7847 pixelCount =  51 ] 
+[12.30] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27234 , 115.35564  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  72359 , pixelCount =  513 ] 
+[12.41] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80015 , 14.72688  rel-to-center, exp =  19486 valueMax =  595 valueSum =  8066 pixelCount =  56 ] 
+[12.41] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16272 , 115.24573  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  72202 , pixelCount =  510 ] 
+[12.49] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.57609 , 14.68767  rel-to-center, exp =  19486 valueMax =  585 valueSum =  7761 pixelCount =  51 ] 
+[12.49] In main.cpp phase  CL_CALIB  - Calib is at [ -11.15421 , 115.27138  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  72835 , pixelCount =  513 ] 
+[12.59] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.63645 , 14.69988  rel-to-center, exp =  19486 valueMax =  601 valueSum =  7567 pixelCount =  50 ] 
+[12.60] In main.cpp phase  CL_BEACON  - Calib is at [ -11.42411 , 115.24972  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  72917 , pixelCount =  513 ] 
+[12.70] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77156 , 14.75864  rel-to-center, exp =  19486 valueMax =  609 valueSum =  7897 pixelCount =  54 ] 
+[12.70] In main.cpp phase  CL_BEACON  - Calib is at [ -11.05993 , 115.30337  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  74108 , pixelCount =  521 ] 
+[12.81] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78716 , 14.74376  rel-to-center, exp =  19486 valueMax =  604 valueSum =  7973 pixelCount =  53 ] 
+[12.81] In main.cpp phase  CL_BEACON  - Calib is at [ -11.42273 , 115.26442  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  70710 , pixelCount =  501 ] 
+[12.91] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73492 , 14.71947  rel-to-center, exp =  19486 valueMax =  612 valueSum =  8024 pixelCount =  54 ] 
+[12.91] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27752 , 115.19135  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  74221 , pixelCount =  521 ] 
+[13.02] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.82959 , 14.76711  rel-to-center, exp =  19486 valueMax =  627 valueSum =  8051 pixelCount =  54 ] 
+[13.02] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16503 , 115.32292  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  71314 , pixelCount =  508 ] 
+[13.12] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.79926 , 14.70929  rel-to-center, exp =  19486 valueMax =  626 valueSum =  8125 pixelCount =  55 ] 
+[13.13] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19225 , 115.13928  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  70831 , pixelCount =  504 ] 
+[13.23] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78265 , 14.72570  rel-to-center, exp =  19486 valueMax =  597 valueSum =  8024 pixelCount =  55 ] 
+[13.23] In main.cpp phase  CL_BEACON  - Calib is at [ -11.20904 , 115.20195  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  70785 , pixelCount =  504 ] 
+[13.32] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78631 , 14.71002  rel-to-center, exp =  19486 valueMax =  608 valueSum =  8035 pixelCount =  55 ] 
+[13.33] In main.cpp phase  CL_BEACON  - Calib is at [ -11.25093 , 115.20167  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  72925 , pixelCount =  517 ] 
+[13.43] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.79170 , 14.78823  rel-to-center, exp =  19486 valueMax =  622 valueSum =  7763 pixelCount =  50 ] 
+[13.43] In main.cpp phase  CL_BEACON  - Calib is at [ -11.18039 , 115.41243  rel-to-center, exp =  158 , valueMax =  277 , valueSum =  74093 , pixelCount =  521 ] 
+[13.54] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70236 , 14.74886  rel-to-center, exp =  19486 valueMax =  615 valueSum =  7872 pixelCount =  52 ] 
+[13.54] In main.cpp phase  CL_BEACON  - Calib is at [ -11.38724 , 115.17224  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  73571 , pixelCount =  516 ] 
+[13.65] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73466 , 14.68477  rel-to-center, exp =  19486 valueMax =  609 valueSum =  7918 pixelCount =  53 ] 
+[13.65] In main.cpp phase  CL_BEACON  - Calib is at [ -11.03499 , 115.33124  rel-to-center, exp =  158 , valueMax =  278 , valueSum =  72241 , pixelCount =  509 ] 
+[13.76] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67245 , 14.70355  rel-to-center, exp =  19486 valueMax =  595 valueSum =  7718 pixelCount =  52 ] 
+[13.76] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16415 , 115.26355  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  72415 , pixelCount =  510 ] 
+[13.85] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71091 , 14.73413  rel-to-center, exp =  19486 valueMax =  615 valueSum =  7925 pixelCount =  53 ] 
+[13.85] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27698 , 115.27127  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  71620 , pixelCount =  508 ] 
+[13.96] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70949 , 14.69980  rel-to-center, exp =  19486 valueMax =  600 valueSum =  7838 pixelCount =  53 ] 
+[13.96] In main.cpp phase  CL_BEACON  - Calib is at [ -11.37482 , 115.37378  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  71591 , pixelCount =  509 ] 
+[14.06] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75840 , 14.69109  rel-to-center, exp =  19486 valueMax =  588 valueSum =  7889 pixelCount =  54 ] 
+[14.06] In main.cpp phase  CL_BEACON  - Calib is at [ -11.14773 , 115.37666  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  72322 , pixelCount =  509 ] 
+[14.16] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69834 , 14.72321  rel-to-center, exp =  19486 valueMax =  592 valueSum =  7840 pixelCount =  53 ] 
+[14.16] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27814 , 115.28709  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  70716 , pixelCount =  502 ] 
+[14.25] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.82982 , 14.68033  rel-to-center, exp =  19486 valueMax =  609 valueSum =  8074 pixelCount =  54 ] 
+[14.25] In main.cpp phase  CL_BEACON  - Calib is at [ -11.31242 , 115.35188  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  71823 , pixelCount =  512 ] 
+[14.35] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.87767 , 14.70500  rel-to-center, exp =  19486 valueMax =  613 valueSum =  7905 pixelCount =  54 ] 
+[14.35] In main.cpp phase  CL_BEACON  - Calib is at [ -11.08438 , 115.24704  rel-to-center, exp =  158 , valueMax =  262 , valueSum =  71770 , pixelCount =  508 ] 
+[14.46] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75372 , 14.65269  rel-to-center, exp =  19486 valueMax =  604 valueSum =  7869 pixelCount =  52 ] 
+[14.46] In main.cpp phase  CL_BEACON  - Calib is at [ -11.38453 , 115.36339  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  73453 , pixelCount =  516 ] 
+[14.57] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.64436 , 14.71023  rel-to-center, exp =  19486 valueMax =  595 valueSum =  7637 pixelCount =  49 ] 
+[14.57] In main.cpp phase  CL_BEACON  - Calib is at [ -11.24239 , 115.24502  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  72069 , pixelCount =  510 ] 
+[14.67] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78017 , 14.72932  rel-to-center, exp =  19486 valueMax =  631 valueSum =  7847 pixelCount =  51 ] 
+[14.67] In main.cpp phase  CL_BEACON  - Calib is at [ -11.29564 , 115.31521  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  73367 , pixelCount =  521 ] 
+[14.78] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.76111 , 14.78098  rel-to-center, exp =  19486 valueMax =  595 valueSum =  7899 pixelCount =  53 ] 
+[14.78] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27746 , 115.31589  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  71722 , pixelCount =  509 ] 
+[14.88] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77313 , 14.70317  rel-to-center, exp =  19486 valueMax =  602 valueSum =  7762 pixelCount =  51 ] 
+[14.88] In main.cpp phase  CL_BEACON  - Calib is at [ -11.24733 , 115.10479  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  71288 , pixelCount =  505 ] 
+[14.99] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.83786 , 14.73804  rel-to-center, exp =  19486 valueMax =  611 valueSum =  8024 pixelCount =  55 ] 
+[14.99] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32956 , 115.43151  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  69973 , pixelCount =  498 ] 
+[15.09] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71777 , 14.66079  rel-to-center, exp =  19486 valueMax =  598 valueSum =  7827 pixelCount =  53 ] 
+[15.10] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21746 , 115.13676  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  73879 , pixelCount =  524 ] 
+[15.19] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77916 , 14.76620  rel-to-center, exp =  19486 valueMax =  596 valueSum =  7947 pixelCount =  53 ] 
+[15.19] In main.cpp phase  CL_BEACON  - Calib is at [ -11.22975 , 115.24598  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  71498 , pixelCount =  511 ] 
+[15.29] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71491 , 14.72584  rel-to-center, exp =  19486 valueMax =  603 valueSum =  7959 pixelCount =  53 ] 
+[15.30] In main.cpp phase  CL_BEACON  - Calib is at [ -11.37278 , 115.27041  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  70899 , pixelCount =  501 ] 
+[15.40] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75902 , 14.68850  rel-to-center, exp =  19486 valueMax =  604 valueSum =  7955 pixelCount =  54 ] 
+[15.40] In main.cpp phase  CL_BEACON  - Calib is at [ -11.40226 , 115.27488  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  72329 , pixelCount =  511 ] 
+[15.51] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.83187 , 14.68953  rel-to-center, exp =  19486 valueMax =  606 valueSum =  7988 pixelCount =  54 ] 
+[15.51] In main.cpp phase  CL_BEACON  - Calib is at [ -11.29142 , 115.29146  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  70331 , pixelCount =  499 ] 
+[15.60] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75101 , 14.80491  rel-to-center, exp =  19486 valueMax =  611 valueSum =  7904 pixelCount =  52 ] 
+[15.60] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16884 , 115.21210  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  70435 , pixelCount =  503 ] 
+[15.70] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70393 , 14.69628  rel-to-center, exp =  19486 valueMax =  599 valueSum =  7846 pixelCount =  52 ] 
+[15.70] In main.cpp phase  CL_BEACON  - Calib is at [ -11.08326 , 115.14161  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  71833 , pixelCount =  514 ] 
+[15.81] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73810 , 14.72100  rel-to-center, exp =  19486 valueMax =  634 valueSum =  7896 pixelCount =  53 ] 
+[15.81] In main.cpp phase  CL_BEACON  - Calib is at [ -11.58198 , 115.23907  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  72798 , pixelCount =  518 ] 
+[15.91] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72376 , 14.73801  rel-to-center, exp =  19486 valueMax =  613 valueSum =  7859 pixelCount =  52 ] 
+[15.91] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32427 , 115.36430  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  73300 , pixelCount =  519 ] 
+[16.01] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72289 , 14.69552  rel-to-center, exp =  19486 valueMax =  604 valueSum =  7856 pixelCount =  53 ] 
+[16.01] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19840 , 115.28084  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  72302 , pixelCount =  517 ] 
+[16.12] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78742 , 14.84166  rel-to-center, exp =  19486 valueMax =  638 valueSum =  8204 pixelCount =  55 ] 
+[16.12] In main.cpp phase  CL_BEACON  - Calib is at [ -11.43970 , 115.29204  rel-to-center, exp =  158 , valueMax =  278 , valueSum =  72709 , pixelCount =  513 ] 
+[16.22] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73616 , 14.72514  rel-to-center, exp =  19486 valueMax =  614 valueSum =  7804 pixelCount =  53 ] 
+[16.22] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21727 , 115.24500  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  73619 , pixelCount =  517 ] 
+[16.33] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69429 , 14.65978  rel-to-center, exp =  19486 valueMax =  576 valueSum =  7795 pixelCount =  53 ] 
+[16.33] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26796 , 115.23732  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  73139 , pixelCount =  515 ] 
+[16.43] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.83910 , 14.63414  rel-to-center, exp =  19486 valueMax =  603 valueSum =  7943 pixelCount =  55 ] 
+[16.43] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16742 , 115.20082  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  72120 , pixelCount =  514 ] 
+[16.52] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.76607 , 14.76948  rel-to-center, exp =  19486 valueMax =  599 valueSum =  7622 pixelCount =  51 ] 
+[16.52] In main.cpp phase  CL_BEACON  - Calib is at [ -11.49548 , 115.20811  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  74053 , pixelCount =  528 ] 
+[16.63] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71445 , 14.69672  rel-to-center, exp =  19486 valueMax =  584 valueSum =  7953 pixelCount =  55 ] 
+[16.63] In main.cpp phase  CL_BEACON  - Calib is at [ -11.04385 , 115.31465  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  70538 , pixelCount =  505 ] 
+[16.73] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73178 , 14.76083  rel-to-center, exp =  19486 valueMax =  602 valueSum =  7915 pixelCount =  54 ] 
+[16.74] In main.cpp phase  CL_BEACON  - Calib is at [ -11.20780 , 115.22583  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  72444 , pixelCount =  510 ] 
+[16.84] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72205 , 14.70934  rel-to-center, exp =  19486 valueMax =  592 valueSum =  7944 pixelCount =  55 ] 
+[16.84] In main.cpp phase  CL_BEACON  - Calib is at [ -11.35223 , 115.14689  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  72986 , pixelCount =  514 ] 
+[16.95] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69197 , 14.73710  rel-to-center, exp =  19486 valueMax =  584 valueSum =  7733 pixelCount =  52 ] 
+[16.95] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21624 , 115.17730  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  71646 , pixelCount =  508 ] 
+[17.05] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.66675 , 14.64916  rel-to-center, exp =  19486 valueMax =  611 valueSum =  7901 pixelCount =  53 ] 
+[17.05] In main.cpp phase  CL_BEACON  - Calib is at [ -11.09769 , 115.31564  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  71949 , pixelCount =  513 ] 
+[17.16] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.68663 , 14.69954  rel-to-center, exp =  19486 valueMax =  610 valueSum =  7748 pixelCount =  52 ] 
+[17.16] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19150 , 115.21981  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  72664 , pixelCount =  516 ] 
+[17.27] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72470 , 14.71515  rel-to-center, exp =  19486 valueMax =  590 valueSum =  7639 pixelCount =  50 ] 
+[17.27] In main.cpp phase  CL_BEACON  - Calib is at [ -11.28009 , 115.32174  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  72462 , pixelCount =  516 ] 
+[17.37] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69024 , 14.72363  rel-to-center, exp =  19486 valueMax =  595 valueSum =  7906 pixelCount =  53 ] 
+[17.37] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21947 , 115.29018  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  72022 , pixelCount =  512 ] 
+[17.47] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77664 , 14.78886  rel-to-center, exp =  19486 valueMax =  617 valueSum =  7938 pixelCount =  53 ] 
+[17.47] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19765 , 115.25629  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  70667 , pixelCount =  500 ] 
+[17.57] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.73675 , 14.77443  rel-to-center, exp =  19486 valueMax =  601 valueSum =  7829 pixelCount =  53 ] 
+[17.57] In main.cpp phase  CL_BEACON  - Calib is at [ -11.34113 , 115.27638  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  72007 , pixelCount =  510 ] 
+[17.68] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.58093 , 14.73287  rel-to-center, exp =  19486 valueMax =  579 valueSum =  7562 pixelCount =  50 ] 
+[17.68] In main.cpp phase  CL_BEACON  - Calib is at [ -11.35217 , 115.23612  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  70605 , pixelCount =  501 ] 
+[17.78] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65558 , 14.74111  rel-to-center, exp =  19486 valueMax =  576 valueSum =  7787 pixelCount =  53 ] 
+[17.79] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32102 , 115.29365  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  71574 , pixelCount =  506 ] 
+[17.88] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.59579 , 14.78289  rel-to-center, exp =  19486 valueMax =  585 valueSum =  7600 pixelCount =  50 ] 
+[17.88] In main.cpp phase  CL_BEACON  - Calib is at [ -11.41338 , 115.20099  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  71020 , pixelCount =  506 ] 
+[17.98] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72723 , 14.83417  rel-to-center, exp =  19486 valueMax =  588 valueSum =  7761 pixelCount =  52 ] 
+[17.98] In main.cpp phase  CL_BEACON  - Calib is at [ -11.40093 , 115.14141  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  71698 , pixelCount =  509 ] 
+[18.09] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.66667 , 14.80798  rel-to-center, exp =  19486 valueMax =  585 valueSum =  7770 pixelCount =  52 ] 
+[18.09] In main.cpp phase  CL_BEACON  - Calib is at [ -11.55373 , 115.23987  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  69946 , pixelCount =  499 ] 
+[18.18] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65956 , 14.76550  rel-to-center, exp =  19486 valueMax =  584 valueSum =  7740 pixelCount =  52 ] 
+[18.18] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26553 , 115.28549  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  69562 , pixelCount =  502 ] 
+[18.29] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70287 , 14.75181  rel-to-center, exp =  19486 valueMax =  619 valueSum =  7744 pixelCount =  51 ] 
+[18.29] In main.cpp phase  CL_BEACON  - Calib is at [ -11.33509 , 115.35144  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  74154 , pixelCount =  524 ] 
+[18.40] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.84248 , 14.75769  rel-to-center, exp =  19486 valueMax =  638 valueSum =  8126 pixelCount =  55 ] 
+[18.40] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27295 , 115.29610  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  72219 , pixelCount =  517 ] 
+[18.51] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69403 , 14.74572  rel-to-center, exp =  19486 valueMax =  605 valueSum =  7834 pixelCount =  52 ] 
+[18.51] In main.cpp phase  CL_BEACON  - Calib is at [ -11.24373 , 115.20636  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  72942 , pixelCount =  514 ] 
+[18.61] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.76523 , 14.73848  rel-to-center, exp =  19486 valueMax =  611 valueSum =  7961 pixelCount =  53 ] 
+[18.61] In main.cpp phase  CL_BEACON  - Calib is at [ -11.12272 , 115.27589  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  69065 , pixelCount =  494 ] 
+[18.72] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.79848 , 14.76201  rel-to-center, exp =  19486 valueMax =  591 valueSum =  8034 pixelCount =  55 ] 
+[18.72] In main.cpp phase  CL_BEACON  - Calib is at [ -10.99024 , 115.27069  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  70111 , pixelCount =  505 ] 
+[18.82] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70208 , 14.74112  rel-to-center, exp =  19486 valueMax =  597 valueSum =  7710 pixelCount =  50 ] 
+[18.82] In main.cpp phase  CL_BEACON  - Calib is at [ -11.37951 , 115.32010  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  71680 , pixelCount =  511 ] 
+[18.93] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80284 , 14.79226  rel-to-center, exp =  19486 valueMax =  615 valueSum =  8039 pixelCount =  55 ] 
+[18.93] In main.cpp phase  CL_BEACON  - Calib is at [ -11.40075 , 115.26982  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  72159 , pixelCount =  512 ] 
+[19.04] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.75719 , 14.72868  rel-to-center, exp =  19486 valueMax =  612 valueSum =  7961 pixelCount =  52 ] 
+[19.04] In main.cpp phase  CL_BEACON  - Calib is at [ -10.82211 , 115.25722  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  71079 , pixelCount =  503 ] 
+[19.15] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72615 , 14.74543  rel-to-center, exp =  19486 valueMax =  586 valueSum =  7935 pixelCount =  54 ] 
+[19.15] In main.cpp phase  CL_BEACON  - Calib is at [ -11.00285 , 115.19963  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  71583 , pixelCount =  511 ] 
+[19.25] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65405 , 14.70806  rel-to-center, exp =  19486 valueMax =  603 valueSum =  7796 pixelCount =  52 ] 
+[19.25] In main.cpp phase  CL_BEACON  - Calib is at [ -10.79008 , 115.31200  rel-to-center, exp =  158 , valueMax =  258 , valueSum =  69914 , pixelCount =  500 ] 
+[19.34] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.68990 , 14.64410  rel-to-center, exp =  19486 valueMax =  598 valueSum =  7904 pixelCount =  53 ] 
+[19.34] In main.cpp phase  CL_CALIB  - Calib is at [ -11.26391 , 115.33206  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  70770 , pixelCount =  503 ] 
+[19.44] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70253 , 14.70340  rel-to-center, exp =  19486 valueMax =  634 valueSum =  8048 pixelCount =  55 ] 
+[19.44] In main.cpp phase  CL_BEACON  - Calib is at [ -11.09752 , 115.28528  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  73814 , pixelCount =  524 ] 
+[19.55] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65888 , 14.72858  rel-to-center, exp =  19486 valueMax =  597 valueSum =  7877 pixelCount =  52 ] 
+[19.55] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16001 , 115.26699  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  70613 , pixelCount =  504 ] 
+[19.65] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.64072 , 14.69137  rel-to-center, exp =  19486 valueMax =  593 valueSum =  7760 pixelCount =  51 ] 
+[19.65] In main.cpp phase  CL_BEACON  - Calib is at [ -11.41361 , 115.25214  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  72130 , pixelCount =  511 ] 
+[19.75] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74203 , 14.64304  rel-to-center, exp =  19486 valueMax =  618 valueSum =  8001 pixelCount =  52 ] 
+[19.75] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19381 , 115.25303  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  73272 , pixelCount =  522 ] 
+[19.86] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.64735 , 14.72167  rel-to-center, exp =  19486 valueMax =  619 valueSum =  7818 pixelCount =  51 ] 
+[19.86] In main.cpp phase  CL_BEACON  - Calib is at [ -11.44852 , 115.14831  rel-to-center, exp =  158 , valueMax =  261 , valueSum =  72821 , pixelCount =  517 ] 
+[19.96] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71144 , 14.77916  rel-to-center, exp =  19486 valueMax =  623 valueSum =  8137 pixelCount =  54 ] 
+[19.96] In main.cpp phase  CL_BEACON  - Calib is at [ -11.16102 , 115.35152  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  69189 , pixelCount =  502 ] 
+[20.05] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.87142 , 14.75618  rel-to-center, exp =  19486 valueMax =  638 valueSum =  8096 pixelCount =  54 ] 
+[20.05] In main.cpp phase  CL_BEACON  - Calib is at [ -11.10749 , 115.25859  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  71003 , pixelCount =  505 ] 
+[20.16] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.89546 , 14.84742  rel-to-center, exp =  19486 valueMax =  644 valueSum =  8284 pixelCount =  56 ] 
+[20.16] In main.cpp phase  CL_BEACON  - Calib is at [ -10.95267 , 115.24300  rel-to-center, exp =  158 , valueMax =  260 , valueSum =  71608 , pixelCount =  510 ] 
+[20.26] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77813 , 14.74534  rel-to-center, exp =  19486 valueMax =  652 valueSum =  8203 pixelCount =  55 ] 
+[20.26] In main.cpp phase  CL_BEACON  - Calib is at [ -11.15822 , 115.36412  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  70270 , pixelCount =  500 ] 
+[20.37] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69256 , 14.78182  rel-to-center, exp =  19486 valueMax =  613 valueSum =  7865 pixelCount =  51 ] 
+[20.37] In main.cpp phase  CL_BEACON  - Calib is at [ -11.15775 , 115.15845  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  73769 , pixelCount =  523 ] 
+[20.48] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77035 , 14.78067  rel-to-center, exp =  19486 valueMax =  616 valueSum =  7947 pixelCount =  53 ] 
+[20.48] In main.cpp phase  CL_BEACON  - Calib is at [ -11.27012 , 115.11873  rel-to-center, exp =  158 , valueMax =  260 , valueSum =  69324 , pixelCount =  496 ] 
+[20.58] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.79744 , 14.72602  rel-to-center, exp =  19486 valueMax =  630 valueSum =  8121 pixelCount =  55 ] 
+[20.58] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32698 , 115.19230  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  73635 , pixelCount =  517 ] 
+[20.68] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69624 , 14.77386  rel-to-center, exp =  19486 valueMax =  607 valueSum =  8026 pixelCount =  53 ] 
+[20.69] In main.cpp phase  CL_BEACON  - Calib is at [ -11.36449 , 115.11095  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  69917 , pixelCount =  497 ] 
+[20.79] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.71425 , 14.74673  rel-to-center, exp =  19486 valueMax =  619 valueSum =  7881 pixelCount =  50 ] 
+[20.79] In main.cpp phase  CL_BEACON  - Calib is at [ -11.46177 , 115.28073  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  68727 , pixelCount =  495 ] 
+[20.89] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70584 , 14.86227  rel-to-center, exp =  19486 valueMax =  618 valueSum =  7965 pixelCount =  52 ] 
+[20.90] In main.cpp phase  CL_BEACON  - Calib is at [ -11.38972 , 115.15962  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  72852 , pixelCount =  518 ] 
+[21.00] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.69090 , 14.78968  rel-to-center, exp =  19486 valueMax =  610 valueSum =  8059 pixelCount =  53 ] 
+[21.00] In main.cpp phase  CL_BEACON  - Calib is at [ -11.49725 , 115.18319  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  73153 , pixelCount =  519 ] 
+[21.11] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.62605 , 14.71814  rel-to-center, exp =  19486 valueMax =  598 valueSum =  7862 pixelCount =  52 ] 
+[21.11] In main.cpp phase  CL_BEACON  - Calib is at [ -11.54815 , 115.20319  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  73370 , pixelCount =  518 ] 
+[21.22] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.70655 , 14.78250  rel-to-center, exp =  19486 valueMax =  619 valueSum =  7899 pixelCount =  51 ] 
+[21.22] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26698 , 115.27200  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  70025 , pixelCount =  497 ] 
+[21.31] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.68853 , 14.73485  rel-to-center, exp =  19486 valueMax =  590 valueSum =  7988 pixelCount =  53 ] 
+[21.31] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26806 , 115.21343  rel-to-center, exp =  158 , valueMax =  271 , valueSum =  72891 , pixelCount =  517 ] 
+[21.41] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.76243 , 14.75744  rel-to-center, exp =  19486 valueMax =  593 valueSum =  8027 pixelCount =  52 ] 
+[21.41] In main.cpp phase  CL_BEACON  - Calib is at [ -11.53641 , 115.23378  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  71673 , pixelCount =  509 ] 
+[21.51] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.72548 , 14.82777  rel-to-center, exp =  19486 valueMax =  635 valueSum =  8065 pixelCount =  53 ] 
+[21.51] In main.cpp phase  CL_BEACON  - Calib is at [ -10.96571 , 115.17740  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  72499 , pixelCount =  514 ] 
+[21.62] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.66455 , 14.83333  rel-to-center, exp =  19486 valueMax =  616 valueSum =  8016 pixelCount =  52 ] 
+[21.62] In main.cpp phase  CL_BEACON  - Calib is at [ -11.17066 , 115.13769  rel-to-center, exp =  158 , valueMax =  270 , valueSum =  70087 , pixelCount =  501 ] 
+[21.73] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.79153 , 14.78802  rel-to-center, exp =  19486 valueMax =  628 valueSum =  7982 pixelCount =  53 ] 
+[21.73] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26273 , 115.24617  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  71626 , pixelCount =  509 ] 
+[21.82] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.69348 , 14.85201  rel-to-center, exp =  19486 valueMax =  627 valueSum =  8156 pixelCount =  53 ] 
+[21.82] In main.cpp phase  CL_CALIB  - Calib is at [ -11.29063 , 115.27048  rel-to-center, exp =  158 , valueMax =  262 , valueSum =  70557 , pixelCount =  504 ] 
+[21.92] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74875 , 14.78607  rel-to-center, exp =  19486 valueMax =  620 valueSum =  8171 pixelCount =  53 ] 
+[21.92] In main.cpp phase  CL_BEACON  - Calib is at [ -11.34112 , 115.34232  rel-to-center, exp =  158 , valueMax =  280 , valueSum =  70394 , pixelCount =  501 ] 
+[22.02] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.85573 , 14.72313  rel-to-center, exp =  19486 valueMax =  648 valueSum =  8318 pixelCount =  54 ] 
+[22.02] In main.cpp phase  CL_BEACON  - Calib is at [ -11.10750 , 115.21106  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  71098 , pixelCount =  506 ] 
+[22.13] In main.cpp phase  CL_BEACON  - Beacon is at [ -14.07273 , 14.84876  rel-to-center, exp =  19486 valueMax =  665 valueSum =  8662 pixelCount =  58 ] 
+[22.13] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32322 , 115.16170  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  70701 , pixelCount =  506 ] 
+[22.23] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.92475 , 14.66815  rel-to-center, exp =  19486 valueMax =  650 valueSum =  8531 pixelCount =  57 ] 
+[22.23] In main.cpp phase  CL_BEACON  - Calib is at [ -10.88405 , 115.30022  rel-to-center, exp =  158 , valueMax =  260 , valueSum =  70912 , pixelCount =  506 ] 
+[22.34] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.77794 , 14.70032  rel-to-center, exp =  19486 valueMax =  601 valueSum =  8232 pixelCount =  56 ] 
+[22.34] In main.cpp phase  CL_BEACON  - Calib is at [ -11.24697 , 115.33558  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  69021 , pixelCount =  496 ] 
+[22.44] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.62897 , 14.73033  rel-to-center, exp =  19486 valueMax =  593 valueSum =  8021 pixelCount =  54 ] 
+[22.44] In main.cpp phase  CL_BEACON  - Calib is at [ -10.88687 , 115.16286  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  69948 , pixelCount =  499 ] 
+[22.55] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.83723 , 14.62360  rel-to-center, exp =  19486 valueMax =  609 valueSum =  8220 pixelCount =  55 ] 
+[22.55] In main.cpp phase  CL_BEACON  - Calib is at [ -11.11724 , 115.39371  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  69765 , pixelCount =  499 ] 
+[22.66] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.68766 , 14.65209  rel-to-center, exp =  19486 valueMax =  613 valueSum =  8321 pixelCount =  56 ] 
+[22.66] In main.cpp phase  CL_BEACON  - Calib is at [ -11.12111 , 115.31076  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  71322 , pixelCount =  505 ] 
+[22.76] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.92683 , 14.73886  rel-to-center, exp =  19486 valueMax =  687 valueSum =  8597 pixelCount =  56 ] 
+[22.77] In main.cpp phase  CL_BEACON  - Calib is at [ -10.99607 , 115.26643  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  71051 , pixelCount =  505 ] 
+[22.87] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.92077 , 14.73917  rel-to-center, exp =  19486 valueMax =  662 valueSum =  8469 pixelCount =  54 ] 
+[22.87] In main.cpp phase  CL_BEACON  - Calib is at [ -11.15616 , 115.24950  rel-to-center, exp =  158 , valueMax =  272 , valueSum =  71924 , pixelCount =  511 ] 
+[22.98] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.95165 , 14.74679  rel-to-center, exp =  19486 valueMax =  703 valueSum =  8728 pixelCount =  56 ] 
+[22.98] In main.cpp phase  CL_BEACON  - Calib is at [ -11.17206 , 115.34588  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  69964 , pixelCount =  503 ] 
+[23.08] In main.cpp phase  CL_BEACON  - Beacon is at [ -14.02247 , 14.76918  rel-to-center, exp =  19486 valueMax =  665 valueSum =  8721 pixelCount =  57 ] 
+[23.08] In main.cpp phase  CL_BEACON  - Calib is at [ -11.04780 , 115.23521  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  69254 , pixelCount =  496 ] 
+[23.18] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.89480 , 14.66927  rel-to-center, exp =  19486 valueMax =  677 valueSum =  8584 pixelCount =  57 ] 
+[23.18] In main.cpp phase  CL_BEACON  - Calib is at [ -11.06137 , 115.23494  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  71651 , pixelCount =  510 ] 
+[23.27] In main.cpp phase  CL_BEACON  - Beacon is at [ -14.07114 , 14.69919  rel-to-center, exp =  19486 valueMax =  707 valueSum =  8926 pixelCount =  58 ] 
+[23.27] In main.cpp phase  CL_BEACON  - Calib is at [ -11.19315 , 115.30706  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  72000 , pixelCount =  518 ] 
+[23.38] In main.cpp phase  CL_BEACON  - Beacon is at [ -14.02712 , 14.58927  rel-to-center, exp =  19486 valueMax =  675 valueSum =  8738 pixelCount =  57 ] 
+[23.38] In main.cpp phase  CL_BEACON  - Calib is at [ -10.82462 , 115.30645  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  72983 , pixelCount =  516 ] 
+[23.49] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.85123 , 14.72582  rel-to-center, exp =  19486 valueMax =  673 valueSum =  8436 pixelCount =  54 ] 
+[23.49] In main.cpp phase  CL_BEACON  - Calib is at [ -11.11818 , 115.47915  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  70951 , pixelCount =  507 ] 
+[23.60] In main.cpp phase  CL_BEACON  - Beacon is at [ -14.01825 , 14.65378  rel-to-center, exp =  19486 valueMax =  699 valueSum =  8766 pixelCount =  56 ] 
+[23.60] In main.cpp phase  CL_BEACON  - Calib is at [ -11.07560 , 115.31282  rel-to-center, exp =  158 , valueMax =  276 , valueSum =  75401 , pixelCount =  523 ] 
+[23.68] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.81051 , 14.70769  rel-to-center, exp =  19486 valueMax =  652 valueSum =  8491 pixelCount =  55 ] 
+[23.69] In main.cpp phase  CL_CALIB  - Calib is at [ -11.08260 , 115.40670  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  73887 , pixelCount =  519 ] 
+[23.78] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.90387 , 14.67463  rel-to-center, exp =  19486 valueMax =  672 valueSum =  8624 pixelCount =  56 ] 
+[23.78] In main.cpp phase  CL_CALIB  - Calib is at [ -11.07659 , 115.33090  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  71345 , pixelCount =  506 ] 
+[23.89] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.84081 , 14.66461  rel-to-center, exp =  19486 valueMax =  658 valueSum =  8581 pixelCount =  56 ] 
+[23.89] In main.cpp phase  CL_BEACON  - Calib is at [ -11.11342 , 115.33613  rel-to-center, exp =  158 , valueMax =  266 , valueSum =  70357 , pixelCount =  501 ] 
+[23.99] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78376 , 14.70681  rel-to-center, exp =  19486 valueMax =  639 valueSum =  8537 pixelCount =  56 ] 
+[24.00] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21521 , 115.32661  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  70996 , pixelCount =  504 ] 
+[24.09] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.68870 , 14.51498  rel-to-center, exp =  19486 valueMax =  601 valueSum =  8410 pixelCount =  57 ] 
+[24.09] In main.cpp phase  CL_BEACON  - Calib is at [ -11.26941 , 115.37589  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  70896 , pixelCount =  503 ] 
+[24.20] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.82151 , 14.65407  rel-to-center, exp =  19486 valueMax =  640 valueSum =  8785 pixelCount =  60 ] 
+[24.20] In main.cpp phase  CL_BEACON  - Calib is at [ -11.21930 , 115.38740  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  71239 , pixelCount =  507 ] 
+[24.31] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.78420 , 14.64069  rel-to-center, exp =  19486 valueMax =  624 valueSum =  8508 pixelCount =  56 ] 
+[24.31] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32715 , 115.43097  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  71919 , pixelCount =  513 ] 
+[24.41] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80448 , 14.63869  rel-to-center, exp =  19486 valueMax =  638 valueSum =  8710 pixelCount =  59 ] 
+[24.41] In main.cpp phase  CL_BEACON  - Calib is at [ -11.09360 , 115.34651  rel-to-center, exp =  158 , valueMax =  275 , valueSum =  70104 , pixelCount =  504 ] 
+[24.52] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.81241 , 14.68667  rel-to-center, exp =  19486 valueMax =  667 valueSum =  8716 pixelCount =  57 ] 
+[24.52] In main.cpp phase  CL_BEACON  - Calib is at [ -11.12174 , 115.29828  rel-to-center, exp =  158 , valueMax =  262 , valueSum =  71758 , pixelCount =  506 ] 
+[24.63] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.74434 , 14.58941  rel-to-center, exp =  19486 valueMax =  640 valueSum =  8785 pixelCount =  59 ] 
+[24.63] In main.cpp phase  CL_BEACON  - Calib is at [ -11.11771 , 115.43471  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  71397 , pixelCount =  506 ] 
+[24.73] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.76076 , 14.65298  rel-to-center, exp =  19486 valueMax =  648 valueSum =  8619 pixelCount =  55 ] 
+[24.73] In main.cpp phase  CL_BEACON  - Calib is at [ -11.18408 , 115.38875  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  71360 , pixelCount =  508 ] 
+[24.83] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80297 , 14.70229  rel-to-center, exp =  19486 valueMax =  631 valueSum =  8750 pixelCount =  57 ] 
+[24.83] In main.cpp phase  CL_BEACON  - Calib is at [ -11.10880 , 115.28087  rel-to-center, exp =  158 , valueMax =  269 , valueSum =  70195 , pixelCount =  498 ] 
+[24.93] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.79578 , 14.66405  rel-to-center, exp =  19486 valueMax =  649 valueSum =  8912 pixelCount =  60 ] 
+[24.93] In main.cpp phase  CL_BEACON  - Calib is at [ -11.25012 , 115.19768  rel-to-center, exp =  158 , valueMax =  261 , valueSum =  70562 , pixelCount =  500 ] 
+[25.04] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.67917 , 14.66885  rel-to-center, exp =  19486 valueMax =  645 valueSum =  8718 pixelCount =  58 ] 
+[25.04] In main.cpp phase  CL_BEACON  - Calib is at [ -11.28148 , 115.28068  rel-to-center, exp =  158 , valueMax =  261 , valueSum =  71947 , pixelCount =  513 ] 
+[25.13] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80472 , 14.72576  rel-to-center, exp =  19486 valueMax =  629 valueSum =  8777 pixelCount =  57 ] 
+[25.13] In main.cpp phase  CL_BEACON  - Calib is at [ -11.63914 , 115.38351  rel-to-center, exp =  158 , valueMax =  273 , valueSum =  69482 , pixelCount =  498 ] 
+[25.24] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.80317 , 14.68105  rel-to-center, exp =  19486 valueMax =  666 valueSum =  8901 pixelCount =  58 ] 
+[25.24] In main.cpp phase  CL_BEACON  - Calib is at [ -11.31986 , 115.15817  rel-to-center, exp =  158 , valueMax =  263 , valueSum =  72490 , pixelCount =  516 ] 
+[25.35] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.54792 , 14.87493  rel-to-center, exp =  19486 valueMax =  643 valueSum =  8379 pixelCount =  53 ] 
+[25.35] In main.cpp phase  CL_BEACON  - Calib is at [ -11.67653 , 115.18157  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  70429 , pixelCount =  501 ] 
+[25.44] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65640 , 14.92168  rel-to-center, exp =  19486 valueMax =  615 valueSum =  8670 pixelCount =  57 ] 
+[25.44] In main.cpp phase  CL_BEACON  - Calib is at [ -11.39226 , 115.17982  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  71479 , pixelCount =  510 ] 
+[25.55] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.53132 , 14.92177  rel-to-center, exp =  19486 valueMax =  626 valueSum =  8590 pixelCount =  54 ] 
+[25.55] In main.cpp phase  CL_BEACON  - Calib is at [ -11.32665 , 115.05981  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  69670 , pixelCount =  498 ] 
+[25.66] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.53008 , 14.89511  rel-to-center, exp =  19486 valueMax =  632 valueSum =  8495 pixelCount =  54 ] 
+[25.66] In main.cpp phase  CL_BEACON  - Calib is at [ -11.89251 , 115.06288  rel-to-center, exp =  158 , valueMax =  268 , valueSum =  70751 , pixelCount =  504 ] 
+[25.76] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.65380 , 14.97309  rel-to-center, exp =  19486 valueMax =  648 valueSum =  8732 pixelCount =  57 ] 
+[25.76] In main.cpp phase  CL_BEACON  - Calib is at [ -11.38377 , 115.15727  rel-to-center, exp =  158 , valueMax =  258 , valueSum =  70993 , pixelCount =  507 ] 
+[25.87] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.53302 , 14.91895  rel-to-center, exp =  19486 valueMax =  640 valueSum =  8600 pixelCount =  54 ] 
+[25.87] In main.cpp phase  CL_BEACON  - Calib is at [ -12.01351 , 115.06928  rel-to-center, exp =  158 , valueMax =  277 , valueSum =  71190 , pixelCount =  509 ] 
+[25.96] In main.cpp phase  CL_CALIB  - Beacon is at [ -13.60857 , 14.93147  rel-to-center, exp =  19486 valueMax =  645 valueSum =  8755 pixelCount =  56 ] 
+[25.96] In main.cpp phase  CL_CALIB  - Calib is at [ -11.89348 , 115.07548  rel-to-center, exp =  158 , valueMax =  274 , valueSum =  70587 , pixelCount =  502 ] 
+[26.06] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.61979 , 14.93506  rel-to-center, exp =  19486 valueMax =  636 valueSum =  8824 pixelCount =  58 ] 
+[26.06] In main.cpp phase  CL_BEACON  - Calib is at [ -11.09814 , 115.03690  rel-to-center, exp =  158 , valueMax =  267 , valueSum =  70470 , pixelCount =  504 ] 
+[26.15] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.52639 , 15.02919  rel-to-center, exp =  19486 valueMax =  661 valueSum =  8564 pixelCount =  54 ] 
+[26.15] In main.cpp phase  CL_BEACON  - Calib is at [ -11.62828 , 115.05472  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  70763 , pixelCount =  502 ] 
+[26.26] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.60345 , 14.92813  rel-to-center, exp =  19486 valueMax =  653 valueSum =  8821 pixelCount =  56 ] 
+[26.26] In main.cpp phase  CL_BEACON  - Calib is at [ -11.70459 , 115.02551  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  69222 , pixelCount =  499 ] 
+[26.36] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.56212 , 15.00436  rel-to-center, exp =  19486 valueMax =  657 valueSum =  8950 pixelCount =  57 ] 
+[26.36] In main.cpp phase  CL_BEACON  - Calib is at [ -10.96609 , 115.06073  rel-to-center, exp =  158 , valueMax =  264 , valueSum =  72105 , pixelCount =  516 ] 
+[26.47] In main.cpp phase  CL_BEACON  - Beacon is at [ -13.56336 , 14.95735  rel-to-center, exp =  19486 valueMax =  660 valueSum =  8957 pixelCount =  57 ] 
+[26.47] In main.cpp phase  CL_BEACON  - Calib is at [ -11.60350 , 115.03078  rel-to-center, exp =  158 , valueMax =  265 , valueSum =  72259 , pixelCount =  517 ] 
+[26.50] In main.cpp - Shutting off calib laser and resetting FSM to (0,0). 
+[26.51] In main.cpp - Saving csv file. 
+[26.60] In main.cpp - Saving text file and ending process. 

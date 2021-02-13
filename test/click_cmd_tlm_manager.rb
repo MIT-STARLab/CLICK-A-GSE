@@ -101,13 +101,6 @@ pat_mode_names = %w[
     BEACON_ALIGN
 ]
 
-def get_timestamp()
-    current_time = Time.now #time of test start
-    current_time_str = current_time.to_s #human readable time
-    current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
-    return current_timestamp, current_time_str
-end
-
 #Subscribe to telemetry packets:
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_LIST_FILE = subscribe_packet_data([['UUT', 'PL_LIST_FILE']], 10000) #set queue depth to 10000 (default is 1000)

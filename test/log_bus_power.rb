@@ -6,9 +6,7 @@ require "csv"
 tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 500000) #set queue depth to 100000 (default is 1000)
 
 #save_period_sec = 1
-current_time = Time.now #time of test start
-current_time_str = current_time.to_s #human readable time
-current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+current_timestamp, current_time_str = get_timestamp()
 
 #Save test results to text file:
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
