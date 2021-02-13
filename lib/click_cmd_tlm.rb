@@ -251,6 +251,39 @@ def validate_file(md5, file_path)
     click_cmd(CMD_PL_VALIDATE_FILE, data, packing)
 end
 
+def disassemble_file(trans_id, file_path)
+    #define chunk size parameter (PL_DL_FILE packet def)
+    chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
+
+    #define data bytes
+    data = []
+    data[0] = trans_id
+    data[1] = chunk_size_bytes
+    data[2] = file_path.length
+    data[3] = file_path 
+    packing = "S>3" + "a" + file_path.length.to_s
+
+    #SM Send via UUT PAYLOAD_WRITE
+    click_cmd(CMD_PL_DISASSEMBLE_FILE, data, packing)
+end
+
+def request_file_chunks(trans_id, all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
+    #define data bytes
+    data = []
+    data[0] = trans_id
+    if all_chunks_bool
+        data[1] = 0xFF
+    else
+        data[1] = 0x00
+    end
+    data[2] = chunk_start_idx
+    data[3] = num_chunks 
+    packing = "S>CS>2"
+
+    #SM Send via UUT PAYLOAD_WRITE
+    click_cmd(CMD_PL_REQUEST_FILE, data, packing)
+end
+
 def upload_file(tlm_id_PL_ASSEMBLE_FILE)
     ###################### Uplink File Information (Number of chunks, file length) #################################   
     # Cosmos directory on the ground station computer
@@ -514,7 +547,7 @@ def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
     packing = "S>3" + "a" + file_path.length.to_s
     
     #SM Send via UUT PAYLOAD_WRITE
-    click_cmd(CMD_PL_REQUEST_FILE, data, packing)
+    click_cmd(CMD_PL_AUTO_DOWNLINK_FILE, data, packing)
     
     #Get File Chunks
     download_complete = false

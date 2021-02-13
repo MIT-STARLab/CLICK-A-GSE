@@ -6,50 +6,22 @@ require 'digest/md5'
 load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
-
-cmd_list = [
-    CMD_PL_REBOOT,
-    CMD_PL_ENABLE_TIME,
-    CMD_PL_EXEC_FILE,
-    CMD_PL_LIST_FILE,
-    CMD_PL_REQUEST_FILE,
-    CMD_PL_UPLOAD_FILE,
-    CMD_PL_ASSEMBLE_FILE,
-    CMD_PL_VALIDATE_FILE,
-    CMD_PL_MOVE_FILE,
-    CMD_PL_DEL_FILE,
-    CMD_PL_SET_PAT_MODE,
-    CMD_PL_SINGLE_CAPTURE,
-    CMD_PL_CALIB_LASER_TEST,
-    CMD_PL_FSM_TEST,
-    CMD_PL_RUN_CALIBRATION,
-    CMD_PL_TX_ALIGN,
-    CMD_PL_UPDATE_TX_OFFSETS,
-    CMD_PL_UPDATE_FSM_ANGLES,
-    CMD_PL_ENTER_PAT_MAIN,
-    CMD_PL_EXIT_PAT_MAIN,
-    CMD_PL_END_PAT_PROCESS,
-    CMD_PL_SET_FPGA,
-    CMD_PL_GET_FPGA,
-    CMD_PL_SET_HK,
-    CMD_PL_ECHO,
-    CMD_PL_NOOP,
-    CMD_PL_SELF_TEST,
-    CMD_PL_DWNLINK_MODE,
-    CMD_PL_DEBUG_MODE,
-]
+cosmos_dir = Cosmos::USERPATH
 
 cmd_names = %w[
     PL_REBOOT
     PL_ENABLE_TIME
     PL_EXEC_FILE
     PL_LIST_FILE
-    PL_REQUEST_FILE
+    PL_AUTO_DOWNLINK_FILE
+    PL_DISASSEMBLE_FILE
+    PL_REQUEST_FILE_CHUNKS
     PL_UPLOAD_FILE
     PL_ASSEMBLE_FILE
     PL_VALIDATE_FILE
     PL_MOVE_FILE
     PL_DEL_FILE
+    PL_AUTO_ASSEMBLE_FILE
     PL_SET_PAT_MODE
     PL_SINGLE_CAPTURE
     PL_CALIB_LASER_TEST
@@ -69,6 +41,7 @@ cmd_names = %w[
     PL_SELF_TEST
     PL_DWNLINK_MODE
     PL_DEBUG_MODE
+    PL_UPDATE_SEED_PARAMS
 ]
 
 self_test_list = [
@@ -115,7 +88,8 @@ while true
     cmd_names[6], cmd_names[7], cmd_names[8], cmd_names[9], cmd_names[10], cmd_names[11],
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
-    cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28],
+    cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
+    cmd_names[30], cmd_names[31], cmd_names[32],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -175,12 +149,51 @@ while true
                 end
             end
 
-        elsif user_cmd == 'PL_REQUEST_FILE'
+        elsif user_cmd == 'PL_AUTO_DOWNLINK_FILE'
             #define file path:
-            file_path = ask_string("For PL_REQUEST_FILE, input the payload file path (e.g. /root/test/test_tlm.txt). Input EXIT to escape.", 'EXIT')
+            file_path = ask_string("For PL_AUTO_DOWNLINK_FILE, input the payload file path (e.g. /root/test/test_tlm.txt). Input EXIT to escape.", 'EXIT')
             #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             if file_path != 'EXIT'
                 request_file(file_path, tlm_id_PL_DL_FILE)
+            end
+
+        elsif user_cmd == 'PL_DISASSEMBLE_FILE'
+            #define file path:
+            file_path = ask_string("For PL_DISASSEMBLE_FILE, input the payload file path (e.g. /root/test/test_tlm.txt). Input EXIT to escape.", 'EXIT')
+            #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
+            if file_path != 'EXIT'
+                # Read the last transfer ID and add 1 to it
+                last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
+                print("\nlast trans id: #{last_trans_id.to_i}\n")
+                
+                trans_id = last_trans_id.to_i+1 # increment the transfer ID
+                print ("new trans id: #{trans_id}\n")
+                trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
+                
+                # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
+                File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
+
+                #Send command
+                disassemble_file(trans_id, file_path)
+            end
+
+        elsif user_cmd == 'PL_REQUEST_FILE_CHUNKS'
+            #define transfer id:
+            trans_id = ask("For PL_REQUEST_FILE_CHUNKS, input the transfer id. Input EXIT to escape.", 'EXIT')
+            #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
+            if trans_id != 'EXIT'
+                recursive_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
+                if recursive_cmd == 'YES'
+                    request_file_chunks(trans_id, true)
+                elsif recursive_cmd == 'NO'
+                    chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
+                    if chunk_start_idx != 'EXIT'
+                        num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
+                        if num_chunks != 'EXIT'
+                            request_file_chunks(trans_id, false, chunk_start_idx, num_chunks)
+                        end
+                    end
+                end
             end
 
         elsif user_cmd == 'PL_UPLOAD_FILE'
@@ -230,6 +243,9 @@ while true
                     delete_file(recursive, file_path)               
                 end
             end
+        
+        elsif user_cmd == 'PL_AUTO_ASSEMBLE_FILE'
+            prompt('PL_AUTO_ASSEMBLE_FILE not yet implemented.')
 
         elsif user_cmd == 'PL_SET_PAT_MODE'
             user_pat_mode = combo_box("Select PAT mode (or EXIT).", 
@@ -600,6 +616,9 @@ while true
         elsif user_cmd == 'PL_DEBUG_MODE'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_DEBUG_MODE)
+
+        elsif user_cmd == 'PL_UPDATE_SEED_PARAMS'
+            prompt('PL_UPDATE_SEED_PARAMS not yet implemented.')
 
         end
 

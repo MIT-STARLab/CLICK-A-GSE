@@ -20,7 +20,6 @@ hk_sys_pkt_fixed_data_fields = %w[
     HK_SYS_PERIOD
     CH_HEARTBEAT_PERIOD
     PAT_HEALTH_PERIOD
-    FPGA_RESPONSE_PERIOD
     ACK_CMD_COUNT
     LAST_ACK_CMD_ID
     ERROR_CMD_COUNT
@@ -31,7 +30,7 @@ hk_sys_pkt_fixed_data_fields = %w[
     AVAILABLE_VIRTUAL_MEMORY
 ]
 hk_sys_pkt_fixed_data_fields_len = hk_sys_pkt_fixed_data_fields.length
-HK_SYS_FIXED_DATA_LEN = 27 #TODO: Add this to the packet def
+HK_SYS_FIXED_DATA_LEN = 26 #TODO: Add this to the packet def
 
 while(true)
     #Get telemetry packet:
