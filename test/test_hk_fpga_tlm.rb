@@ -8,7 +8,7 @@ tlm_id_PL_HK_FPGA = subscribe_packet_data([['UUT', 'PL_HK_FPGA']], 500000) #set 
 #Save test results to text file:
 current_timestamp, current_time_str = get_timestamp()
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
-file_name = "HK_CH_" + current_timestamp + ".txt"
+file_name = "HK_FPGA_" + current_timestamp + ".txt"
 file_path = test_log_dir + file_name
 File.open(file_path, 'a+') {|f| f.write("Housekeeping Telemetry - FPGA Health. Start Time: " + current_time_str + "\n")}
 
