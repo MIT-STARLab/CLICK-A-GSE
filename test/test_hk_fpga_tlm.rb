@@ -33,7 +33,7 @@ while(true)
 
     #Parse FPGA Data - Select Registers Under 128: (0-4), (32-38), 47, 48, 53, 54, 57, (60-63), (96-109), (112-119)
     reg_UNDER_128 = packet.read('FPGA_REG_UNDER_128')
-    addr_UNDER_128 = (0..4) + (32..38) + [47,48,53,54,57] + (60..63) + (96..109) + (112..119)
+    addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..109).to_a + (112..119).to_a
     msg_UNDER_128 = "Under 128 Block: "
     for i in 0..(reg_UNDER_128.length-1)
         msg_UNDER_128 += ("(Reg " + addr_UNDER_128[i].to_s + ": " + reg_UNDER_128[i].to_s + "), ")
@@ -69,7 +69,7 @@ while(true)
 
     #Parse FPGA Data - DAC Registers (502-509)
     reg_DAC_BLOCK = packet.read('FPGA_REG_DAC_BLOCK')
-    addr_DAC_BLOCK = 0..8
+    addr_DAC_BLOCK = (0..8).to_a
     names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
     msg_DAC_BLOCK = "DAC Block: "
     for i in 0..(reg_DAC_BLOCK.length-1)
