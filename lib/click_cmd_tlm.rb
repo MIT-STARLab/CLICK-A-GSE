@@ -46,6 +46,14 @@ def click_cmd(cmd_id, data = [], packing = "C*")
     cmd("UUT PAYLOAD_WRITE with RAW_BYTES #{raw_bytes}, LENGTH #{raw_bytes.length}")
 end
 
+### Get timestamp for file saving
+def get_timestamp()
+    current_time = Time.now #time of test start
+    current_time_str = current_time.to_s #human readable time
+    current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+    return current_timestamp, current_time_str
+end
+
 ### Parse CCSDS header in payload telemetry packet
 def parse_ccsds(packet)
     #Read the packet CCSDS primary header:

@@ -98,6 +98,33 @@ TELEMETRY XACT PL_HK_FPGA BIG_ENDIAN
   APPEND_ITEM HK_FPGA_COUNTER 8 UINT
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "TBD variable length payload data + CRC"
 
+# HK_CH - Commandhandler Housekeeping - APID: 0x315 (TBR)
+TELEMETRY XACT PL_HK_CH BIG_ENDIAN
+  ITEM SYNC 0 64 UINT "Sync Pattern"
+    FORMAT_STRING "0x%08X"
+  ID_ITEM MSG_ID 64 32 UINT 0x315 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ITEM LEN 96 32 UINT "Length (bytes) of packet"
+  ITEM SEQ 128 32 UINT "Sequence Counter"
+  ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
+    UNITS sec sec
+  ITEM CCSDS_TAI_SUBSECS 192 8 UINT "TAI Subseconds from CCSDS Header"
+    POLY_READ_CONVERSION 0 0.2
+    UNITS sec sec
+  ITEM CCSDS_REALTIME 200 8 UINT "Identifies data as realtime or from storage"
+    STATE REALTIME 1
+    STATE STORED 0
+  #End COSMOS Header
+  APPEND_ITEM PL_CCSDS_VER 3 UINT
+  APPEND_ITEM PL_CCSDS_TYPE 1 UINT
+  APPEND_ITEM PL_CCSDS_SECNDRY 1 UINT
+  APPEND_ITEM PL_CCSDS_APID 11 UINT "Same as message ID above"
+    FORMAT_STRING "0x%03X"
+  APPEND_ITEM PL_CCSDS_GRP 2 UINT
+  APPEND_ITEM PL_CCSDS_SEQ 14 UINT
+  APPEND_ITEM PL_CCSDS_LEN 16 UINT
+  #End Payload Header
+  APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "CH health string is variable length payload data + CRC"
+
 # DL_FILE - File Telemetry Chunks - APID: 0x387 (TBR)
 TELEMETRY XACT PL_DL_FILE BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"

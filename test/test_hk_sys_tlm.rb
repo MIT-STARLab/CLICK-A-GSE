@@ -34,7 +34,7 @@ while(true)
     _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
     apid_check_bool = pl_ccsds_apid == TLM_HK_SYS
     if !apid_check_bool
-        puts "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_ECHO APID (= " + TLM_HK_SYS.to_s + "). "
+        puts "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_HK_SYS APID (= " + TLM_HK_SYS.to_s + "). "
     end
 
     #Assemble HK Message
