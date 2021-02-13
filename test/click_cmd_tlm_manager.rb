@@ -122,7 +122,7 @@ while true
     cmd_names[6], cmd_names[7], cmd_names[8], cmd_names[9], cmd_names[10], cmd_names[11],
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
-    cmd_names[24], cmd_names[25], cmd_names[26], 
+    cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
