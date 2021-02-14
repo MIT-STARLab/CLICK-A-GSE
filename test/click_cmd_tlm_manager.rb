@@ -27,6 +27,7 @@ cmd_names = %w[
     PL_CALIB_LASER_TEST
     PL_FSM_TEST
     PL_RUN_CALIBRATION
+    PL_UPDATE_ACQUISITION_PARAMS
     PL_TX_ALIGN
     PL_UPDATE_TX_OFFSETS
     PL_UPDATE_FSM_ANGLES
@@ -81,7 +82,7 @@ tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 1
 tlm_id_PL_GET_FPGA = subscribe_packet_data([['UUT', 'PL_GET_FPGA']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
-
+fpga_req_num = 0 #fpga request number counter
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
     cmd_names[0], cmd_names[1], cmd_names[2], cmd_names[3], cmd_names[4], cmd_names[5], 
@@ -89,7 +90,7 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
-    cmd_names[30], cmd_names[31], cmd_names[32],
+    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -175,6 +176,7 @@ while true
 
                 #Send command
                 disassemble_file(trans_id, file_path)
+                prompt(file_path + " disassembly request sent with transfer id: " + trans_id.to_s)
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE_CHUNKS'
@@ -265,7 +267,7 @@ while true
         elsif user_cmd == 'PL_SINGLE_CAPTURE'
             user_exp = ask("For PL_SINGLE_CAPTURE, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT') 
             if user_exp != 'EXIT'
-                if user_exp >= 10 and user_exp <= 10000000
+                if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
                     puts "user_exp: ", user_exp
                     #define data bytes
                     data = []
@@ -282,7 +284,7 @@ while true
         elsif user_cmd == 'PL_CALIB_LASER_TEST'
             user_exp = ask("For PL_CALIB_LASER_TEST, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
             if user_exp != 'EXIT'
-                if user_exp >= 10 and user_exp <= 10000000
+                if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
                     #define data bytes
                     data = []
                     data[0] = user_exp
@@ -298,7 +300,7 @@ while true
         elsif user_cmd == 'PL_FSM_TEST'
             user_exp = ask("For PL_FSM_TEST, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
             if user_exp != 'EXIT'
-                if user_exp >= 10 and user_exp <= 10000000
+                if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
                     #define data bytes
                     data = []
                     data[0] = user_exp
@@ -314,7 +316,43 @@ while true
         elsif user_cmd == 'PL_RUN_CALIBRATION'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_RUN_CALIBRATION)
-            
+        
+        elsif user_cmd == 'PL_UPDATE_ACQUISITION_PARAMS'
+            user_bcn_rel_x = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon X relative position in pixels (or 0). Input EXIT to escape.", 'EXIT')
+            if user_bcn_rel_x != 'EXIT'
+                user_bcn_rel_y = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon Y relative position in pixels (or 0). Input EXIT to escape.", 'EXIT')
+                if user_bcn_rel_y != 'EXIT'
+                    if user_bcn_rel_x <= CAMERA_WIDTH/2 and user_bcn_rel_y <= CAMERA_HEIGHT/2
+                        user_bcn_window_size = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon acquisition window size (width = height) in pixels (or 0). Input EXIT to escape.", 'EXIT')
+                        if user_bcn_window_size != 'EXIT'
+                            if user_bcn_window_size <= CAMERA_HEIGHT
+                                user_bcn_max_exp = ask("For PL_UPDATE_ACQUISITION_PARAMS, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
+                                if user_bcn_max_exp != 'EXIT'
+                                    if user_bcn_max_exp >= CAMERA_MIN_EXP and user_bcn_max_exp <= CAMERA_MAX_EXP
+                                        #define data bytes
+                                        data = []
+                                        data[0] = user_bcn_rel_x
+                                        data[1] = user_bcn_rel_y
+                                        data[3] = user_bcn_window_size
+                                        data[4] = user_bcn_max_exp
+                                        packing = "s>2S>L>"
+                    
+                                        #SM Send via UUT Payload Write
+                                        click_cmd(CMD_PL_UPDATE_ACQUISITION_PARAMS, data, packing)
+                                    else
+                                        prompt("Exposure time out of bounds (10 to 10000000).")
+                                    end
+                                end
+                            else
+                                prompt("Beacon window size out of bounds.")
+                            end
+                        end
+                    else
+                        prompt("Beacon relative position out of bounds.")
+                    end
+                end
+            end            
+
         elsif user_cmd == 'PL_TX_ALIGN'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_TX_ALIGN)
@@ -324,7 +362,7 @@ while true
             if user_x_update != 'EXIT'
                 user_y_update = ask("For PL_UPDATE_TX_OFFSETS, input Y displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
                 if user_y_update != 'EXIT'
-                    if user_x_update <= 1000 and user_y_update <= 1000
+                    if user_x_update <= CAMERA_WIDTH/2 and user_y_update <= CAMERA_HEIGHT/2
                         #define data bytes
                         data = []
                         data[0] = user_x_update
@@ -373,97 +411,88 @@ while true
 
         elsif user_cmd == 'PL_SET_FPGA'
             #define request number, start address, and data to write
-            user_request_number = ask("For PL_SET_FPGA, input request number (between 0 and 255). Input EXIT to escape.", 'EXIT')
-            if user_request_number != 'EXIT'
-                if user_request_number >= 0 and user_request_number <= 255
-                    user_start_address = ask("For PL_SET_FPGA, input start register address.")
-                    user_num_registers = ask("For PL_SET_FPGA, input number of registers to write.")
-                    user_write_data = []
-                    for i in 0..(user_num_registers-1)
-                        user_write_data_i = ask("For PL_SET_FPGA, input data to write to register " + (user_start_address + i).to_s)
-                        user_write_data += [user_write_data_i] 
-                    end               
-                    
-                    #define data bytes
-                    data = []
-                    data[0] = user_request_number
-                    data[1] = user_start_address
-                    data[2] = user_write_data.length
-                    data += user_write_data
-                    packing = "CS>C" + "L>" + user_write_data.length.to_s
-        
-                    #SM Send via UUT PAYLOAD_WRITE
-                    click_cmd(CMD_PL_SET_FPGA, data, packing)
-                else
-                    prompt("Request number out of bounds (0 to 255)")
-                end
+            user_start_address = ask("For PL_SET_FPGA, input start register address. Input EXIT to escape.", 'EXIT')
+            if user_start_address != 'EXIT'
+                user_num_registers = ask("For PL_SET_FPGA, input number of registers to write.")
+                fpga_req_num = (fpga_req_num + 1)%256
+                user_write_data = []
+                for i in 0..(user_num_registers-1)
+                    user_write_data_i = ask("For PL_SET_FPGA, input data to write to register " + (user_start_address + i).to_s)
+                    user_write_data += [user_write_data_i] 
+                end               
+                
+                #define data bytes
+                data = []
+                data[0] = fpga_req_num
+                data[1] = user_start_address
+                data[2] = user_write_data.length
+                data += user_write_data
+                packing = "CS>C" + "L>" + user_write_data.length.to_s
+    
+                #SM Send via UUT PAYLOAD_WRITE
+                click_cmd(CMD_PL_SET_FPGA, data, packing)
             end
 
         elsif user_cmd == 'PL_GET_FPGA'
             #define request number, start address, and data to write
-            user_request_number = ask("For PL_GET_FPGA, input request number (between 0 and 255). Input EXIT to escape.", 'EXIT')
-            if user_request_number != 'EXIT'
-                if user_request_number >= 0 and user_request_number <= 255
-                    user_start_address = ask("For PL_GET_FPGA, input start register address.")
-                    user_num_registers = ask("For PL_GET_FPGA, input number of registers to read.")         
+            user_start_address = ask("For PL_GET_FPGA, input start register address. Input EXIT to escape.", 'EXIT')
+            if user_start_address != 'EXIT'
+                user_num_registers = ask("For PL_GET_FPGA, input number of registers to read.")         
+                fpga_req_num = (fpga_req_num + 1)%256
+                #define data bytes
+                data = []
+                data[0] = fpga_req_num
+                data[1] = user_start_address
+                data[2] = user_num_registers
+                packing = "CS>C"
 
-                    #define data bytes
-                    data = []
-                    data[0] = user_request_number
-                    data[1] = user_start_address
-                    data[2] = user_num_registers
-                    packing = "CS>C"
+                #SM Send via UUT PAYLOAD_WRITE
+                click_cmd(CMD_PL_GET_FPGA, data, packing)
 
-                    #SM Send via UUT PAYLOAD_WRITE
-                    click_cmd(CMD_PL_GET_FPGA, data, packing)
+                #Get telemetry packet:
+                packet = get_packet(tlm_id_PL_GET_FPGA)   
 
-                    #Get telemetry packet:
-                    packet = get_packet(tlm_id_PL_GET_FPGA)   
+                #Parse CCSDS header:             
+                _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+                apid_check_bool = pl_ccsds_apid == TLM_GET_FPGA
 
-                    #Parse CCSDS header:             
-                    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
-                    apid_check_bool = pl_ccsds_apid == TLM_GET_FPGA
+                request_num_rx = packet.read('REQUEST_NUM')
+                start_addr_rx = packet.read('START_ADDRESS')
+                num_registers_rx = packet.read('SIZE')
 
-                    request_num_rx = packet.read('REQUEST_NUM')
-                    start_addr_rx = packet.read('START_ADDRESS')
-                    num_registers_rx = packet.read('SIZE')
+                request_num_check = request_num_rx == user_request_number
+                start_addr_check = start_addr_rx == user_start_address
+                num_registers_check = num_registers_rx == user_num_registers
+                
+                #Define variable length data packing:
+                packing = "L>" + num_registers_rx.to_s + "S>" #define data packing for telemetry packet
 
-                    request_num_check = request_num_rx == user_request_number
-                    start_addr_check = start_addr_rx == user_start_address
-                    num_registers_check = num_registers_rx == user_num_registers
-                    
-                    #Define variable length data packing:
-                    packing = "L>" + num_registers_rx.to_s + "S>" #define data packing for telemetry packet
-
-                    #Read the data bytes and check CRC:
-                    read_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
-                    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
-                    
-                    summary_message = "PL_GET_FPGA: \n"
-                    if !apid_check_bool
-                        summary_message += ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_GET_FPGA APID (= " + TLM_GET_FPGA.to_s + ").\n")
-                    end
-                    if !crc_check_bool
-                        summary_message += ("CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n")
-                    end
-                    if !request_num_check
-                        summary_message += ("Request Number Error! Received request number (= " + request_num_rx.to_s + ") not equal to transmitted request number (= " + user_request_number.to_s + ").\n")
-                    end
-                    if !request_num_check
-                        summary_message += ("Request Number Error! Received start address (= " + start_addr_check.to_s + ") not equal to transmitted start address (= " + user_start_address.to_s + ").\n")
-                    end
-                    if !request_num_check
-                        summary_message += ("Request Number Error! Received number of registers (= " + num_registers_rx.to_s + ") not equal to requested number of registers (= " + user_num_registers.to_s + ").\n")
-                    end
-                    summary_message += "Read Data: \n"
-                    for i in 0..(num_registers_rx-1)
-                        register = start_addr_rx + i
-                        summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
-                    end
-                    prompt(summary_message)
-                else
-                    prompt("Request number out of bounds (0 to 255)")
+                #Read the data bytes and check CRC:
+                read_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+                crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+                
+                summary_message = "PL_GET_FPGA: \n"
+                if !apid_check_bool
+                    summary_message += ("CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_GET_FPGA APID (= " + TLM_GET_FPGA.to_s + ").\n")
                 end
+                if !crc_check_bool
+                    summary_message += ("CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n")
+                end
+                if !request_num_check
+                    summary_message += ("Request Number Error! Received request number (= " + request_num_rx.to_s + ") not equal to transmitted request number (= " + user_request_number.to_s + ").\n")
+                end
+                if !request_num_check
+                    summary_message += ("Request Number Error! Received start address (= " + start_addr_check.to_s + ") not equal to transmitted start address (= " + user_start_address.to_s + ").\n")
+                end
+                if !request_num_check
+                    summary_message += ("Request Number Error! Received number of registers (= " + num_registers_rx.to_s + ") not equal to requested number of registers (= " + user_num_registers.to_s + ").\n")
+                end
+                summary_message += "Read Data: \n"
+                for i in 0..(num_registers_rx-1)
+                    register = start_addr_rx + i
+                    summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                end
+                prompt(summary_message)
             end
 
         elsif user_cmd == 'PL_SET_HK'
@@ -537,81 +566,23 @@ while true
                     prompt("PL_LASER_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
 
                 elsif test_id == PAT_SELF_TEST
-                    #Get telemetry packet:
-                    packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
-                    current_timestamp, current_time_str = get_timestamp()
-
-                    #Parse CCSDS header:             
-                    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
-                    apid_check_bool = pl_ccsds_apid == TLM_PAT_SELF_TEST
-
-                    #Get Test Flags
-                    camera_test_flag = packet.read('CAMERA_TEST_FLAG')
-                    fpga_ipc_test_flag = packet.read('FPGA_IPC_TEST_FLAG')
-                    laser_test_flag = packet.read('LASER_TEST_FLAG')
-                    fsm_test_flag = packet.read('FSM_TEST_FLAG')
-                    calibration_test_flag = packet.read('CALIBRATION_TEST_FLAG')
-                    test_results = [camera_test_flag, fpga_ipc_test_flag, laser_test_flag, fsm_test_flag, calibration_test_flag]
-                    test_names = ["Camera", "FPGA IPC", "Calibration Laser", "FSM", "Calibration"]
-                    summary_message = ""
-                    num_tests_passed = 0
-                    for i in 0..(test_results.length-1)
-                        if test_results[i] == PAT_PASS_SELF_TEST
-                            summary_message += (test_names[i] + " Test: PASSED\n")
-                            num_tests_passed += 1
-                        elsif test_results[i] == PAT_NULL_SELF_TEST
-                            summary_message += (test_names[i] + " Test: N/A\n")
-                        elsif test_results[i] == PAT_FAIL_SELF_TEST
-                            summary_message += (test_names[i] + " Test: FAILED\n")
-                        else
-                            summary_message += (test_names[i] + " Test: Unrecognized Result = " + camera_test_flag.to_s + "\n")
-                        end
-                    end
-                    self_test_pass_bool = num_tests_passed == test_results.length
-                    
-                    #Get test error message if available
-                    if !self_test_pass_bool
-                        error_data_length = pl_ccsds_length - 5 - CRC_LEN + 1 #get data size
-                        packing = "a" + error_data_length.to_s + "S>" #define data packing for telemetry packet
-                        error_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
-                    else
-                        crc_rx = parse_empty_data_and_crc(packet) #parse crc
-                    end
-                    #Check CRC:
-                    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC                    
-                    
-                    #Determine if self test was successful and if not, generate error message:
-                    success_bool = apid_check_bool and crc_check_bool and self_test_pass_bool
-                    if success_bool
-                        summary_message = "PAT Self Test: PASSED.\n" + summary_message
-                    else
-                        summary_message = "PAT Self Test: FAILED.\n" + summary_message
-                        if !apid_check_bool
-                            summary_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_PAT_SELF_TEST APID (= " + TLM_PAT_SELF_TEST.to_s + ").\n"
-                        end
-                        if !crc_check_bool
-                            summary_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
-                        end
-                        if !self_test_pass_bool
-                            summary_message += (error_data + "\n")
-                        end
-                    end
-
-                    #Save test results to text file:
-                    file_name = "PAT_SELF_TEST_RESULTS_" + current_timestamp + ".txt"
-                    file_path = test_log_dir + file_name
-                    File.open(file_path, 'a+') {|f| f.write("PAT_SELF_TEST. Start Time: " + current_time_str + "\n")}
-                    File.open(file_path, 'a+') {|f| f.write(summary_message)}
-                    download_files_cmd = message_box(summary_message + "Test summary saved to: " + file_path + "\nDownload PAT logs?", 'YES', 'NO')
-                    if download_files_cmd == 'YES'
-                        request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
-                    end
+                    getResults_PAT_SELF_TEST(tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
                 end
             end
 
         elsif user_cmd == 'PL_DWNLINK_MODE'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_DWNLINK_MODE)
+
+            #Display PAT Self Test Results
+            getResults_PAT_SELF_TEST(tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+
+            #Get full PAT test data
+            prompt("Test is running...\nWhen complete, press Continue to restart PAT process and retrieve log data.")
+            request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+
+            #Get remainder of data (TODO: automate this)
+            prompt("Use file transfer to retrieve remaining test log data.")
 
         elsif user_cmd == 'PL_DEBUG_MODE'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)

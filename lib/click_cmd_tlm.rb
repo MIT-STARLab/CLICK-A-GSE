@@ -660,3 +660,78 @@ def request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, exp_num_str = 
         request_directory_files(exp_folder_path, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
     end
 end
+
+def getResults_PAT_SELF_TEST(tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, req_pat_telemetry_bool = false)
+    #Get telemetry packet:
+    packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
+    current_timestamp, current_time_str = get_timestamp()
+
+    #Parse CCSDS header:             
+    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+    apid_check_bool = pl_ccsds_apid == TLM_PAT_SELF_TEST
+
+    #Get Test Flags
+    camera_test_flag = packet.read('CAMERA_TEST_FLAG')
+    fpga_ipc_test_flag = packet.read('FPGA_IPC_TEST_FLAG')
+    laser_test_flag = packet.read('LASER_TEST_FLAG')
+    fsm_test_flag = packet.read('FSM_TEST_FLAG')
+    calibration_test_flag = packet.read('CALIBRATION_TEST_FLAG')
+    test_results = [camera_test_flag, fpga_ipc_test_flag, laser_test_flag, fsm_test_flag, calibration_test_flag]
+    test_names = ["Camera", "FPGA IPC", "Calibration Laser", "FSM", "Calibration"]
+    summary_message = "PAT_SELF_TEST. Start Time: " + current_time_str + "\n"
+    num_tests_passed = 0
+    for i in 0..(test_results.length-1)
+        if test_results[i] == PAT_PASS_SELF_TEST
+            summary_message += (test_names[i] + " Test: PASSED\n")
+            num_tests_passed += 1
+        elsif test_results[i] == PAT_NULL_SELF_TEST
+            summary_message += (test_names[i] + " Test: N/A\n")
+        elsif test_results[i] == PAT_FAIL_SELF_TEST
+            summary_message += (test_names[i] + " Test: FAILED\n")
+        else
+            summary_message += (test_names[i] + " Test: Unrecognized Result = " + camera_test_flag.to_s + "\n")
+        end
+    end
+    self_test_pass_bool = num_tests_passed == test_results.length
+    
+    #Get test error message if available
+    if !self_test_pass_bool
+        error_data_length = pl_ccsds_length - 5 - CRC_LEN + 1 #get data size
+        packing = "a" + error_data_length.to_s + "S>" #define data packing for telemetry packet
+        error_data, crc_rx = parse_variable_data_and_crc(packet, packing) #parse variable length data and crc
+    else
+        crc_rx = parse_empty_data_and_crc(packet) #parse crc
+    end
+    #Check CRC:
+    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC                    
+    
+    #Determine if self test was successful and if not, generate error message:
+    success_bool = apid_check_bool and crc_check_bool and self_test_pass_bool
+    if success_bool
+        summary_message = "PAT Self Test: PASSED.\n" + summary_message
+    else
+        summary_message = "PAT Self Test: FAILED.\n" + summary_message
+        if !apid_check_bool
+            summary_message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_PAT_SELF_TEST APID (= " + TLM_PAT_SELF_TEST.to_s + ").\n"
+        end
+        if !crc_check_bool
+            summary_message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+        end
+        if !self_test_pass_bool
+            summary_message += (error_data + "\n")
+        end
+    end
+
+    #Save test results to text file:
+    file_name = "PAT_SELF_TEST_RESULTS_" + current_timestamp + ".txt"
+    file_path = test_log_dir + file_name
+    File.open(file_path, 'a+') {|f| f.write(summary_message)}
+    if req_pat_telemetry_bool
+        download_files_cmd = message_box(summary_message + "Test summary saved to: " + file_path + "\nDownload PAT logs?", 'YES', 'NO')
+        if download_files_cmd == 'YES'
+            request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+        end
+    else
+        prompt(summary_message + "Test summary saved to: " + file_path)
+    end
+end
