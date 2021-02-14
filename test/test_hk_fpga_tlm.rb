@@ -19,6 +19,7 @@ csv = CSV.open(file_path, "a+")
 CSV.open(file_path, 'a+') do |row|
     row << header
 end
+puts header.length
 
 while(true)
     #Get telemetry packet:
@@ -95,6 +96,8 @@ while(true)
     packet_data += [reg_603_EDFA_MODE]
     packet_data += [reg_604_EDFA_DIODE_ON]
     packet_data += [reg_605_EDFA_MYSTERY_TEMP]
+    packet_data += [reg_606_EDFA_POWER_IN]
+    packet_data += [reg_607_EDFA_POWER_OUT]
     packet_data += [reg_608_EDFA_PRE_CURRENT]
     packet_data += [reg_609_EDFA_PRE_POWER]
     packet_data += [reg_610_EDFA_PUMP_CURRENT]
@@ -115,4 +118,5 @@ while(true)
     CSV.open(file_path, 'a+') do |row|
         row << packet_data
     end
+    puts packet_data.length
 end
