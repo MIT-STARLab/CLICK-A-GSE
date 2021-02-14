@@ -8,39 +8,64 @@ tlm_id_PL_HK_FPGA = subscribe_packet_data([['UUT', 'PL_HK_FPGA']], 500000) #set 
 #Save test results to text file:
 current_timestamp, current_time_str = get_timestamp()
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
-file_name = "HK_FPGA_" + current_timestamp + ".txt"
+file_name = "HK_FPGA_" + current_timestamp + ".csv"
 file_path = test_log_dir + file_name
-File.open(file_path, 'a+') {|f| f.write("Housekeeping Telemetry - FPGA Health. Start Time: " + current_time_str + "\n")}
+
+addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..109).to_a + (112..119).to_a
+addr_EDFA = (602..611).to_a
+names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
+header = ['APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + addr_UNDER_128 + addr_EDFA + names_DAC_BLOCK
+csv = CSV.open(file_path, "a+")
+CSV.open(file_path, 'a+') do |row|
+    row << header
+end
 
 while(true)
     #Get telemetry packet:
     packet = get_packet(tlm_id_PL_HK_FPGA)
-
+    packet_data = []
     #Parse CCSDS header:             
     _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
     apid_check_bool = pl_ccsds_apid == TLM_HK_FPGA_MAP
     if !apid_check_bool
         err_msg_apid = "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_HK_FPGA APID (= " + TLM_HK_FPGA_MAP.to_s + ").\n"
         puts err_msg_apid
-        File.open(file_path, 'a+') {|f| f.write(err_msg_apid)}
+        #File.open(file_path, 'a+') {|f| f.write(err_msg_apid)}
+        packet_data += [0]
+    else
+        packet_data += [1]
+    end
+
+    #Extract CRC
+    crc_rx = parse_empty_data_and_crc(packet) #parse crc
+    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+    if !crc_check_bool
+        err_msg_crc = "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+        puts err_msg_crc
+        #File.open(file_path, 'a+') {|f| f.write(err_msg_crc)}
+        packet_data += [0]
+    else
+        packet_data += [1]
     end
 
     #Get FPGA Counter
     counter = packet.read('HK_FPGA_COUNTER')
     msg_counter = "------------------FPGA TLM COUNTER: " + counter.to_s + " ------------------"
     puts msg_counter
-    File.open(file_path, 'a+') {|f| f.write(msg_counter)}
+    #File.open(file_path, 'a+') {|f| f.write(msg_counter)}
+    packet_data += [counter]
 
     #Parse FPGA Data - Select Registers Under 128: (0-4), (32-38), 47, 48, 53, 54, 57, (60-63), (96-109), (112-119)
     reg_UNDER_128 = packet.read('FPGA_REG_UNDER_128')
-    addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..109).to_a + (112..119).to_a
     msg_UNDER_128 = "Under 128 Block: "
     for i in 0..(reg_UNDER_128.length-1)
         msg_UNDER_128 += ("(Reg " + addr_UNDER_128[i].to_s + ": " + reg_UNDER_128[i].to_s + "), ")
+        packet_data += [reg_UNDER_128[i]]
     end
     msg_UNDER_128 += "\n"
     puts msg_UNDER_128
-    File.open(file_path, 'a+') {|f| f.write(msg_UNDER_128)}
+
+    #File.open(file_path, 'a+') {|f| f.write(msg_UNDER_128)}
 
     #Parse FPGA Data - EDFA Registers (602-611)
     reg_602_EDFA_EN_PIN = packet.read('FPGA_REG_602_EDFA_EN_PIN')
@@ -65,26 +90,29 @@ while(true)
     msg_EDFA += ("(EDFA_PUMP_CURRENT: " + reg_610_EDFA_PUMP_CURRENT.to_s + "), ")
     msg_EDFA += ("(EDFA_CASE_TEMP: " + reg_611_EDFA_CASE_TEMP.to_s + ")\n")
     puts msg_EDFA
-    File.open(file_path, 'a+') {|f| f.write(msg_EDFA)}
+    #File.open(file_path, 'a+') {|f| f.write(msg_EDFA)}
+    packet_data += [reg_602_EDFA_EN_PIN]
+    packet_data += [reg_603_EDFA_MODE]
+    packet_data += [reg_604_EDFA_DIODE_ON]
+    packet_data += [reg_605_EDFA_MYSTERY_TEMP]
+    packet_data += [reg_608_EDFA_PRE_CURRENT]
+    packet_data += [reg_609_EDFA_PRE_POWER]
+    packet_data += [reg_610_EDFA_PUMP_CURRENT]
+    packet_data += [reg_611_EDFA_CASE_TEMP]
 
     #Parse FPGA Data - DAC Registers (502-509)
     reg_DAC_BLOCK = packet.read('FPGA_REG_DAC_BLOCK')
-    addr_DAC_BLOCK = (0..8).to_a
-    names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
     msg_DAC_BLOCK = "DAC Block: "
     for i in 0..(reg_DAC_BLOCK.length-1)
         msg_DAC_BLOCK += ("(" + names_DAC_BLOCK[i] + ": " + reg_DAC_BLOCK[i].to_s + "), ")
+        packet_data += [reg_DAC_BLOCK[i]]
     end
     msg_DAC_BLOCK += "\n"
     puts msg_DAC_BLOCK
-    File.open(file_path, 'a+') {|f| f.write(msg_DAC_BLOCK)}
+    #File.open(file_path, 'a+') {|f| f.write(msg_DAC_BLOCK)}
 
-    #Extract CRC
-    crc_rx = parse_empty_data_and_crc(packet) #parse crc
-    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
-    if !crc_check_bool
-        err_msg_crc = "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
-        puts err_msg_crc
-        File.open(file_path, 'a+') {|f| f.write(err_msg_crc)}
+    #Write packet data to csv log
+    CSV.open(file_path, 'a+') do |row|
+        row << packet_data
     end
 end
