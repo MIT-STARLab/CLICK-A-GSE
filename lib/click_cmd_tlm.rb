@@ -661,7 +661,7 @@ def request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, exp_num_str = 
     end
 end
 
-def getResults_PAT_SELF_TEST(tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, req_pat_telemetry_bool = false)
+def getResults_PAT_SELF_TEST(test_log_dir, tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, req_pat_telemetry_bool = false)
     #Get telemetry packet:
     packet = get_packet(tlm_id_PL_PAT_SELF_TEST)   
     current_timestamp, current_time_str = get_timestamp()

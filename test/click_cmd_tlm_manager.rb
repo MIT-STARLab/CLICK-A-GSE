@@ -566,7 +566,7 @@ while true
                     prompt("PL_LASER_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
 
                 elsif test_id == PAT_SELF_TEST
-                    getResults_PAT_SELF_TEST(tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+                    getResults_PAT_SELF_TEST(test_log_dir, tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
                 end
             end
 
@@ -575,7 +575,7 @@ while true
             click_cmd(CMD_PL_DWNLINK_MODE)
 
             #Display PAT Self Test Results
-            getResults_PAT_SELF_TEST(tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+            getResults_PAT_SELF_TEST(test_log_dir, tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
 
             #Get full PAT test data
             prompt("Test is running...\nWhen complete, press Continue to restart PAT process and retrieve log data.")
