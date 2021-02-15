@@ -50,7 +50,8 @@ end
 def get_timestamp()
     current_time = Time.now #time of test start
     current_time_str = current_time.to_s #human readable time
-    current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+    #current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
+    current_timestamp = current_time_str[0..9] + "_" + current_time_str[11..12] + "-" + current_time_str[14..15] + "-" + current_time_str[17..18]
     return current_timestamp, current_time_str
 end
 

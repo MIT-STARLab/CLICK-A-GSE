@@ -10,6 +10,7 @@ current_timestamp, current_time_str = get_timestamp()
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 file_name = "HK_FPGA_" + current_timestamp + ".csv"
 file_path = test_log_dir + file_name
+puts "Saving results to: " + file_path
 
 addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..97).to_a
 addr_200_300 = (200..205).to_a + (300..303).to_a
@@ -21,6 +22,8 @@ CSV.open(file_path, 'a+') do |row|
     row << header
 end
 puts header.length
+puts addr_UNDER_128.length
+puts addr_200_300.length
 
 while(true)
     #Get telemetry packet:

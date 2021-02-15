@@ -13,6 +13,7 @@ current_timestamp, current_time_str = get_timestamp()
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 file_name = "LOG_POWER_" + current_timestamp + ".csv"
 file_path = test_log_dir + file_name
+puts "Saving results to: " + file_path
 
 power_pkt_data_fields = %w[
     CCSDS_TAI_SECS
