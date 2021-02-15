@@ -9,8 +9,6 @@ test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 cosmos_dir = Cosmos::USERPATH
 
 cmd_names = %w[
-    PL_NOOP
-    PL_SHUTDOWN
     PL_REBOOT
     PL_ENABLE_TIME
     PL_EXEC_FILE
@@ -40,6 +38,7 @@ cmd_names = %w[
     PL_GET_FPGA
     PL_SET_HK
     PL_ECHO
+    PL_NOOP
     PL_SELF_TEST
     PL_DWNLINK_MODE
     PL_DEBUG_MODE
@@ -91,14 +90,10 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
-    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33], cmd_names[34],
+    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
-        if user_cmd == 'PL_SHUTDOWN'
-            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
-            click_cmd(CMD_PL_SHUTDOWN)
-        
-        elsif user_cmd == 'PL_REBOOT'
+        if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_REBOOT)
 
@@ -632,11 +627,17 @@ while true
     elsif user_cmd == 'TEST_PAT'
         prompt("Ensure PAT Health Telemetry stream is running before proceeding (i.e. run test_hk_pat_tlm.rb in a separate window).\n Press Continue to execute calibration.")
 
-        #Run Calibration
-        click_cmd(CMD_PL_RUN_CALIBRATION)
+        #Run PAT Self Test
+        test_id = PAT_SELF_TEST             
+        #define data bytes
+        data = []
+        data[0] = test_id
+        packing = "C"
+        #SM Send via UUT PAYLOAD_WRITE
+        click_cmd(CMD_PL_SELF_TEST, data, packing)
 
-        #Get confirmation of calibration (User Prompt) #TODO: automate this
-        prompt("Observe PAT Health Telemetry and wait for calibration to complete before proceeding.")
+        #Display PAT Self Test Results
+        getResults_PAT_SELF_TEST(test_log_dir, tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
 
         #Turn on Beacon (User Prompt)
         prompt("Turn ON Beacon Laser via GSE AlphaNov program before proceeding.")
@@ -645,8 +646,13 @@ while true
         click_cmd(CMD_PL_ENTER_PAT_MAIN)
 
         #Turn on Dithering (User Prompt)
-        prompt("1. Start Beacon Dithering via CSV command on GSE GUI.\n2. Wait for dithering script to complete.\n3. Press Continue to restart PAT and download log files.")
-
+        prompt("1. Start Beacon Dithering via CSV command on GSE GUI.\n2. Wait for dithering script to complete.")
+        
+        #Return PAT to standby 
+        click_cmd(CMD_PL_EXIT_PAT_MAIN)
+        
+        prompt("Press Continue to restart PAT and retrieve test telemetry.")
+        
         #Restart PAT and get most recent PAT telemetry data
         request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
     
