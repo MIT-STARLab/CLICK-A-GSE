@@ -11,10 +11,11 @@ test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 file_name = "HK_FPGA_" + current_timestamp + ".csv"
 file_path = test_log_dir + file_name
 
-addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..109).to_a + (112..119).to_a
+addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..97).to_a
+addr_200_300 = (200..205).to_a + (300..303).to_a
 addr_EDFA = (602..611).to_a
 names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
-header = ['TIME', 'APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + addr_UNDER_128 + addr_EDFA + names_DAC_BLOCK
+header = ['TIME', 'APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + addr_UNDER_128 + addr_200_300 + addr_EDFA + names_DAC_BLOCK
 csv = CSV.open(file_path, "a+")
 CSV.open(file_path, 'a+') do |row|
     row << header
@@ -43,7 +44,6 @@ while(true)
     if !crc_check_bool
         err_msg_crc = "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
         puts err_msg_crc
-        #File.open(file_path, 'a+') {|f| f.write(err_msg_crc)}
         packet_data += [0]
     else
         packet_data += [1]
@@ -53,10 +53,9 @@ while(true)
     counter = packet.read('HK_FPGA_COUNTER')
     msg_counter = "------------------FPGA TLM COUNTER: " + counter.to_s + " ------------------"
     puts msg_counter
-    #File.open(file_path, 'a+') {|f| f.write(msg_counter)}
     packet_data += [counter]
 
-    #Parse FPGA Data - Select Registers Under 128: (0-4), (32-38), 47, 48, 53, 54, 57, (60-63), (96-109), (112-119)
+    #Parse FPGA Data - Select Registers Under 128: (0-4), (32-38), 47, 48, 53, 54, 57, (60-63), (96-98)
     reg_UNDER_128 = packet.read('FPGA_REG_UNDER_128')
     msg_UNDER_128 = "Under 128 Block: "
     for i in 0..(reg_UNDER_128.length-1)
@@ -66,7 +65,15 @@ while(true)
     msg_UNDER_128 += "\n"
     puts msg_UNDER_128
 
-    #File.open(file_path, 'a+') {|f| f.write(msg_UNDER_128)}
+    #Parse FPGA Data - Select Registers Under 128: (0-4), (32-38), 47, 48, 53, 54, 57, (60-63), (96-98)
+    reg_200_300 = packet.read('FPGA_REG_200_300')
+    msg_200_300 = "200, 300 Block: "
+    for i in 0..(reg_200_300.length-1)
+        msg_200_300 += ("(Reg " + addr_200_300[i].to_s + ": " + reg_200_300[i].to_s + "), ")
+        packet_data += [reg_200_300[i]]
+    end
+    msg_200_300 += "\n"
+    puts msg_200_300
 
     #Parse FPGA Data - EDFA Registers (602-611)
     reg_602_EDFA_EN_PIN = packet.read('FPGA_REG_602_EDFA_EN_PIN')
