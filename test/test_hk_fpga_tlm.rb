@@ -14,7 +14,7 @@ file_path = test_log_dir + file_name
 addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..109).to_a + (112..119).to_a
 addr_EDFA = (602..611).to_a
 names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
-header = ['APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + addr_UNDER_128 + addr_EDFA + names_DAC_BLOCK
+header = ['TIME', 'APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + addr_UNDER_128 + addr_EDFA + names_DAC_BLOCK
 csv = CSV.open(file_path, "a+")
 CSV.open(file_path, 'a+') do |row|
     row << header
@@ -24,7 +24,7 @@ puts header.length
 while(true)
     #Get telemetry packet:
     packet = get_packet(tlm_id_PL_HK_FPGA)
-    packet_data = []
+    packet_data = [Time.now.to_s]
     #Parse CCSDS header:             
     _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
     apid_check_bool = pl_ccsds_apid == TLM_HK_FPGA_MAP

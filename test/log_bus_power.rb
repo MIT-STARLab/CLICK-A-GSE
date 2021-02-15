@@ -68,7 +68,7 @@ power_pkt_data_fields_len = power_pkt_data_fields.length
 
 csv = CSV.open(file_path, "a+")
 CSV.open(file_path, 'a+') do |row|
-    row << power_pkt_data_fields
+    row << (['TIME'] + power_pkt_data_fields)
 end
 
 while true
@@ -76,7 +76,7 @@ while true
     packet = get_packet(tlm_id_POWER)
 
     #Get packet data
-    packet_data = []
+    packet_data = [Time.now.to_s]
     for i in 0..(power_pkt_data_fields_len-1)
         packet_data += [packet.read(power_pkt_data_fields[i])]
     end
