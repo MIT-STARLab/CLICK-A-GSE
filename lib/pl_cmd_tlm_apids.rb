@@ -102,10 +102,10 @@ FL_ERR_MISSING_CHUNK = 0x04
 FL_SUCCESS = 0xFF
 
 #HK FPGA Registers
-addr_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..97).to_a
-addr_200_300 = (200..205).to_a + (300..303).to_a
-addr_EDFA = (602..611).to_a
-names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
+ADDR_UNDER_128 = (0..4).to_a + (32..38).to_a + [47,48,53,54,57] + (60..63).to_a + (96..97).to_a
+ADDR_200_300 = (200..205).to_a + (300..303).to_a
+ADDR_EDFA = (602..611).to_a
+NAMES_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
 
 #HK Sys Packet Fields
 hk_sys_pkt_fixed_data_fields = %w[

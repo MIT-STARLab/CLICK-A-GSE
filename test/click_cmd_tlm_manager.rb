@@ -683,7 +683,7 @@ while true
         current_timestamp, current_time_str = get_timestamp()
         
         #Run test
-        num_errors, message_list = multiple_echo_test(tlm_id_PL_ECHO)
+        num_errors, message_list = multiple_echo_test(num_echo_tests, tlm_id_PL_ECHO)
 
         #Save test results to text file:
         file_name = "TEST_MULTIPLE_ECHO_" + current_timestamp + ".txt"

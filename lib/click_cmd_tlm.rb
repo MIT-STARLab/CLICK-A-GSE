@@ -213,7 +213,7 @@ def echo_test(echo_data_tx, tlm_id_PL_ECHO)
     return success_bool, error_message
 end
 
-def multiple_echo_test(tlm_id_PL_ECHO)
+def multiple_echo_test(num_echo_tests, tlm_id_PL_ECHO)
     message_list = []
     num_errors = 0
     for i in 0..(num_echo_tests-1)
@@ -792,7 +792,7 @@ def getHK_FPGA(file_path, tlm_id_PL_HK_FPGA)
     reg_UNDER_128 = packet.read('FPGA_REG_UNDER_128')
     msg_UNDER_128 = "Under 128 Block: "
     for i in 0..(reg_UNDER_128.length-1)
-        msg_UNDER_128 += ("(Reg " + addr_UNDER_128[i].to_s + ": " + reg_UNDER_128[i].to_s + "), ")
+        msg_UNDER_128 += ("(Reg " + ADDR_UNDER_128[i].to_s + ": " + reg_UNDER_128[i].to_s + "), ")
         packet_data += [reg_UNDER_128[i]]
     end
     msg_UNDER_128 += "\n"
@@ -802,7 +802,7 @@ def getHK_FPGA(file_path, tlm_id_PL_HK_FPGA)
     reg_200_300 = packet.read('FPGA_REG_200_300')
     msg_200_300 = "200, 300 Block: "
     for i in 0..(reg_200_300.length-1)
-        msg_200_300 += ("(Reg " + addr_200_300[i].to_s + ": " + reg_200_300[i].to_s + "), ")
+        msg_200_300 += ("(Reg " + ADDR_200_300[i].to_s + ": " + reg_200_300[i].to_s + "), ")
         packet_data += [reg_200_300[i]]
     end
     msg_200_300 += "\n"
@@ -847,7 +847,7 @@ def getHK_FPGA(file_path, tlm_id_PL_HK_FPGA)
     reg_DAC_BLOCK = packet.read('FPGA_REG_DAC_BLOCK')
     msg_DAC_BLOCK = "DAC Block: "
     for i in 0..(reg_DAC_BLOCK.length-1)
-        msg_DAC_BLOCK += ("(" + names_DAC_BLOCK[i] + ": " + reg_DAC_BLOCK[i].to_s + "), ")
+        msg_DAC_BLOCK += ("(" + NAMES_DAC_BLOCK[i] + ": " + reg_DAC_BLOCK[i].to_s + "), ")
         packet_data += [reg_DAC_BLOCK[i]]
     end
     msg_DAC_BLOCK += "\n"

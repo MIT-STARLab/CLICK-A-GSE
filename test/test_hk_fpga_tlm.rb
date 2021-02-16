@@ -16,14 +16,11 @@ puts "Saving results to: " + file_path
 # addr_200_300 = (200..205).to_a + (300..303).to_a
 # addr_EDFA = (602..611).to_a
 # names_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
-header = ['TIME', 'APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + addr_UNDER_128 + addr_200_300 + addr_EDFA + names_DAC_BLOCK
+header = ['TIME', 'APID_VALID', 'CRC_VALID', 'FPGA_COUNTER'] + ADDR_UNDER_128 + ADDR_200_300 + ADDR_EDFA + NAMES_DAC_BLOCK
 csv = CSV.open(file_path, "a+")
 CSV.open(file_path, 'a+') do |row|
     row << header
 end
-puts header.length
-puts addr_UNDER_128.length
-puts addr_200_300.length
 
 while(true)
     getHK_FPGA(file_path, tlm_id_PL_HK_FPGA)
