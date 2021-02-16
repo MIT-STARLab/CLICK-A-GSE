@@ -261,24 +261,18 @@ while true
 
                 #Send command
                 disassemble_file(trans_id, file_path)
-                prompt(file_path + " disassembly request sent with transfer id: " + trans_id.to_s)
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE_CHUNKS'
-            #define transfer id:
-            trans_id = ask("For PL_REQUEST_FILE_CHUNKS, input the transfer id. Input EXIT to escape.", 'EXIT')
-            #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
-            if trans_id != 'EXIT'
-                recursive_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
-                if recursive_cmd == 'YES'
-                    request_file_chunks(trans_id, true)
-                elsif recursive_cmd == 'NO'
-                    chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
-                    if chunk_start_idx != 'EXIT'
-                        num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
-                        if num_chunks != 'EXIT'
-                            request_file_chunks(trans_id, false, chunk_start_idx, num_chunks)
-                        end
+            recursive_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
+            if recursive_cmd == 'YES'
+                request_file_chunks(true)
+            elsif recursive_cmd == 'NO'
+                chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
+                if chunk_start_idx != 'EXIT'
+                    num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
+                    if num_chunks != 'EXIT'
+                        request_file_chunks(false, chunk_start_idx, num_chunks)
                     end
                 end
             end

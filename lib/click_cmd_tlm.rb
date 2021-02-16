@@ -269,8 +269,21 @@ def validate_file(md5, file_path)
     click_cmd(CMD_PL_VALIDATE_FILE, data, packing)
 end
 
-def disassemble_file(trans_id, file_path)
-    #define chunk size parameter (PL_DL_FILE packet def)
+def validate_downloaded_file(reconstructed_filename, md5_rx_bytes)
+    #check md5 hash
+    md5 = Digest::MD5.file reconstructed_filename
+    md5_bytes = md5.digest.bytes
+    if md5_bytes != md5_rx_bytes
+        prompt('Error in file validation: calculated MD5 hash does not match received MD5 hash.')
+        puts "md5 bytes calculated: ", md5_bytes
+        puts "md5 bytes received: ", md5_rx_bytes
+    else 
+        prompt("Successful file validation: " + reconstructed_filename)
+    end
+end
+
+def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
+    #define chunk size parameter (PL_DISASSEMBLE_FILE packet def)
     chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
 
     #define data bytes
@@ -283,9 +296,40 @@ def disassemble_file(trans_id, file_path)
 
     #SM Send via UUT PAYLOAD_WRITE
     click_cmd(CMD_PL_DISASSEMBLE_FILE, data, packing)
+
+    #Get telemetry packet:
+    packet = get_packet(tlm_id_PL_ECHO)   
+
+    #Parse CCSDS header:             
+    _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
+    apid_check_bool = pl_ccsds_apid == TLM_DISASSEMBLE_FILE
+    
+    #Get Data
+    trans_id_rx = packet.read('TRANSFER_ID')
+    trans_id_bool = trans_id == trans_id_rx
+    number_of_chunks_total = packet.read('CHUNK_TOTAL_COUNT')
+    message = "Disassembly Complete: " + file_path + "\nChunks saved to /root/file_staging/" + trans_id_rx.to_s + "\nNumber of Chunks: " + number_of_chunks_total.to_s + "\nChunk Size: " + chunk_size_bytes.to_s + "\n"
+
+    #Check CRC:
+    crc_rx = parse_empty_data_and_crc(packet) #parse variable length data and crc
+    crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC
+    
+    #Determine if echo was successful and if not, generate error message:
+    if !apid_check_bool
+        message += "CCSDS APID Error! Received APID (= " + pl_ccsds_apid.to_s + ") not equal to PL_DISASSEMBLE_FILE APID (= " + TLM_DISASSEMBLE_FILE.to_s + ").\n"
+    end
+    if !crc_check_bool
+        message += "CRC Error! Received CRC (= " + crc_rx.to_s + ") not equal to expected CRC (= " + crc_check.to_s + ").\n"
+    end
+    if !trans_id_bool
+        message += "Transfer ID Error! Received Transfer ID (= " + trans_id_rx.to_s + ") not equal to transmitted Transfer ID (= " + trans_id.to_s + ").\n"
+    end
+    prompt(message)
 end
 
-def request_file_chunks(trans_id, all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
+def request_file_chunks(all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
+    trans_id, save_dir = new_dl_transfer_id() 
+
     #define data bytes
     data = []
     data[0] = trans_id
@@ -300,6 +344,31 @@ def request_file_chunks(trans_id, all_chunks_bool, chunk_start_idx = 0, num_chun
 
     #SM Send via UUT PAYLOAD_WRITE
     click_cmd(CMD_PL_REQUEST_FILE, data, packing)
+
+    #Get File Chunks
+    download_complete = false
+    error_message = ""
+    if(all_chunks_bool)
+        chunk_seq_num = 0
+        while !download_complete
+            chunk_seq_num += 1
+            chunk_error_message, chunk_total_count, md5_rx_bytes = download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
+            if chunk_error_message.length > 0
+                prompt(chunk_error_message) 
+            end
+            download_complete = chunk_seq_num == chunk_total_count #TODO: put a timer on this in case the last chunk packet never arrives
+        end
+    else
+        chunk_seq_num = chunk_start_idx - 1
+        while !download_complete
+            chunk_seq_num += 1
+            chunk_error_message, chunk_total_count, md5_rx_bytes = download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
+            if chunk_error_message.length > 0
+                prompt(chunk_error_message) 
+            end
+            download_complete = chunk_seq_num == chunk_start_idx + num_chunks - 1 #TODO: put a timer on this in case the last chunk packet never arrives
+        end
+    end
 end
 
 def upload_file(tlm_id_PL_ASSEMBLE_FILE)
@@ -531,16 +600,8 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
     return chunk_error_message, chunk_total_count, md5_rx_bytes
 end
 
-def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
+def new_dl_transfer_id()
     cosmos_dir = Cosmos::USERPATH
-
-    #define file name
-    file_path_list = file_path.split("/")
-    file_name = file_path_list[-1]
-    
-    #define chunk size parameter (PL_DL_FILE packet def)
-    chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
-    
     # Read the last transfer ID and add 1 to it
     last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
     print("\nlast trans id: #{last_trans_id.to_i}\n")
@@ -555,6 +616,34 @@ def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
     #make a new folder in the outputs/data/downlink folder for the file chunks
     FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{trans_id}"
     save_dir = "#{cosmos_dir}/outputs/data/downlink/#{trans_id}/"
+    return trans_id, save_dir
+end
+
+def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
+    cosmos_dir = Cosmos::USERPATH
+
+    #define file name
+    file_path_list = file_path.split("/")
+    file_name = file_path_list[-1]
+    
+    #define chunk size parameter (PL_DL_FILE packet def)
+    chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
+    
+    trans_id, save_dir = new_dl_transfer_id()
+    # # Read the last transfer ID and add 1 to it
+    # last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
+    # print("\nlast trans id: #{last_trans_id.to_i}\n")
+    
+    # trans_id = last_trans_id.to_i+1 # increment the transfer ID
+    # print ("new trans id: #{trans_id}\n")
+    # trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
+    
+    # # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
+    # File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
+    
+    # #make a new folder in the outputs/data/downlink folder for the file chunks
+    # FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{trans_id}"
+    # save_dir = "#{cosmos_dir}/outputs/data/downlink/#{trans_id}/"
     
     #define data bytes
     data = []
