@@ -328,7 +328,7 @@ def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
 end
 
 def request_file_chunks(all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
-    trans_id, save_dir = new_dl_transfer_id() 
+    trans_id, save_dir = new_dl_transfer_id('fixthis') 
 
     #define data bytes
     data = []
@@ -600,7 +600,7 @@ def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
     return chunk_error_message, chunk_total_count, md5_rx_bytes
 end
 
-def new_dl_transfer_id()
+def new_dl_transfer_id(file_path)
     cosmos_dir = Cosmos::USERPATH
     # Read the last transfer ID and add 1 to it
     last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
@@ -609,7 +609,7 @@ def new_dl_transfer_id()
     trans_id = last_trans_id.to_i+1 # increment the transfer ID
     print ("new trans id: #{trans_id}\n")
     trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
-    
+  
     # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
     File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
     
@@ -629,7 +629,7 @@ def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
     #define chunk size parameter (PL_DL_FILE packet def)
     chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
     
-    trans_id, save_dir = new_dl_transfer_id()
+    trans_id, save_dir = new_dl_transfer_id(file_path)
     # # Read the last transfer ID and add 1 to it
     # last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
     # print("\nlast trans id: #{last_trans_id.to_i}\n")
