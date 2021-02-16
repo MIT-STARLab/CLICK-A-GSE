@@ -259,21 +259,91 @@ while true
             end
 
         elsif user_cmd == 'PL_SINGLE_CAPTURE'
-            user_exp = ask("For PL_SINGLE_CAPTURE, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT') 
-            if user_exp != 'EXIT'
-                if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
-                    puts "user_exp: ", user_exp
-                    #define data bytes
-                    data = []
-                    data[0] = user_exp
-                    packing = "L>"
+            user_window_width = ask("For PL_SINGLE_CAPTURE, input window width in pixels. Options: Input FULL for full frame. Input DEFAULT for default centered 600x600 window. Input EXIT to escape.", 'EXIT')
+            if user_window_width != 'EXIT'
+                if user_window_width == 'FULL'
+                    user_exp = ask("For PL_SINGLE_CAPTURE, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
+                    if user_exp != 'EXIT'
+                        if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
+                            #define data bytes
+                            data = []
+                            data[0] = 0 #window center X relative to center
+                            data[1] = 0 #window center Y relative to center
+                            data[2] = CAMERA_WIDTH
+                            data[3] = CAMERA_HEIGHT
+                            data[4] = user_exp
+                            packing = "s>2S>2L>"
 
-                    #SM Send via UUT Payload Write
-                    click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+                            #SM Send via UUT Payload Write
+                            click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+                        else
+                            prompt("Exposure time out of bounds (10 to 10000000).")
+                        end
+                    end
+
+                elsif user_window_width == 'DEFAULT'
+                    user_exp = ask("For PL_SINGLE_CAPTURE, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
+                    if user_exp != 'EXIT'
+                        if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
+                            #define data bytes
+                            data = []
+                            data[0] = 0 #window center X relative to center
+                            data[1] = 0 #window center Y relative to center
+                            data[2] = 600
+                            data[3] = 600
+                            data[4] = user_exp
+                            packing = "s>2S>2L>"
+
+                            #SM Send via UUT Payload Write
+                            click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+                        else
+                            prompt("Exposure time out of bounds (10 to 10000000).")
+                        end
+                    end
+
+                elsif user_window_width <= CAMERA_WIDTH
+                    user_window_height = ask("For PL_SINGLE_CAPTURE, input window height in pixels. Options: Input SQUARE for square window. Input EXIT to escape.", 'EXIT')
+                    if user_window_height != 'EXIT'
+                        if user_window_height == 'SQUARE'
+                            user_window_height = user_window_width
+                        end
+                        if user_window_height <= CAMERA_HEIGHT
+                            user_window_ctr_rel_x = ask("For PL_SINGLE_CAPTURE, input window center X relative position in pixels. Input EXIT to escape.", 'EXIT')
+                            if user_window_ctr_rel_x != 'EXIT'
+                                user_window_ctr_rel_y = ask("For PL_SINGLE_CAPTURE, input window center Y relative position in pixels. Input EXIT to escape.", 'EXIT')
+                                if user_window_ctr_rel_y != 'EXIT'
+                                    if user_window_ctr_rel_x <= CAMERA_WIDTH/2 - user_window_width/2 and user_window_ctr_rel_y <= CAMERA_HEIGHT/2 - user_window_height/2
+                                        user_bcn_max_exp = ask("For PL_SINGLE_CAPTURE, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
+                                        if user_bcn_max_exp != 'EXIT'
+                                            if user_bcn_max_exp >= CAMERA_MIN_EXP and user_bcn_max_exp <= CAMERA_MAX_EXP
+                                                #define data
+                                                data = []
+                                                data[0] = user_window_ctr_rel_x
+                                                data[1] = user_window_ctr_rel_y
+                                                data[2] = user_window_width
+                                                data[3] = user_window_height
+                                                data[4] = user_exp
+                                                packing = "s>2S>2L>"
+                            
+                                                #SM Send via UUT Payload Write
+                                                click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+                                            else
+                                                prompt("Exposure time out of bounds (10 to 10000000).")
+                                            end
+                                        end
+                                    else
+                                        prompt("Beacon relative position out of bounds.")
+                                    end
+                                end
+                            end
+                        else
+                            prompt("Beacon window size out of bounds.") 
+                        end
+                    end
                 else
-                    prompt("Exposure time out of bounds (10 to 10000000).")
+                    prompt("Beacon window size out of bounds.")
                 end
-            end
+            end   
 
         elsif user_cmd == 'PL_CALIB_LASER_TEST'
             user_exp = ask("For PL_CALIB_LASER_TEST, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
@@ -312,14 +382,14 @@ while true
             click_cmd(CMD_PL_RUN_CALIBRATION)
         
         elsif user_cmd == 'PL_UPDATE_ACQUISITION_PARAMS'
-            user_bcn_rel_x = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon X relative position in pixels (or 0). Input EXIT to escape.", 'EXIT')
-            if user_bcn_rel_x != 'EXIT'
-                user_bcn_rel_y = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon Y relative position in pixels (or 0). Input EXIT to escape.", 'EXIT')
-                if user_bcn_rel_y != 'EXIT'
-                    if user_bcn_rel_x <= CAMERA_WIDTH/2 and user_bcn_rel_y <= CAMERA_HEIGHT/2
-                        user_bcn_window_size = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon acquisition window size (width = height) in pixels (or 0). Input EXIT to escape.", 'EXIT')
-                        if user_bcn_window_size != 'EXIT'
-                            if user_bcn_window_size <= CAMERA_HEIGHT
+            user_bcn_window_size = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon acquisition window size (width = height) in pixels. Input EXIT to escape.", 'EXIT')
+            if user_bcn_window_size != 'EXIT'
+                if user_bcn_window_size <= CAMERA_HEIGHT
+                    user_bcn_rel_x = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon X relative position in pixels. Input EXIT to escape.", 'EXIT')
+                    if user_bcn_rel_x != 'EXIT'
+                        user_bcn_rel_y = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon Y relative position in pixels. Input EXIT to escape.", 'EXIT')
+                        if user_bcn_rel_y != 'EXIT'
+                            if user_bcn_rel_x <= CAMERA_WIDTH/2 - user_bcn_window_size/2 and user_bcn_rel_y <= CAMERA_HEIGHT/2 - user_bcn_window_size/2
                                 user_bcn_max_exp = ask("For PL_UPDATE_ACQUISITION_PARAMS, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
                                 if user_bcn_max_exp != 'EXIT'
                                     if user_bcn_max_exp >= CAMERA_MIN_EXP and user_bcn_max_exp <= CAMERA_MAX_EXP
@@ -338,11 +408,11 @@ while true
                                     end
                                 end
                             else
-                                prompt("Beacon window size out of bounds.")
+                                prompt("Beacon relative position out of bounds.")
                             end
                         end
                     else
-                        prompt("Beacon relative position out of bounds.")
+                        prompt("Beacon window size out of bounds.") 
                     end
                 end
             end            
