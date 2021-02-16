@@ -996,8 +996,8 @@ def getHK_SYS(file_path, tlm_id_PL_HK_SYS)
 
     #Assemble HK Message
     message = ''
-    for i in 0..(hk_sys_pkt_fixed_data_fields_len-1)
-        message += ("[" + hk_sys_pkt_fixed_data_fields[i] + ': ' + packet.read(hk_sys_pkt_fixed_data_fields[i]).to_s + "] ")
+    for i in 0..(HK_SYS_PKT_FIXED_DATA_FIELDS_LEN-1)
+        message += ("[" + HK_SYS_PKT_FIXED_DATA_FIELDS[i] + ': ' + packet.read(HK_SYS_PKT_FIXED_DATA_FIELDS[i]).to_s + "] ")
     end
     message += "\n"
     puts (message)

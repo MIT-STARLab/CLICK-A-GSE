@@ -109,7 +109,7 @@ ADDR_EDFA = (602..611).to_a
 NAMES_DAC_BLOCK = ['DAC_1_A', 'DAC_1_B', 'DAC_1_C', 'DAC_1_D', 'DAC_2_A', 'DAC_2_B', 'DAC_2_C', 'DAC_2_D']
 
 #HK Sys Packet Fields
-hk_sys_pkt_fixed_data_fields = %w[
+HK_SYS_PKT_FIXED_DATA_FIELDS = %w[
     CCSDS_TAI_SECS
     HK_SYS_COUNTER
     ENABLE_FLAGS
@@ -126,5 +126,5 @@ hk_sys_pkt_fixed_data_fields = %w[
     DISK_FREE_MEMORY
     AVAILABLE_VIRTUAL_MEMORY
 ]
-hk_sys_pkt_fixed_data_fields_len = hk_sys_pkt_fixed_data_fields.length
+HK_SYS_PKT_FIXED_DATA_FIELDS_LEN = HK_SYS_PKT_FIXED_DATA_FIELDS.length
 HK_SYS_FIXED_DATA_LEN = 26
