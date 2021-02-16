@@ -260,7 +260,20 @@ while true
                 File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
 
                 #Send command
-                disassemble_file(trans_id, file_path)
+                #disassemble_file(trans_id, file_path)
+                    #define chunk size parameter (PL_DL_FILE packet def)
+                  chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
+              
+                  #define data bytes
+                  data = []
+                  data[0] = trans_id
+                  data[1] = chunk_size_bytes
+                  data[2] = file_path.length
+                  data[3] = file_path 
+                  packing = "S>3" + "a" + file_path.length.to_s
+              
+                  #SM Send via UUT PAYLOAD_WRITE
+                  click_cmd(CMD_PL_DISASSEMBLE_FILE, data, packing)
                 prompt(file_path + " disassembly request sent with transfer id: " + trans_id.to_s)
             end
 
