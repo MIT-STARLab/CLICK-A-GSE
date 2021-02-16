@@ -13,6 +13,7 @@ file_path = test_log_dir + file_name
 File.open(file_path, 'a+') {|f| f.write("Housekeeping Telemetry - Commandhandler Health. Start Time: " + current_time_str + "\n")}
 
 while(true)
+    #getHK_CH(file_path, tlm_id_PL_HK_CH)
     #Get telemetry packet:
     packet = get_packet(tlm_id_PL_HK_CH)
 

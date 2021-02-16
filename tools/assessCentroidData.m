@@ -1,8 +1,6 @@
 %Assess Centroid Data
 addpath('data');
-filename = 'data/centroidData_5hz_900sec_vacuum_ambient.xlsx';
-mu_budget_urad = 0.31; %urad
-sigma_budget_urad = 16.4; %urad
+filename = 'data/centroidData - 299 - 5Hz 900sec vacuum 15C.xlsx';
 f_ir_mm = 125; %ir camera focal length
 w_pxl_ir_mm = 12.5e-3; %ir camera pixel pitch
 
@@ -53,7 +51,6 @@ err_x_mean = mean(err_x_urad);
 err_x_std = std(err_x_urad);
 err_y_mean = mean(err_y_urad);
 err_y_std = std(err_y_urad);
-disp(['Ptg Budget CBE - Err Stats (urad): mu_max = ', num2str(mu_budget_urad), ', sigma_max = ', num2str(sigma_budget_urad)]);
 disp(['PAT Test - X Err Stats (urad): mu_x = ', num2str(err_x_mean), ', sigma_x = ', num2str(err_x_std)]);
 disp(['PAT Test - Y Err Stats (urad): mu_y = ', num2str(err_y_mean), ', sigma_y = ', num2str(err_y_std)]);
 
