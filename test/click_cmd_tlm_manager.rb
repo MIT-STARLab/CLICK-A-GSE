@@ -179,15 +179,18 @@ while true
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE_CHUNKS'
-            recursive_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
-            if recursive_cmd == 'YES'
-                request_file_chunks(true)
-            elsif recursive_cmd == 'NO'
-                chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
-                if chunk_start_idx != 'EXIT'
-                    num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
-                    if num_chunks != 'EXIT'
-                        request_file_chunks(false, chunk_start_idx, num_chunks)
+            transfer_id = ask("For PL_ASSEMBLE_FILE, input the transfer id (use list file cmd on /root/file_staging to see available ids). Input EXIT to escape.", 'EXIT')
+            if transfer_id != 'EXIT'
+                all_chunks_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
+                if all_chunks_cmd == 'YES'
+                    request_file_chunks(transfer_id, true)
+                elsif all_chunks_cmd == 'NO'
+                    chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
+                    if chunk_start_idx != 'EXIT'
+                        num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
+                        if num_chunks != 'EXIT'
+                            request_file_chunks(transfer_id, false, chunk_start_idx, num_chunks)
+                        end
                     end
                 end
             end
@@ -276,6 +279,12 @@ while true
 
                             #SM Send via UUT Payload Write
                             click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+
+                            #Get image telemetry
+                            get_img_cmd = message_box("Get image now?", 'YES', 'NO')
+                            if get_img_cmd == 'YES'
+                                request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+                            end
                         else
                             prompt("Exposure time out of bounds (10 to 10000000).")
                         end
@@ -296,6 +305,12 @@ while true
 
                             #SM Send via UUT Payload Write
                             click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+
+                            #Get image telemetry
+                            get_img_cmd = message_box("Get image now?", 'YES', 'NO')
+                            if get_img_cmd == 'YES'
+                                request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+                            end
                         else
                             prompt("Exposure time out of bounds (10 to 10000000).")
                         end
@@ -327,6 +342,12 @@ while true
                             
                                                 #SM Send via UUT Payload Write
                                                 click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
+
+                                                #Get image telemetry
+                                                get_img_cmd = message_box("Get image now?", 'YES', 'NO')
+                                                if get_img_cmd == 'YES'
+                                                    request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
+                                                end
                                             else
                                                 prompt("Exposure time out of bounds (10 to 10000000).")
                                             end

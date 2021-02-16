@@ -327,9 +327,9 @@ def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
     prompt(message)
 end
 
-def request_file_chunks(all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
-    trans_id, save_dir = new_dl_transfer_id('fixthis') 
-
+def request_file_chunks(trans_id, all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
+    cosmos_dir = Cosmos::USERPATH
+    save_dir = "#{cosmos_dir}/outputs/data/downlink/#{trans_id}/"
     #define data bytes
     data = []
     data[0] = trans_id
@@ -630,20 +630,6 @@ def request_file(file_path, tlm_id_PL_DL_FILE, user_save_dir = "")
     chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
     
     trans_id, save_dir = new_dl_transfer_id(file_path)
-    # # Read the last transfer ID and add 1 to it
-    # last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
-    # print("\nlast trans id: #{last_trans_id.to_i}\n")
-    
-    # trans_id = last_trans_id.to_i+1 # increment the transfer ID
-    # print ("new trans id: #{trans_id}\n")
-    # trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
-    
-    # # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
-    # File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
-    
-    # #make a new folder in the outputs/data/downlink folder for the file chunks
-    # FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{trans_id}"
-    # save_dir = "#{cosmos_dir}/outputs/data/downlink/#{trans_id}/"
     
     #define data bytes
     data = []
@@ -746,10 +732,11 @@ def request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE, exp_num_str = 
                 end
                 exp_num_str = exp_num.to_s 
                 exp_folder_path = "/root/log/pat/" + exp_num_str 
-                prompt("Path to current PAT log directory is: " + exp_folder_path + "\nPress Continue to restart PAT and download log files.")
+                restart_cmd = message_box("Path to current PAT log directory is: " + exp_folder_path + "\nRestart PAT to terminate active logging to this directory?", 'YES', 'NO')
+                if restart_cmd == 'YES'
+                    click_cmd(CMD_PL_END_PAT_PROCESS) #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
+                end
                 download_bool = true
-                #end pat (to terminate the log file; it will be restarted automatically by housekeeping)
-                click_cmd(CMD_PL_END_PAT_PROCESS)
             else
                 prompt("PAT log directory is empty.")
             end
