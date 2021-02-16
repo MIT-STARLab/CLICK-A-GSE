@@ -681,18 +681,9 @@ while true
     elsif user_cmd == 'TEST_MULTIPLE_ECHO'
         num_echo_tests = ask("For TEST_MULTIPLE_ECHO, enter number of echo tests to perform: ")
         current_timestamp, current_time_str = get_timestamp()
-        message_list = []
-        num_errors = 0
-        for i in 0..(num_echo_tests-1)
-            echo_data_tx = "TEST " + i.to_s 
-            success_bool, error_message = echo_test(echo_data_tx, tlm_id_PL_ECHO)
-            if success_bool
-                message_list += ["[" + Time.now.to_s + " " + echo_data_tx + "] Echo Success!\n"]
-            else
-                num_errors += 1
-                message_list += ["[" + Time.now.to_s + " " + echo_data_tx + "] " + error_message + "\n"]
-            end
-        end
+        
+        #Run test
+        num_errors, message_list = multiple_echo_test(tlm_id_PL_ECHO)
 
         #Save test results to text file:
         file_name = "TEST_MULTIPLE_ECHO_" + current_timestamp + ".txt"
