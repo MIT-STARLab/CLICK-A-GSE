@@ -600,7 +600,8 @@ while true
             system_heartbeat_period = ask('For PL_SET_HK, enter System heartbeat period in seconds.')
             ch_heartbeat_period = ask('For PL_SET_HK, enter Commandhandler heartbeat period in seconds.')
             pat_heartbeat_period = ask('For PL_SET_HK, enter PAT heartbeat period in seconds.')
-
+            
+            data = []
             data[0] = enable_byte
             data[1] = fpga_heartbeat_period
             data[2] = system_heartbeat_period
