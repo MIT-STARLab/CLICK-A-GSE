@@ -21,7 +21,6 @@ cmd_names = %w[
     PL_VALIDATE_FILE
     PL_MOVE_FILE
     PL_DEL_FILE
-    PL_AUTO_ASSEMBLE_FILE
     PL_SET_PAT_MODE
     PL_SINGLE_CAPTURE
     PL_CALIB_LASER_TEST
@@ -90,7 +89,7 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
-    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33],
+    cmd_names[30], cmd_names[31], cmd_names[32],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -242,9 +241,6 @@ while true
                     delete_file(recursive, file_path)               
                 end
             end
-        
-        elsif user_cmd == 'PL_AUTO_ASSEMBLE_FILE'
-            prompt('PL_AUTO_ASSEMBLE_FILE not yet implemented.')
 
         elsif user_cmd == 'PL_SET_PAT_MODE'
             user_pat_mode = combo_box("Select PAT mode (or EXIT).", 
