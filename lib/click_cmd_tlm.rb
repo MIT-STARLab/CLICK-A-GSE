@@ -297,6 +297,8 @@ def validate_downloaded_file(reconstructed_filename, md5_rx_bytes)
 end
 
 def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
+    trans_id, save_dir = new_dl_transfer_id(file_path)
+
     #define chunk size parameter (PL_DISASSEMBLE_FILE packet def)
     chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
 
@@ -323,7 +325,7 @@ def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
     trans_id_bool = trans_id == trans_id_rx
     number_of_chunks_total = packet.read('CHUNK_TOTAL_COUNT')
     message = "Disassembly Complete: " + file_path + "\nChunks saved to /root/file_staging/" + trans_id_rx.to_s + "\nNumber of Chunks: " + number_of_chunks_total.to_s + "\nChunk Size: " + chunk_size_bytes.to_s + "\n"
-
+    message += "Local directory prepared for download at: " + save_dir + "\n"
     #Check CRC:
     crc_rx = parse_empty_data_and_crc(packet) #parse variable length data and crc
     crc_check_bool, crc_check = check_pl_tlm_crc(packet, crc_rx) #check CRC

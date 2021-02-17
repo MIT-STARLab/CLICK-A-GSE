@@ -162,17 +162,6 @@ while true
             file_path = ask_string("For PL_DISASSEMBLE_FILE, input the payload file path (e.g. /root/test/test_tlm.txt). Input EXIT to escape.", 'EXIT')
             #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             if file_path != 'EXIT'
-                # Read the last transfer ID and add 1 to it
-                last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
-                print("\nlast trans id: #{last_trans_id.to_i}\n")
-                
-                trans_id = last_trans_id.to_i+1 # increment the transfer ID
-                print ("new trans id: #{trans_id}\n")
-                trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
-                
-                # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
-                File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
-
                 #Send command
                 disassemble_file(trans_id, file_path)
             end
