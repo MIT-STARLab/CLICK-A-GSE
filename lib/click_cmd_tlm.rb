@@ -256,6 +256,20 @@ def assemble_file(transfer_id, file_path)
     click_cmd(CMD_PL_ASSEMBLE_FILE, data, packing)
 end
 
+def auto_assemble_file(transfer_id, md5, file_path)
+    #define data bytes
+    md5_bytes = md5.digest.bytes
+    data = []
+    data[0] = transfer_id
+    data += md5_bytes
+    data[1] = file_path.length
+    data[2] = file_path 
+    packing = "S>" + "C" + md5_bytes.length.to_s + "S>a" + file_path.length.to_s
+
+    #SM Send via UUT PAYLOAD_WRITE
+    click_cmd(CMD_PL_AUTO_ASSEMBLE_FILE, data, packing)
+end
+
 def validate_file(md5, file_path)
     #define data bytes
     md5_bytes = md5.digest.bytes
@@ -478,8 +492,12 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
     #define payload file path:
     staging_directory_path = '/root/file_staging/'+ trans_id.to_s
     payload_file_path_staging = staging_directory_path + '/' + file_name 
-    prompt("All Chunks Sent. Press Continue to assemble remote file in staging: " + payload_file_path_staging)
-    assemble_file(trans_id, payload_file_path_staging)
+    cmd_auto = message_box("All Chunks Sent to Staging: " + payload_file_path_staging + "\nAutomatically validate and clean up staging?", 'YES', 'NO')
+    if cmd_auto == 'YES'
+        auto_assemble_file(trans_id, md5, payload_file_path_staging)
+    else
+        assemble_file(trans_id, payload_file_path_staging)
+    end
     #Get telemetry packet:
     packet = get_packet(tlm_id_PL_ASSEMBLE_FILE)   
 
@@ -536,7 +554,13 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
 
     success_bool = apid_check_bool and crc_check and status_check_bool and missing_packets_check_bool
     if success_bool
-        prompt("File assembled in staging without errors. Press Continue to validate.")
+        prompt("File assembled in staging without errors.")
+    else
+        prompt("File assembly produced errors:\n" + error_message)
+    end
+
+    if cmd_auto == 'NO'
+        prompt("Press Continue to validate assembled file.")
         ### Validate File
         validate_file(md5, payload_file_path_staging)
 
@@ -547,10 +571,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
         prompt("File moved to final destination. Press Continue to delete staging directory: " + staging_directory_path)
         ### Delete staging directory
         delete_file(0xFF, staging_directory_path)
-    else
-        prompt("File assembly produced errors:\n" + error_message)
     end
-
 end
 
 def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
