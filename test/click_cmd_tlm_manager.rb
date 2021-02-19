@@ -313,9 +313,9 @@ while true
                                 user_window_ctr_rel_y = ask("For PL_SINGLE_CAPTURE, input window center Y relative position in pixels. Input EXIT to escape.", 'EXIT')
                                 if user_window_ctr_rel_y != 'EXIT'
                                     if user_window_ctr_rel_x <= CAMERA_WIDTH/2 - user_window_width/2 and user_window_ctr_rel_y <= CAMERA_HEIGHT/2 - user_window_height/2
-                                        user_bcn_max_exp = ask("For PL_SINGLE_CAPTURE, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
-                                        if user_bcn_max_exp != 'EXIT'
-                                            if user_bcn_max_exp >= CAMERA_MIN_EXP and user_bcn_max_exp <= CAMERA_MAX_EXP
+                                        user_exp = ask("For PL_SINGLE_CAPTURE, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
+                                        if user_exp != 'EXIT'
+                                            if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
                                                 #define data
                                                 data = []
                                                 data[0] = user_window_ctr_rel_x
@@ -548,8 +548,8 @@ while true
                 request_num_rx = packet.read('REQUEST_NUM')
                 start_addr_rx = packet.read('START_ADDRESS')
                 num_registers_rx = packet.read('SIZE')
-
-                request_num_check = request_num_rx == user_request_number
+                
+                request_num_check = fpga_req_num == request_num_rx
                 start_addr_check = start_addr_rx == user_start_address
                 num_registers_check = num_registers_rx == user_num_registers
                 
@@ -570,16 +570,20 @@ while true
                 if !request_num_check
                     summary_message += ("Request Number Error! Received request number (= " + request_num_rx.to_s + ") not equal to transmitted request number (= " + user_request_number.to_s + ").\n")
                 end
-                if !request_num_check
+                if !start_addr_check
                     summary_message += ("Request Number Error! Received start address (= " + start_addr_check.to_s + ") not equal to transmitted start address (= " + user_start_address.to_s + ").\n")
                 end
-                if !request_num_check
+                if !num_registers_check
                     summary_message += ("Request Number Error! Received number of registers (= " + num_registers_rx.to_s + ") not equal to requested number of registers (= " + user_num_registers.to_s + ").\n")
                 end
                 summary_message += "Read Data: \n"
-                for i in 0..(num_registers_rx-1)
-                    register = start_addr_rx + i
-                    summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                if num_registers_rx > 1
+                    for i in 0..(num_registers_rx-1)
+                        register = start_addr_rx + i
+                        summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                    end
+                else
+                    summary_message += ("Register: " + start_addr_rx.to_s + ", Value: " + read_data.to_s + "\n")
                 end
                 prompt(summary_message)
             end
