@@ -262,8 +262,8 @@ def auto_assemble_file(transfer_id, md5, file_path)
     data = []
     data[0] = transfer_id
     data += md5_bytes
-    data[1] = file_path.length
-    data[2] = file_path 
+    data += [file_path.length]
+    data += [file_path] 
     packing = "S>" + "C" + md5_bytes.length.to_s + "S>a" + file_path.length.to_s
 
     #SM Send via UUT PAYLOAD_WRITE
@@ -487,6 +487,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
         print("chunk file contents length: #{chunk_file_length}\n")
         send_file_chunk(trans_id, file_seq_num, num_chunks, chunk_file_length, chunk_file_contents)
         file_seq_num += 1 #increment file sequence number
+        wait(0.5)
     end 
     full_file.close
 
