@@ -403,10 +403,9 @@ while true
                                         data = []
                                         data[0] = user_bcn_rel_x
                                         data[1] = user_bcn_rel_y
-                                        data[3] = user_bcn_window_size
-                                        data[4] = user_bcn_max_exp
+                                        data[2] = user_bcn_window_size
+                                        data[3] = user_bcn_max_exp
                                         packing = "s>2S>L>"
-                    
                                         #SM Send via UUT Payload Write
                                         click_cmd(CMD_PL_UPDATE_ACQUISITION_PARAMS, data, packing)
                                     else
