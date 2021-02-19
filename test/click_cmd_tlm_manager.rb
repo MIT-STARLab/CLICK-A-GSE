@@ -433,11 +433,30 @@ while true
                 user_y_update = ask("For PL_UPDATE_TX_OFFSETS, input Y displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
                 if user_y_update != 'EXIT'
                     if user_x_update <= CAMERA_WIDTH/2 and user_y_update <= CAMERA_HEIGHT/2
+                        user_config_cmd = message_box('For PL_UPDATE_TX_OFFSETS, configure tx offset thermal model update period or enable dithering? (PAT must be in STANDBY)', 'YES', 'NO')
+                        if user_config_cmd == 'NO'
+                            tx_offset_calc_pd = 1000
+                            enable_dither = 0
+                            dither_pd = 10
+                        else
+                            tx_offset_calc_pd = ask('For PL_UPDATE_TX_OFFSETS, input Tx Offset thermal model re-calculation period in seconds (e.g. 1000).')
+                            enable_dither_cmd = message_box('For PL_UPDATE_TX_OFFSETS, enable Tx Offset dithering?', 'YES', 'NO')
+                            if enable_dither_cmd == 'YES'
+                                enable_dither = 0xFF
+                                dither_pd = ask('For PL_UPDATE_TX_OFFSETS, input dithering period in seconds (e.g. 10).')
+                            else
+                                enable_dither = 0
+                                dither_pd = 10
+                            end
+                        end
                         #define data bytes
                         data = []
                         data[0] = user_x_update
                         data[1] = user_y_update
-                        packing = "s>2"
+                        data[2] = tx_offset_calc_pd
+                        data[3] = enable_dither
+                        data[4] = dither_pd
+                        packing = "s>2S>CS>"
     
                         #SM Send via UUT Payload Write
                         click_cmd(CMD_PL_UPDATE_TX_OFFSETS, data, packing)
