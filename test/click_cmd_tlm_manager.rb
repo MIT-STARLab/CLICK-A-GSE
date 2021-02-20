@@ -81,6 +81,7 @@ tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 1
 tlm_id_PL_GET_FPGA = subscribe_packet_data([['UUT', 'PL_GET_FPGA']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_DISASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_DISASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 fpga_req_num = 0 #fpga request number counter
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -163,7 +164,7 @@ while true
             #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             if file_path != 'EXIT'
                 #Send command
-                disassemble_file(trans_id, file_path)
+                disassemble_file(file_path, tlm_id_PL_DISASSEMBLE_FILE)
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE_CHUNKS'
@@ -171,13 +172,13 @@ while true
             if transfer_id != 'EXIT'
                 all_chunks_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
                 if all_chunks_cmd == 'YES'
-                    request_file_chunks(transfer_id, true)
+                    request_file_chunks(tlm_id_PL_DL_FILE, transfer_id, true)
                 elsif all_chunks_cmd == 'NO'
                     chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
                     if chunk_start_idx != 'EXIT'
                         num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
                         if num_chunks != 'EXIT'
-                            request_file_chunks(transfer_id, false, chunk_start_idx, num_chunks)
+                            request_file_chunks(tlm_id_PL_DL_FILE, transfer_id, false, chunk_start_idx, num_chunks)
                         end
                     end
                 end
@@ -594,7 +595,7 @@ while true
                 enable_str[0] = '1'
             else
                 enable_str[1] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
-                enable_str[2] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
+                enable_str[2] = message_box('For PL_SET_HK, click 1 to enable SYS housekeeping message sending.', '1', '0')
                 enable_str[3] = message_box('For PL_SET_HK, click 1 to enable FPGA housekeeping message sending.', '1', '0')
                 enable_str[4] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')
                 enable_str[5] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
