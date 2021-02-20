@@ -10,6 +10,7 @@ cosmos_dir = Cosmos::USERPATH
 
 cmd_names = %w[
     PL_REBOOT
+    PL_SHUTDOWN
     PL_ENABLE_TIME
     PL_EXEC_FILE
     PL_LIST_FILE
@@ -90,12 +91,16 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
-    cmd_names[30], cmd_names[31], cmd_names[32],
+    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_REBOOT)
+
+        elsif user_cmd == 'PL_SHUTDOWN'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_SHUTDOWN)
 
         elsif user_cmd == 'PL_ENABLE_TIME'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
