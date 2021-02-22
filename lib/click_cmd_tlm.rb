@@ -1,11 +1,11 @@
 #Library for CLICK A payload command and telemetry 
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\lib\crc16.rb
+#Assumed Path: C:\CLICK-A-GSE\lib\
 
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
 
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb')
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/crc16.rb')
+load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb')
+load ('C:/CLICK-A-GSE/lib/crc16.rb')
 
 ### Send command to payload via PAYLOAD_WRITE
 def click_cmd(cmd_id, data = [], packing = "C*")

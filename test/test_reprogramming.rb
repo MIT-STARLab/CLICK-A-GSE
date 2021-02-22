@@ -1,7 +1,7 @@
 #Test Script - Reprogramming
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_reprogramming.rb
+#Assumed Path: C:\CLICK-A-GSE\test\test_reprogramming.rb
 
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/test/payload_cmd.rb')
+load ('C:/CLICK-A-GSE/test/payload_cmd.rb')
 set_line_delay(0.0)
 
 # Make sure payload is powered off

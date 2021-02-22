@@ -1,9 +1,9 @@
 #Test Script - Request Payload File Downlink
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_request_file.rb
+#Assumed Path: C:\CLICK-A-GSE\test\test_request_file.rb
 
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 def download_chunk(chunk_seq_num, trans_id, save_dir, tlm_id_PL_DL_FILE)
         #Get telemetry packet:

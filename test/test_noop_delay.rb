@@ -1,4 +1,4 @@
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 # Change NOOP delay
 cmd("UUT HOLDING_TABLE_INSERT with CCSDS_AP_ID XB1, WORD_OFFSET 0, WORD_LENGTH 1, RAW_BYTES [50, 0, 0, 0]")

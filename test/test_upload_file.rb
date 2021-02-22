@@ -1,6 +1,6 @@
 #Test Script - Uplink File to Payload 
 #Note: this, like scp in Linux, will overwrite a pre-existing file with the same path on the payload
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_upload_file.rb
+#Assumed Path: C:\CLICK-A-GSE\test\test_upload_file.rb
 
 # 1. upload file chunks to staging (receive_file_chunk)
 # 2. assemble file chunks (assemble_file) -> returns telemetry packet with status/errors/missing packet ids (staging directory isn't automatically deleted)
@@ -14,7 +14,7 @@
 # Specify what packages the script needs
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 
