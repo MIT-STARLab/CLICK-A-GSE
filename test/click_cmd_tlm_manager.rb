@@ -1,15 +1,16 @@
 #Test Script - CLICK Command and Telemetry Manager
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\click_cmd_tlm_manager.rb
+#Assumed Path: C:\CLICK-A-GSE\test\click_cmd_tlm_manager.rb
 
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 test_log_dir = (Cosmos::USERPATH + "/outputs/logs/xb1_click/")
 cosmos_dir = Cosmos::USERPATH
 
 cmd_names = %w[
     PL_REBOOT
+    PL_SHUTDOWN
     PL_ENABLE_TIME
     PL_EXEC_FILE
     PL_LIST_FILE
@@ -81,6 +82,7 @@ tlm_id_PL_PAT_SELF_TEST = subscribe_packet_data([['UUT', 'PL_PAT_SELF_TEST']], 1
 tlm_id_PL_GET_FPGA = subscribe_packet_data([['UUT', 'PL_GET_FPGA']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_ASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_ASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 tlm_id_PL_DL_FILE = subscribe_packet_data([['UUT', 'PL_DL_FILE']], 10000) #set queue depth to 10000 (default is 1000)
+tlm_id_PL_DISASSEMBLE_FILE = subscribe_packet_data([['UUT', 'PL_DISASSEMBLE_FILE']], 10000) #set queue depth to 10000 (default is 1000)
 fpga_req_num = 0 #fpga request number counter
 while true
     user_cmd = combo_box("Select a command (or EXIT): ", 
@@ -89,12 +91,16 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
-    cmd_names[30], cmd_names[31], cmd_names[32],
+    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_REBOOT)
+
+        elsif user_cmd == 'PL_SHUTDOWN'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_SHUTDOWN)
 
         elsif user_cmd == 'PL_ENABLE_TIME'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
@@ -163,7 +169,7 @@ while true
             #can get image name via list file command or via housekeeping tlm stream or PAT .txt telemetry file
             if file_path != 'EXIT'
                 #Send command
-                disassemble_file(trans_id, file_path)
+                disassemble_file(file_path, tlm_id_PL_DISASSEMBLE_FILE)
             end
 
         elsif user_cmd == 'PL_REQUEST_FILE_CHUNKS'
@@ -171,13 +177,13 @@ while true
             if transfer_id != 'EXIT'
                 all_chunks_cmd = message_box("For PL_REQUEST_FILE_CHUNKS, request all file chunks? ", 'YES', 'NO', 'EXIT')
                 if all_chunks_cmd == 'YES'
-                    request_file_chunks(transfer_id, true)
+                    request_file_chunks(tlm_id_PL_DL_FILE, transfer_id, true)
                 elsif all_chunks_cmd == 'NO'
                     chunk_start_idx = ask("For PL_REQUEST_FILE_CHUNKS, input the chunk start index. Input EXIT to escape.", 'EXIT')
                     if chunk_start_idx != 'EXIT'
                         num_chunks = ask("For PL_REQUEST_FILE_CHUNKS, input the number of chunks. Input EXIT to escape.", 'EXIT')
                         if num_chunks != 'EXIT'
-                            request_file_chunks(transfer_id, false, chunk_start_idx, num_chunks)
+                            request_file_chunks(tlm_id_PL_DL_FILE, transfer_id, false, chunk_start_idx, num_chunks)
                         end
                     end
                 end
@@ -313,9 +319,9 @@ while true
                                 user_window_ctr_rel_y = ask("For PL_SINGLE_CAPTURE, input window center Y relative position in pixels. Input EXIT to escape.", 'EXIT')
                                 if user_window_ctr_rel_y != 'EXIT'
                                     if user_window_ctr_rel_x <= CAMERA_WIDTH/2 - user_window_width/2 and user_window_ctr_rel_y <= CAMERA_HEIGHT/2 - user_window_height/2
-                                        user_bcn_max_exp = ask("For PL_SINGLE_CAPTURE, input maximum beacon exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
-                                        if user_bcn_max_exp != 'EXIT'
-                                            if user_bcn_max_exp >= CAMERA_MIN_EXP and user_bcn_max_exp <= CAMERA_MAX_EXP
+                                        user_exp = ask("For PL_SINGLE_CAPTURE, input exposure time (us) (between 10 and 10000000). Input EXIT to escape.", 'EXIT')
+                                        if user_exp != 'EXIT'
+                                            if user_exp >= CAMERA_MIN_EXP and user_exp <= CAMERA_MAX_EXP
                                                 #define data
                                                 data = []
                                                 data[0] = user_window_ctr_rel_x
@@ -403,10 +409,9 @@ while true
                                         data = []
                                         data[0] = user_bcn_rel_x
                                         data[1] = user_bcn_rel_y
-                                        data[3] = user_bcn_window_size
-                                        data[4] = user_bcn_max_exp
+                                        data[2] = user_bcn_window_size
+                                        data[3] = user_bcn_max_exp
                                         packing = "s>2S>L>"
-                    
                                         #SM Send via UUT Payload Write
                                         click_cmd(CMD_PL_UPDATE_ACQUISITION_PARAMS, data, packing)
                                     else
@@ -433,11 +438,30 @@ while true
                 user_y_update = ask("For PL_UPDATE_TX_OFFSETS, input Y displacement in pixels (or 0). Input EXIT to escape.", 'EXIT')
                 if user_y_update != 'EXIT'
                     if user_x_update <= CAMERA_WIDTH/2 and user_y_update <= CAMERA_HEIGHT/2
+                        user_config_cmd = message_box('For PL_UPDATE_TX_OFFSETS, configure tx offset thermal model update period or enable dithering? (PAT must be in STANDBY)', 'YES', 'NO')
+                        if user_config_cmd == 'NO'
+                            tx_offset_calc_pd = 1000
+                            enable_dither = 0
+                            dither_pd = 10
+                        else
+                            tx_offset_calc_pd = ask('For PL_UPDATE_TX_OFFSETS, input Tx Offset thermal model re-calculation period in seconds (e.g. 1000).')
+                            enable_dither_cmd = message_box('For PL_UPDATE_TX_OFFSETS, enable Tx Offset dithering?', 'YES', 'NO')
+                            if enable_dither_cmd == 'YES'
+                                enable_dither = 0xFF
+                                dither_pd = ask('For PL_UPDATE_TX_OFFSETS, input dithering period in seconds (e.g. 10).')
+                            else
+                                enable_dither = 0
+                                dither_pd = 10
+                            end
+                        end
                         #define data bytes
                         data = []
                         data[0] = user_x_update
                         data[1] = user_y_update
-                        packing = "s>2"
+                        data[2] = tx_offset_calc_pd
+                        data[3] = enable_dither
+                        data[4] = dither_pd
+                        packing = "s>2S>CS>"
     
                         #SM Send via UUT Payload Write
                         click_cmd(CMD_PL_UPDATE_TX_OFFSETS, data, packing)
@@ -529,8 +553,8 @@ while true
                 request_num_rx = packet.read('REQUEST_NUM')
                 start_addr_rx = packet.read('START_ADDRESS')
                 num_registers_rx = packet.read('SIZE')
-
-                request_num_check = request_num_rx == user_request_number
+                
+                request_num_check = fpga_req_num == request_num_rx
                 start_addr_check = start_addr_rx == user_start_address
                 num_registers_check = num_registers_rx == user_num_registers
                 
@@ -551,16 +575,20 @@ while true
                 if !request_num_check
                     summary_message += ("Request Number Error! Received request number (= " + request_num_rx.to_s + ") not equal to transmitted request number (= " + user_request_number.to_s + ").\n")
                 end
-                if !request_num_check
+                if !start_addr_check
                     summary_message += ("Request Number Error! Received start address (= " + start_addr_check.to_s + ") not equal to transmitted start address (= " + user_start_address.to_s + ").\n")
                 end
-                if !request_num_check
+                if !num_registers_check
                     summary_message += ("Request Number Error! Received number of registers (= " + num_registers_rx.to_s + ") not equal to requested number of registers (= " + user_num_registers.to_s + ").\n")
                 end
                 summary_message += "Read Data: \n"
-                for i in 0..(num_registers_rx-1)
-                    register = start_addr_rx + i
-                    summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                if num_registers_rx > 1
+                    for i in 0..(num_registers_rx-1)
+                        register = start_addr_rx + i
+                        summary_message += ("Register: " + register.to_s + ", Value: " + read_data[i].to_s + "\n")
+                    end
+                else
+                    summary_message += ("Register: " + start_addr_rx.to_s + ", Value: " + read_data.to_s + "\n")
                 end
                 prompt(summary_message)
             end
@@ -572,12 +600,12 @@ while true
                 enable_str[0] = '1'
             else
                 enable_str[1] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
-                enable_str[2] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
-                enable_str[3] = message_box('For PL_SET_HK, click 1 to enable FPGA housekeeping message sending.', '1', '0')
-                enable_str[4] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')
-                enable_str[5] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
-                enable_str[6] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
-                enable_str[7] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
+                enable_str[2] = message_box('For PL_SET_HK, click 1 to enable SYS housekeeping message sending.', '1', '0')
+                enable_str[3] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')
+                enable_str[4] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
+                enable_str[5] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
+                enable_str[6] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
+                enable_str[7] = message_box('For PL_SET_HK, click 1 to enable Load Balancer restart.', '1', '0')
             end
             enable_byte = ('0b' + enable_str).to_i(2)
 

@@ -1,11 +1,11 @@
 #Library for CLICK A payload command and telemetry 
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\lib\crc16.rb
+#Assumed Path: C:\CLICK-A-GSE\lib\
 
 require 'FileUtils' # Pretty sure COSMOS already requires this, so this is might be unnecessary
 require 'digest/md5'
 
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb')
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/crc16.rb')
+load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb')
+load ('C:/CLICK-A-GSE/lib/crc16.rb')
 
 ### Send command to payload via PAYLOAD_WRITE
 def click_cmd(cmd_id, data = [], packing = "C*")
@@ -262,8 +262,8 @@ def auto_assemble_file(transfer_id, md5, file_path)
     data = []
     data[0] = transfer_id
     data += md5_bytes
-    data[1] = file_path.length
-    data[2] = file_path 
+    data += [file_path.length]
+    data += [file_path] 
     packing = "S>" + "C" + md5_bytes.length.to_s + "S>a" + file_path.length.to_s
 
     #SM Send via UUT PAYLOAD_WRITE
@@ -296,7 +296,7 @@ def validate_downloaded_file(reconstructed_filename, md5_rx_bytes)
     end
 end
 
-def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
+def disassemble_file(file_path, tlm_id_PL_DISASSEMBLE_FILE)
     trans_id, save_dir = new_dl_transfer_id(file_path)
 
     #define chunk size parameter (PL_DISASSEMBLE_FILE packet def)
@@ -314,7 +314,7 @@ def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
     click_cmd(CMD_PL_DISASSEMBLE_FILE, data, packing)
 
     #Get telemetry packet:
-    packet = get_packet(tlm_id_PL_ECHO)   
+    packet = get_packet(tlm_id_PL_DISASSEMBLE_FILE)   
 
     #Parse CCSDS header:             
     _, _, _, pl_ccsds_apid, _, _, pl_ccsds_length =  parse_ccsds(packet) 
@@ -343,7 +343,7 @@ def disassemble_file(trans_id, file_path, tlm_id_PL_DISASSEMBLE_FILE)
     prompt(message)
 end
 
-def request_file_chunks(trans_id, all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
+def request_file_chunks(tlm_id_PL_DL_FILE, trans_id, all_chunks_bool, chunk_start_idx = 0, num_chunks = 0)
     cosmos_dir = Cosmos::USERPATH
     save_dir = "#{cosmos_dir}/outputs/data/downlink/#{trans_id}/"
     #define data bytes
@@ -487,6 +487,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
         print("chunk file contents length: #{chunk_file_length}\n")
         send_file_chunk(trans_id, file_seq_num, num_chunks, chunk_file_length, chunk_file_contents)
         file_seq_num += 1 #increment file sequence number
+        wait(0.5)
     end 
     full_file.close
 
@@ -496,7 +497,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
     payload_file_path_staging = staging_directory_path + '/' + file_name 
     cmd_auto = message_box("All Chunks Sent to Staging: " + payload_file_path_staging + "\nAutomatically validate and clean up staging?", 'YES', 'NO')
     if cmd_auto == 'YES'
-        auto_assemble_file(trans_id, md5, payload_file_path_staging)
+        auto_assemble_file(trans_id, md5, destination_file_path)
     else
         assemble_file(trans_id, payload_file_path_staging)
     end
@@ -556,7 +557,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
 
     success_bool = apid_check_bool and crc_check and status_check_bool and missing_packets_check_bool
     if success_bool
-        prompt("File assembled in staging without errors.")
+        prompt("File assembly without errors.")
     else
         prompt("File assembly produced errors:\n" + error_message)
     end

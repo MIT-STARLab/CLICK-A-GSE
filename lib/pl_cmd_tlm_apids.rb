@@ -1,5 +1,5 @@
 #CLICK Payload Command & Telemetry APIDs:
-#Assumed path: C:\BCT\71sw0078_a_cosmos_click_edu\procedures\CLICK-A-GSE\lib\pl_cmd_tlm_apids.rb
+#Assumed path: C:\CLICK-A-GSE\lib\pl_cmd_tlm_apids.rb
 #Reference: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
 
 #Ground Command IDs
@@ -116,6 +116,7 @@ HK_SYS_PKT_FIXED_DATA_FIELDS = %w[
     HK_FPGA_PERIOD
     HK_SYS_PERIOD
     CH_HEARTBEAT_PERIOD
+    LOAD_BALANCER_HEARTBEAT_PERIOD
     PAT_HEALTH_PERIOD
     ACK_CMD_COUNT
     LAST_ACK_CMD_ID
@@ -129,4 +130,4 @@ HK_SYS_PKT_FIXED_DATA_FIELDS = %w[
     USED_VIRTUAL_MEMORY
 ]
 HK_SYS_PKT_FIXED_DATA_FIELDS_LEN = HK_SYS_PKT_FIXED_DATA_FIELDS.length
-HK_SYS_FIXED_DATA_LEN = 26
+HK_SYS_FIXED_DATA_LEN = 27

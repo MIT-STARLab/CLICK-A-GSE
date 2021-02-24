@@ -1,8 +1,8 @@
 #Logging Script - Save Bus Power Telemetry to Text File
 #To Exit: press Stop button (preferably during wait period between saves - line 90)
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\log_bus_power.rb
+#Assumed Path: C:\CLICK-A-GSE\test\log_bus_power.rb
 require "csv"
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 tlm_id_POWER = subscribe_packet_data([['UUT', 'POWER']], 500000) #set queue depth to 100000 (default is 1000)
 

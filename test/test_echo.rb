@@ -1,7 +1,7 @@
 #Test Script - Echo
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_echo.rb
+#Assumed Path: C:\CLICK-A-GSE\test\test_echo.rb
 
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 #Subscribe to telemetry packets:
 id = subscribe_packet_data([['UUT', 'PL_ECHO']], 1) #set queue depth to 1 (don't want history of all packets)

@@ -1,6 +1,6 @@
 #Test Script - Payload FPGA Map Housekeeping Telemetry
-#Assumed Path: #Cosmos::USERPATH + \procedures\CLICK-A-GSE\test\test_hk_ch_tlm.rb
-load (Cosmos::USERPATH + '/procedures/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+#Assumed Path: C:\CLICK-A-GSE\test\test_hk_ch_tlm.rb
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 #Subscribe to telemetry packets:
 tlm_id_PL_HK_FPGA = subscribe_packet_data([['UUT', 'PL_HK_FPGA']], 500000) #set queue depth to 500000 (default is 1000)

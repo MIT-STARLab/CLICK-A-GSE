@@ -2,7 +2,7 @@
 addpath('2dgaussian301');
 addpath('data');
 sigma_req = 0.5*(0.95/0.963)*4.2; %uplink budget has a 96.3% airy radius of 4.2, or about a 2 sigma (95%) of 4.1433
-filename = 'data/2020-09-12-16-22-30_ACQUISITION_exp_963.png';
+filename = 'data/2016-10-07-09-21-47_ACQUISITION_exp_643_cold.png';
 imdata = imread(filename);
 imdata_normalized = imdata/max(max(imdata));
 figure;
