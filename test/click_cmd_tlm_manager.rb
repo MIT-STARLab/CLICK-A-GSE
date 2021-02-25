@@ -685,7 +685,11 @@ while true
 
                 #Get Telemetry:
                 if test_id == GENERAL_SELF_TEST
-                    prompt("PL_GENERAL_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
+                    prompt("PL_GENERAL_SELF_TEST command sent. Test takes 2 minutes to run") 
+                    wait(120)
+                    request_file("/root/log/self_test_data/0", tlm_id_PL_DL_FILE, "C:/BCT/")
+                    prompt("Test Complete. Please get compressed file at C:/BCT/0.gz")
+                    end
 
                 elsif test_id == LASER_SELF_TEST
                     prompt("PL_LASER_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
