@@ -417,10 +417,10 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
     puts "num chunks: #{num_chunks}"
 
     ###################### Transfer ID Information ###############################
-    # Make sure that the file C:\BCT\71sw0078_a_cosmos_click_edu\procedures\trans_id_ul.csv exists to track the transfer ID numbers used
+    # Make sure that the file test\trans_id_ul.csv exists to track the transfer ID numbers used
 
     # Read the last transfer ID sent and add 1 to it
-    last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_ul.csv",'r'){|f| f.readlines[-1]}
+    last_trans_id = File.open("C:/CLICK-A-GSE/test/trans_id_ul.csv",'r'){|f| f.readlines[-1]}
     puts "\nlast trans id: #{last_trans_id.to_i}\n"
 
     trans_id = last_trans_id.to_i+1 # increment the transfer ID
@@ -428,7 +428,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
     trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
     # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads attempted)
-    File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_ul.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
+    File.open("C:/CLICK-A-GSE/test/trans_id_ul.csv", 'a+') {|f| f.write("#{trans_id}, #{file_name}\n")}
 
     #make a new folder in the outputs_data_uplink folder for the file chunks
     FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/uplink/#{trans_id}"
@@ -627,7 +627,7 @@ end
 def new_dl_transfer_id(file_path)
     cosmos_dir = Cosmos::USERPATH
     # Read the last transfer ID and add 1 to it
-    last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
+    last_trans_id = File.open("C:/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
     print("\nlast trans id: #{last_trans_id.to_i}\n")
     
     trans_id = last_trans_id.to_i+1 # increment the transfer ID
@@ -635,7 +635,7 @@ def new_dl_transfer_id(file_path)
     trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
   
     # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
-    File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
+    File.open("C:/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
     
     #make a new folder in the outputs/data/downlink folder for the file chunks
     FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{trans_id}"

@@ -64,7 +64,7 @@ file_path = remote_directory + file_name #can get image name via list file comma
 chunk_size_bytes = 4047 #ref: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728 
 
 # Read the last transfer ID and add 1 to it
-last_trans_id = File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
+last_trans_id = File.open("C:/CLICK-A-GSE/test/trans_id_dl.csv",'r'){|f| f.readlines[-1]}
 print("\nlast trans id: #{last_trans_id.to_i}\n")
 
 trans_id = last_trans_id.to_i+1 # increment the transfer ID
@@ -72,7 +72,7 @@ print ("new trans id: #{trans_id}\n")
 trans_id = trans_id % (2**16) # mod 65536- transfer ID goes from 0 to 65535
 
 # Add the new transfer ID to the file, along with the name of the file you sent (to keep track of file uploads/downloads attempted)
-File.open("#{cosmos_dir}/procedures/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
+File.open("C:/CLICK-A-GSE/test/trans_id_dl.csv", 'a+') {|f| f.write("#{trans_id}, #{file_path}\n")}
 
 #make a new folder in the outputs/data/downlink folder for the file chunks
 FileUtils.mkdir_p "#{cosmos_dir}/outputs/data/downlink/#{trans_id}"
