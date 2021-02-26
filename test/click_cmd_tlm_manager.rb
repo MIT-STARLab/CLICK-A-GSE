@@ -601,11 +601,11 @@ while true
             else
                 enable_str[1] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
                 enable_str[2] = message_box('For PL_SET_HK, click 1 to enable SYS housekeeping message sending.', '1', '0')
-                enable_str[3] = message_box('For PL_SET_HK, click 1 to enable FPGA housekeeping message sending.', '1', '0')
-                enable_str[4] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')
-                enable_str[5] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
-                enable_str[6] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
-                enable_str[7] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
+                enable_str[3] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')
+                enable_str[4] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
+                enable_str[5] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
+                enable_str[6] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
+                enable_str[7] = message_box('For PL_SET_HK, click 1 to enable Load Balancer restart.', '1', '0')
             end
             enable_byte = ('0b' + enable_str).to_i(2)
 

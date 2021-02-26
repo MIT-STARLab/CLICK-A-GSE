@@ -1,17 +1,20 @@
 %Assess Centroid Data
 addpath('data');
-filename = 'data/centroidData - 299 - 5Hz 900sec vacuum 15C.xlsx';
+filename = 'data/centroidData_air.xlsx';
 f_ir_mm = 125; %ir camera focal length
 w_pxl_ir_mm = 12.5e-3; %ir camera pixel pitch
-
 
 data = xlsread(filename);
 tx_res = data(:,5);
 bcn_res = data(:,10);
-valid_data = ones(1,length(tx_res));
-for k = 1:length(tx_res)
+start_pt = 130;
+num_points = 150;
+valid_data = zeros(1,num_points);
+for k = start_pt:num_points
     if((tx_res(k) == -1) || (bcn_res(k) == -1))
         valid_data(k) = 0;
+    else
+        valid_data(k) = 1;
     end
 end
 valid_data = logical(valid_data);
