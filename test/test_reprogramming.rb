@@ -40,4 +40,4 @@ cmd("UUT SET_LOAD_SWITCH with SWITCH_NUM 28, STATUS 1")
 cmd("UUT SET_LOAD_SWITCH with SWITCH_NUM 29, STATUS 1")
 
 # Start golden image transmission
-cmd("UUT PYLD_CFDP_DL_FILE with PKT_LEN 62, CCSDS_AP_ID 496, TRN_ID 17, SRC_PATH /mnt/sd/general/click_golden.img")
+cmd("UUT PYLD_CFDP_DL_FILE with PKT_LEN 62, CCSDS_AP_ID 496, TRN_ID 7, SRC_PATH /mnt/sd/general/click_golden.img")

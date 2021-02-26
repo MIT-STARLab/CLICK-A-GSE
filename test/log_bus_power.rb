@@ -33,7 +33,6 @@ power_pkt_data_fields = %w[
     IO19_BATTERY_HTR_1_EN
     IO22_V3_EN
     IO23_V4_EN
-    IO25_GOLDEN_IMAGE
     IO26_CROSSLINK
     IO27_PAYLOAD_ENABLE
     IO28_TIME_TONE

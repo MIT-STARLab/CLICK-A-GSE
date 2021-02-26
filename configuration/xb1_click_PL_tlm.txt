@@ -140,11 +140,11 @@ TELEMETRY XACT PL_HK_CH BIG_ENDIAN
   #End Payload Header
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "CH health string is variable length payload data + CRC"
 
-# DL_FILE - File Telemetry Chunks - APID: 0x387 (TBR)
+# DL_FILE - File Telemetry Chunks - APID: 0x3E1 (TBR)
 TELEMETRY XACT PL_DL_FILE BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x387 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3E1 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
@@ -202,11 +202,11 @@ TELEMETRY XACT PL_LIST_FILE BIG_ENDIAN
   #End Payload Header
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "File list data is variable length payload data + CRC"
 
-# DISASSEMBLE_FILE - File disassembly report - APID: 0x3B1
+# DISASSEMBLE_FILE - File disassembly report - APID: 0x3E2
 TELEMETRY XACT PL_DISASSEMBLE_FILE BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x3B1 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3E2 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
@@ -231,11 +231,11 @@ TELEMETRY XACT PL_DISASSEMBLE_FILE BIG_ENDIAN
   APPEND_ITEM CHUNK_TOTAL_COUNT 16 UINT
   APPEND_ARRAY_ITEM PL_VAR_DATA_AND_CRC 8 UINT -0 "Empty data + CRC"
 
-# ASSEMBLE_FILE - Response from assemble file command - APID: 0x3B0
+# ASSEMBLE_FILE - Response from assemble file command - APID: 0x3E3
 TELEMETRY XACT PL_ASSEMBLE_FILE BIG_ENDIAN
   ITEM SYNC 0 64 UINT "Sync Pattern"
     FORMAT_STRING "0x%08X"
-  ID_ITEM MSG_ID 64 32 UINT 0x3B0 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
+  ID_ITEM MSG_ID 64 32 UINT 0x3E3 "Message ID – should be 0x300 – 0x3FF and unique for each pkt"
   ITEM LEN 96 32 UINT "Length (bytes) of packet"
   ITEM SEQ 128 32 UINT "Sequence Counter"
   ITEM CCSDS_TAI_SECS 160 32 UINT "TAI Seconds from CCSDS Header"
