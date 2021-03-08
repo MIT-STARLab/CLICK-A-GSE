@@ -1,14 +1,14 @@
 %Assess Centroid Data
 addpath('data');
-filename = 'data/centroidData_air.xlsx';
+filename = 'data/centroidData_38_to_40.xlsx';
 f_ir_mm = 125; %ir camera focal length
 w_pxl_ir_mm = 12.5e-3; %ir camera pixel pitch
 
 data = xlsread(filename);
 tx_res = data(:,5);
 bcn_res = data(:,10);
-start_pt = 130;
-num_points = 150;
+start_pt = 1;
+num_points = length(tx_res);
 valid_data = zeros(1,num_points);
 for k = start_pt:num_points
     if((tx_res(k) == -1) || (bcn_res(k) == -1))
