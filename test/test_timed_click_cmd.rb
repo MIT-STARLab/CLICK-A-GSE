@@ -1,7 +1,9 @@
 #Test Sending Payload Write Echo Via Store Timed Command
 
-#load (Cosmos::USERPATH + "/procedures/lib/click_cmd_tlm.rb") #previous path
-load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb') #new path - not sure why this was changed
+#load (Cosmos::USERPATH + "/procedures/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb") #previous path
+#load (Cosmos::USERPATH + "/procedures/CLICK-A-GSE/lib/crc16.rb") #previous path
+load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb') #new path - not sure why this was changed'
+load ('C:/CLICK-A-GSE/lib/crc16.rb') #new path - not sure why this was changed'
 
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 
@@ -20,7 +22,7 @@ utc_time_sec = utc_time.floor #uint32
 utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
 
 #get execution time
-user_delay_sec = ask_string("Current UTC time is: " + curr_time.to_s + "\nFor Test Store Timed Command - Input time to wait (in seconds) before execution.")
+user_delay_sec = ask("Current UTC time is: " + curr_time.to_s + "\nFor Test Store Timed Command - Input time to wait (in seconds) before execution.")
 user_exec_time_tai_sec = utc_time_sec + UTC_TAI_OFFSET + user_delay_sec
 user_exec_time_subsec = utc_time_subsec
 
@@ -28,12 +30,7 @@ user_exec_time_subsec = utc_time_subsec
 data = []
 data[0] = user_echo_data
 packing = "a" + user_echo_data.length.to_s
-
-#SM Send via Timed UUT PAYLOAD_WRITE
-#click_cmd(CMD_PL_ECHO, data, packing)
-###start click_cmd(cmd_id, data = [], packing = "C*"):
-#cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
-#data_packed is a packed data set (e.g. [0x01,0x0200].pack("CS>")): https://www.rubydoc.info/stdlib/core/1.9.3/Array:pack 
+pl_cmd_apid = CMD_PL_ECHO
 
 #pack data into binary sequence
 data_packed = data.pack(packing) 
@@ -41,15 +38,10 @@ data_packed = data.pack(packing)
 #get packet length (secondary header + data bytes + crc - 1)
 packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
 
-# #get time stamp
-# utc_time = Time.now.utc.to_f
-# utc_time_sec = utc_time.floor #uint32
-# utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
-
 #construct CCSDS header (primary and secondary)
 header = []
-header[IDX_CCSDS_VER] = CCSDS_VER | (cmd_id >> 8) #TBR
-header[IDX_CCSDS_APID] = cmd_id & 0xFF #TBR
+header[IDX_CCSDS_VER] = CCSDS_VER | (pl_cmd_apid >> 8) #TBR
+header[IDX_CCSDS_APID] = pl_cmd_apid & 0xFF #TBR
 header[IDX_CCSDS_GRP] = CCSDS_GRP_NONE #TBR
 header[IDX_CCSDS_SEQ] = 0 #TBR
 header[IDX_CCSDS_LEN] = packet_length 
@@ -64,10 +56,6 @@ packet_packed = header_packed + data_packed
 crc = Crc16.new.update(packet_packed.unpack("C*"))
 packet_packed += [crc].pack("S>")
 raw_bytes_payload_write = packet_packed.unpack("C*")
-
-#send PAYLOAD_WRITE command
-#cmd("UUT PAYLOAD_WRITE with RAW_BYTES #{raw_bytes}, LENGTH #{raw_bytes.length}") #immediate command execution
-###end click_cmd
 
 #prepend PAYLOAD_WRITE header to packet
 payload_write_header_packed = [15,3,raw_bytes_payload_write.length].pack("C2S>")
