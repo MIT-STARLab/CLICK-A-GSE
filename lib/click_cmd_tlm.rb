@@ -487,7 +487,7 @@ def upload_file(tlm_id_PL_ASSEMBLE_FILE)
         print("chunk file contents length: #{chunk_file_length}\n")
         send_file_chunk(trans_id, file_seq_num, num_chunks, chunk_file_length, chunk_file_contents)
         file_seq_num += 1 #increment file sequence number
-        wait(0.5)
+        wait(0.05)
     end 
     full_file.close
 
