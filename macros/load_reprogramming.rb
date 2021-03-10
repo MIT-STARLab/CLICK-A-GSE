@@ -1,4 +1,4 @@
-# Loads the RPi reprogramming sequence into the XB1 macro table (RAM).
+# Loads the RPi reprogramming init sequence into the XB1 macro table (RAM).
 # XB1 supports 96 macros IDs. BCT recommended using 60 and above for payload.
 # Up to 400 commands can be stored in the macro table in total.
 macro_id = 65
@@ -62,6 +62,3 @@ table_offset += 1
 # Load switch: PAYLOAD_NOOP ON
 cmd("UUT STORE_MACRO_COMMAND with TABLE_SLOT #{table_offset}, MACRO_ID #{macro_id}, REL_TIME #{time_offset_5Hz}, LENGTH 4, RAW_BYTES [0x28,0x01,0x1D,0x01]")
 table_offset += 1
-
-# Start UART transfer
-# cmd("UUT STORE_MACRO_COMMAND with TABLE_SLOT #{table_offset}, MACRO_ID #{macro_id}, REL_TIME #{time_offset_5Hz}, LENGTH ?, RAW_BYTES []")
