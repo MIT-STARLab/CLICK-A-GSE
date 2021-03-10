@@ -4,6 +4,7 @@
 #load (Cosmos::USERPATH + "/procedures/CLICK-A-GSE/lib/crc16.rb") #previous path
 load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb') #new path - not sure why this was changed'
 load ('C:/CLICK-A-GSE/lib/crc16.rb') #new path - not sure why this was changed'
+load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
 
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 
