@@ -272,7 +272,7 @@ while true
                             click_cmd(CMD_PL_SINGLE_CAPTURE, data, packing)
 
                             #Get image telemetry
-                            get_img_cmd = message_box("Get image now?", 'YES', 'NO')
+                            get_img_cmd = message_box("Wait a few seconds and press YES to download stuff.", 'YES', 'NO')
                             if get_img_cmd == 'YES'
                                 request_pat_telemetry(tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
                             end
@@ -689,7 +689,6 @@ while true
                     wait(120)
                     request_file("/root/log/self_test_data/0", tlm_id_PL_DL_FILE, "C:/BCT/")
                     prompt("Test Complete. Please get compressed file at C:/BCT/0.gz")
-                    end
 
                 elsif test_id == LASER_SELF_TEST
                     prompt("PL_LASER_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
