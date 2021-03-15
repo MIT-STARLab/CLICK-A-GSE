@@ -7,7 +7,47 @@ require 'digest/md5'
 load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb')
 load ('C:/CLICK-A-GSE/lib/crc16.rb')
 
-### Send command to payload via PAYLOAD_WRITE
+### Send timed execution command to payload via PAYLOAD_WRITE
+def click_timed_payload_cmd(pl_cmd_apid, timed_cmd_id, exec_time_tai_sec, exec_time_subsec = 0, data = [], packing = "C*")
+    #pack data into binary sequence
+    data_packed = data.pack(packing) 
+
+    #get packet length (secondary header + data bytes + crc - 1)
+    packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
+
+    #get time stamp
+    utc_time = Time.now.utc.to_f
+    utc_time_sec = utc_time.floor #uint32
+    utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+
+    #construct payload command CCSDS header (primary and secondary)
+    header = []
+    header[IDX_CCSDS_VER] = CCSDS_VER | (pl_cmd_apid >> 8) #TBR
+    header[IDX_CCSDS_APID] = pl_cmd_apid & 0xFF #TBR
+    header[IDX_CCSDS_GRP] = CCSDS_GRP_NONE #TBR
+    header[IDX_CCSDS_SEQ] = 0 #TBR
+    header[IDX_CCSDS_LEN] = packet_length 
+    header[IDX_TIME_SEC] = utc_time_sec
+    header[IDX_TIME_SUBSEC] = utc_time_subsec
+    header[IDX_RESERVED] = 0
+    packing_header = "C4S>L>C2"   
+    header_packed = header.pack(packing_header) 
+
+    #compute CRC16 and append to packet
+    packet_packed = header_packed + data_packed
+    crc = Crc16.new.update(packet_packed.unpack("C*"))
+    packet_packed += [crc].pack("S>")
+
+    #prepend PAYLOAD_WRITE header to payload command packet
+    payload_write_header_packed = [PAYLOAD_WRITE_APID, PAYLOAD_WRITE_OP_CODE, packet_packed.unpack("C*").length].pack("C2S>")
+    payload_write_packet_packed = payload_write_header_packed + packet_packed
+    payload_write_raw_bytes = payload_write_packet_packed.unpack("C*")
+
+    #Send timed command
+    cmd("UUT STORE_TIMED_COMMAND with CMD_ID #{timed_cmd_id}, EXEC_TIME #{exec_time_tai_sec}, ADD_CYCLE #{exec_time_subsec}, LENGTH #{payload_write_raw_bytes.length}, RAW_BYTES #{payload_write_raw_bytes}")
+end
+
+### Send immediate execution command to payload via PAYLOAD_WRITE (ground testing)
 def click_cmd(cmd_id, data = [], packing = "C*")
     #cmd_ids defined here: https://docs.google.com/spreadsheets/d/1ITNdvtceonKRpWd4pGuhg9Do2ZygTLGonbsYKwVzycM/edit#gid=1522568728
     #data_packed is a packed data set (e.g. [0x01,0x0200].pack("CS>")): https://www.rubydoc.info/stdlib/core/1.9.3/Array:pack 
@@ -53,6 +93,12 @@ def get_timestamp()
     #current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
     current_timestamp = current_time_str[0..9] + "_" + current_time_str[11..12] + "-" + current_time_str[14..15] + "-" + current_time_str[17..18]
     return current_timestamp, current_time_str
+end
+
+### Sync bus clock with local computer
+def sync_bus_clock()
+    ref_tai_time_sec = Time.now.utc.to_f.floor + UTC_TAI_OFFSET
+    cmd("UUT SET_CURRENT_TIME_TAI with TIME #{ref_tai_time_sec}")
 end
 
 ### Parse CCSDS header in payload telemetry packet

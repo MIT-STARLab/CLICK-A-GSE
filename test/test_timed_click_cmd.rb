@@ -2,16 +2,54 @@
 
 #load (Cosmos::USERPATH + "/procedures/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb") #previous path
 #load (Cosmos::USERPATH + "/procedures/CLICK-A-GSE/lib/crc16.rb") #previous path
-load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb') #new path - not sure why this was changed'
-load ('C:/CLICK-A-GSE/lib/crc16.rb') #new path - not sure why this was changed'
+# load ('C:/CLICK-A-GSE/lib/pl_cmd_tlm_apids.rb') 
+# load ('C:/CLICK-A-GSE/lib/crc16.rb') 
 load ('C:/CLICK-A-GSE/lib/click_cmd_tlm.rb')
+
+# ### Send timed execution command to payload via PAYLOAD_WRITE
+# def click_timed_payload_cmd(pl_cmd_apid, timed_cmd_id, exec_time_tai_sec, exec_time_subsec = 0, data = [], packing = "C*")
+#     #pack data into binary sequence
+#     data_packed = data.pack(packing) 
+
+#     #get packet length (secondary header + data bytes + crc - 1)
+#     packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
+
+#     #get time stamp
+#     utc_time = Time.now.utc.to_f
+#     utc_time_sec = utc_time.floor #uint32
+#     utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+
+#     #construct payload command CCSDS header (primary and secondary)
+#     header = []
+#     header[IDX_CCSDS_VER] = CCSDS_VER | (pl_cmd_apid >> 8) #TBR
+#     header[IDX_CCSDS_APID] = pl_cmd_apid & 0xFF #TBR
+#     header[IDX_CCSDS_GRP] = CCSDS_GRP_NONE #TBR
+#     header[IDX_CCSDS_SEQ] = 0 #TBR
+#     header[IDX_CCSDS_LEN] = packet_length 
+#     header[IDX_TIME_SEC] = utc_time_sec
+#     header[IDX_TIME_SUBSEC] = utc_time_subsec
+#     header[IDX_RESERVED] = 0
+#     packing_header = "C4S>L>C2"   
+#     header_packed = header.pack(packing_header) 
+
+#     #compute CRC16 and append to packet
+#     packet_packed = header_packed + data_packed
+#     crc = Crc16.new.update(packet_packed.unpack("C*"))
+#     packet_packed += [crc].pack("S>")
+
+#     #prepend PAYLOAD_WRITE header to packet
+#     payload_write_header_packed = [PAYLOAD_WRITE_APID, PAYLOAD_WRITE_OP_CODE, packet_packed.unpack("C*").length].pack("C2S>")
+#     payload_write_packet_packed = payload_write_header_packed + packet_packed
+#     payload_write_raw_bytes = payload_write_packet_packed.unpack("C*")
+
+#     #Send timed command
+#     cmd("UUT STORE_TIMED_COMMAND with CMD_ID #{timed_cmd_id}, EXEC_TIME #{exec_time_tai_sec}, ADD_CYCLE #{exec_time_subsec}, LENGTH #{payload_write_raw_bytes.length}, RAW_BYTES #{payload_write_raw_bytes}")
+# end
 
 tlm_id_PL_ECHO = subscribe_packet_data([['UUT', 'PL_ECHO']], 10000) #set queue depth to 10000 (default is 1000)
 
-UTC_TAI_OFFSET = 37 #TAI is exactly 37 seconds ahead of UTC
-#sync bus time for test
-ref_tai_time_sec = Time.now.utc.to_f.floor + UTC_TAI_OFFSET
-cmd("UUT SET_CURRENT_TIME_TAI with TIME #{ref_tai_time_sec}")
+#sync bus clock with local computer time for test
+sync_bus_clock()
 
 #get user data
 user_echo_data = ask_string("For Test Store Timed Command - PL_ECHO, input string to echo.")
@@ -33,39 +71,9 @@ data[0] = user_echo_data
 packing = "a" + user_echo_data.length.to_s
 pl_cmd_apid = CMD_PL_ECHO
 
-#pack data into binary sequence
-data_packed = data.pack(packing) 
-
-#get packet length (secondary header + data bytes + crc - 1)
-packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
-
-#construct CCSDS header (primary and secondary)
-header = []
-header[IDX_CCSDS_VER] = CCSDS_VER | (pl_cmd_apid >> 8) #TBR
-header[IDX_CCSDS_APID] = pl_cmd_apid & 0xFF #TBR
-header[IDX_CCSDS_GRP] = CCSDS_GRP_NONE #TBR
-header[IDX_CCSDS_SEQ] = 0 #TBR
-header[IDX_CCSDS_LEN] = packet_length 
-header[IDX_TIME_SEC] = utc_time_sec
-header[IDX_TIME_SUBSEC] = utc_time_subsec
-header[IDX_RESERVED] = 0
-packing_header = "C4S>L>C2"   
-header_packed = header.pack(packing_header) 
-
-#compute CRC16 and append to packet
-packet_packed = header_packed + data_packed
-crc = Crc16.new.update(packet_packed.unpack("C*"))
-packet_packed += [crc].pack("S>")
-raw_bytes_payload_write = packet_packed.unpack("C*")
-
-#prepend PAYLOAD_WRITE header to packet
-payload_write_header_packed = [15,3,raw_bytes_payload_write.length].pack("C2S>")
-packed_packed_store_timed_command = payload_write_header_packed + packet_packed
-raw_bytes_store_timed_command = packed_packed_store_timed_command.unpack("C*")
-
-#Send timed command
-cmd_id = 1 #arbitrary
-cmd("UUT STORE_TIMED_COMMAND with CMD_ID #{cmd_id}, EXEC_TIME #{user_exec_time_tai_sec}, ADD_CYCLE #{user_exec_time_subsec}, LENGTH #{raw_bytes_store_timed_command.length}, RAW_BYTES #{raw_bytes_store_timed_command}")
+#send timed payload cmd
+timed_cmd_id = 1 #timed command id (1-400)
+click_timed_payload_cmd(pl_cmd_apid, timed_cmd_id, user_exec_time_tai_sec, user_exec_time_subsec, data, packing)
 
 #Get telemetry packet:
 packet = get_packet(tlm_id_PL_ECHO)   
