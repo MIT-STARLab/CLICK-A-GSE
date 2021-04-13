@@ -18,7 +18,7 @@ def click_timed_payload_cmd(pl_cmd_apid, timed_cmd_id, exec_time_tai_sec, exec_t
     #get time stamp
     utc_time = Time.now.utc.to_f
     utc_time_sec = utc_time.floor #uint32
-    utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+    utc_time_subsec = (5*(utc_time - utc_time_sec)).floor #= ((1000*frac)/200).floor
 
     #construct payload command CCSDS header (primary and secondary)
     header = []
@@ -59,9 +59,10 @@ def click_cmd(cmd_id, data = [], packing = "C*")
     packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
 
     #get time stamp
-    utc_time = Time.now.utc.to_f
-    utc_time_sec = utc_time.floor #uint32
-    utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+    #utc_time = Time.now.utc.to_f
+    #utc_time_sec = utc_time.floor #uint32
+    #utc_time_subsec = (5*(utc_time - utc_time_sec)).floor #= ((1000*frac)/200).floor
+    utc_time_sec, utc_time_subsec = get_utc_time()
 
     #construct CCSDS header (primary and secondary)
     header = []
@@ -93,6 +94,15 @@ def get_timestamp()
     #current_timestamp = current_time.to_f.floor.to_s #timestamp in seconds
     current_timestamp = current_time_str[0..9] + "_" + current_time_str[11..12] + "-" + current_time_str[14..15] + "-" + current_time_str[17..18]
     return current_timestamp, current_time_str
+end
+
+def get_utc_time()
+    #get time stamp
+    curr_time = Time.now
+    utc_time = curr_time.utc.to_f
+    utc_time_sec = utc_time.floor #uint32
+    utc_time_subsec = (5*(utc_time - utc_time_sec)).floor #= ((1000*frac)/200).floor
+    return utc_time_sec, utc_time_subsec
 end
 
 ### Sync bus clock with local computer
@@ -1060,13 +1070,19 @@ def getHK_SYS(file_path, tlm_id_PL_HK_SYS)
     puts (message)
     File.open(file_path, 'a+') {|f| f.write(message)}
     process_info_len = pl_ccsds_length - HK_SYS_FIXED_DATA_LEN - CRC_LEN + 1 #get data size
+    #puts "process_info_len", process_info_len
+    #puts "pl_ccsds_length", pl_ccsds_length
+    #puts "HK_SYS_FIXED_DATA_LEN", HK_SYS_FIXED_DATA_LEN
+    #puts "CRC_LEN", CRC_LEN
     
     if process_info_len > 0
         packing = 'C' + process_info_len.to_s + 'S>' #define packing for process info and crc
         process_info, crc_rx = parse_variable_data_and_crc(packet, packing) #parse process info variable length data and crc
+        #puts "process info length: ", process_info.length
+        proc_msg = ""
         if process_info.length % 3 == 0
-            for i in 0..(process_info.length - 3)
-                proc_msg = ("Process Name: " + process_info[i].to_s + ", CPU Percent: " + process_info[i+1].to_s + ", Memory Percent: " + process_info[i+2].to_s + "\n")
+            for i in 0..(process_info.length/3 - 1)
+                proc_msg += ("Process Name: " + HK_SYS_PROC_NAMES[HK_SYS_PROC_IDS.index(process_info[3*i])] + ", CPU Percent: " + process_info[3*i+1].to_s + ", Memory Percent: " + process_info[3*i+2].to_s + "\n")
             end
         else
             proc_msg = "Error process information is missing data (not a multiple of 3)\nRaw Process Info: ["

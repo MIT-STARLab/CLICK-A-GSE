@@ -56,14 +56,16 @@ user_echo_data = ask_string("For Test Store Timed Command - PL_ECHO, input strin
 
 #get time stamp
 curr_time = Time.now
-utc_time = curr_time.utc.to_f
-utc_time_sec = utc_time.floor #uint32
-utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+#utc_time = curr_time.utc.to_f
+#utc_time_sec = utc_time.floor #uint32
+#utc_time_subsec = (5*(utc_time - utc_time_sec)).floor #= ((1000*frac)/200).floor
+utc_time_sec, utc_time_subsec = get_utc_time()
 
 #get execution time
 user_delay_sec = ask("Current UTC time is: " + curr_time.to_s + "\nFor Test Store Timed Command - Input time to wait (in seconds) before execution.")
 user_exec_time_tai_sec = utc_time_sec + UTC_TAI_OFFSET + user_delay_sec
 user_exec_time_subsec = utc_time_subsec
+puts user_exec_time_subsec
 
 #define data bytes
 data = []

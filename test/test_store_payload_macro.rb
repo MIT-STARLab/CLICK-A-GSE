@@ -6,9 +6,10 @@ user_echo_data = ask_string("For Test Store and Execute Payload Command Macro (S
 
 #get time stamp
 curr_time = Time.now
-utc_time = curr_time.utc.to_f
-utc_time_sec = utc_time.floor #uint32
-utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+#utc_time = curr_time.utc.to_f
+#utc_time_sec = utc_time.floor #uint32
+#utc_time_subsec = (5*(utc_time - utc_time_sec)).floor #= ((1000*frac)/200).floor
+utc_time_sec, utc_time_subsec = get_utc_time()
 
 #define data bytes
 data = []
@@ -24,9 +25,10 @@ data_packed = data.pack(packing)
 packet_length = data_packed.length + SECONDARY_HEADER_LEN + CRC_LEN - 1
 
 #get time stamp
-utc_time = Time.now.utc.to_f
-utc_time_sec = utc_time.floor #uint32
-utc_time_subsec = (5*(utc_time - utc_time_sec)).round #= ((1000*frac)/200).round
+#utc_time = Time.now.utc.to_f
+#utc_time_sec = utc_time.floor #uint32
+#utc_time_subsec = (5*(utc_time - utc_time_sec)).floor #= ((1000*frac)/200).floor
+utc_time_sec, utc_time_subsec = get_utc_time()
 
 #construct payload command CCSDS header (primary and secondary)
 header = []
