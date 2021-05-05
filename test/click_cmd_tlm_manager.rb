@@ -594,24 +594,31 @@ while true
             end
 
         elsif user_cmd == 'PL_SET_HK'
-            all_packets_enable = message_box('For PL_SET_HK, enable all packets? [Default]', 'YES', 'NO')
-            enable_str = '00000000'
-            if all_packets_enable == 'YES'
-                enable_str[0] = '1'
-            else
-                enable_str[1] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
-                enable_str[2] = message_box('For PL_SET_HK, click 1 to enable SYS housekeeping message sending.', '1', '0')
-                enable_str[3] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')
-                enable_str[4] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
-                enable_str[5] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
-                enable_str[6] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
-                enable_str[7] = message_box('For PL_SET_HK, click 1 to enable Load Balancer restart.', '1', '0')
+            cmd_default_enable = message_box('For PL_SET_HK, enable all packets and all restarts? [Default]', 'YES', 'NO')
+            enable_str = '11111111'
+            if cmd_default_enable == 'NO'
+                cmd_all_packets_enable = message_box('For PL_SET_HK, enable all packets?', 'YES', 'NO')
+                if cmd_all_packets_enable == 'N0'
+                    enable_str[0] = '0'
+                    enable_str[1] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
+                    enable_str[2] = message_box('For PL_SET_HK, click 1 to enable SYS housekeeping message sending.', '1', '0')
+                    enable_str[3] = message_box('For PL_SET_HK, click 1 to enable PAT housekeeping message sending.', '1', '0')               
+                end
+                
+                cmd_all_restarts_enable = message_box('For PL_SET_HK, enable all restarts?', 'YES', 'NO')
+                if cmd_all_restarts_enable == 'N0'
+                    enable_str[4] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
+                    enable_str[5] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
+                    enable_str[6] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
+                    enable_str[7] = message_box('For PL_SET_HK, click 1 to enable Load Balancer restart.', '1', '0')               
+                end
             end
             enable_byte = ('0b' + enable_str).to_i(2)
 
             fpga_heartbeat_period = ask('For PL_SET_HK, enter FPGA heartbeat period in seconds.')
             system_heartbeat_period = ask('For PL_SET_HK, enter System heartbeat period in seconds.')
             ch_heartbeat_period = ask('For PL_SET_HK, enter Commandhandler heartbeat period in seconds.')
+            lb_heartbeat_period = ask('For PL_SET_HK, enter Load Balancer heartbeat period in seconds.')
             pat_heartbeat_period = ask('For PL_SET_HK, enter PAT heartbeat period in seconds.')
             
             data = []
@@ -619,7 +626,8 @@ while true
             data[1] = fpga_heartbeat_period
             data[2] = system_heartbeat_period
             data[3] = ch_heartbeat_period
-            data[4] = pat_heartbeat_period
+            data[4] = lb_heartbeat_period
+            data[5] = pat_heartbeat_period
             packing = "C*"
             click_cmd(CMD_PL_SET_HK, data, packing)
 
