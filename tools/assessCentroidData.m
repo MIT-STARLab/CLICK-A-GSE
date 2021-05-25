@@ -1,6 +1,6 @@
 %Assess Centroid Data
 addpath('data');
-filename = 'data/centroidData_38_to_40.xlsx';
+filename = 'data/centroidData ambient air BCT.xlsx';
 f_ir_mm = 125; %ir camera focal length
 w_pxl_ir_mm = 12.5e-3; %ir camera pixel pitch
 

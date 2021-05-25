@@ -27,6 +27,7 @@ cmd_names = %w[
     PL_CALIB_LASER_TEST
     PL_FSM_TEST
     PL_RUN_CALIBRATION
+    PL_TEST_ADCS_FEEDBACK
     PL_UPDATE_ACQUISITION_PARAMS
     PL_TX_ALIGN
     PL_UPDATE_TX_OFFSETS
@@ -91,7 +92,7 @@ while true
     cmd_names[12], cmd_names[13], cmd_names[14], cmd_names[15], cmd_names[16], cmd_names[17], 
     cmd_names[18], cmd_names[19], cmd_names[20], cmd_names[21], cmd_names[22], cmd_names[23], 
     cmd_names[24], cmd_names[25], cmd_names[26], cmd_names[27], cmd_names[28], cmd_names[29],
-    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33],
+    cmd_names[30], cmd_names[31], cmd_names[32], cmd_names[33], cmd_names[34],
     'TEST_MULTIPLE_ECHO', 'TEST_PAT', 'REQUEST_DIRECTORY_FILES', 'REQUEST_PAT_FILES', 'EXIT')
     if cmd_names.include? user_cmd
         if user_cmd == 'PL_REBOOT'
@@ -392,6 +393,10 @@ while true
         elsif user_cmd == 'PL_RUN_CALIBRATION'
             #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
             click_cmd(CMD_PL_RUN_CALIBRATION)
+
+        elsif user_cmd == 'PL_TEST_ADCS_FEEDBACK'
+            #DC Send via UUT Payload Write (i.e. send CMD_ID only with empty data field)
+            click_cmd(CMD_PL_TEST_ADCS_FEEDBACK)
         
         elsif user_cmd == 'PL_UPDATE_ACQUISITION_PARAMS'
             user_bcn_window_size = ask("For PL_UPDATE_ACQUISITION_PARAMS, input beacon acquisition window size (width = height) in pixels. Input EXIT to escape.", 'EXIT')
