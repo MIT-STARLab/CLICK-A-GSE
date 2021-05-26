@@ -599,7 +599,7 @@ while true
             end
 
         elsif user_cmd == 'PL_SET_HK'
-            cmd_default_enable = message_box('For PL_SET_HK, enable all packets and all restarts? [Default]', 'YES', 'NO')
+            cmd_default_enable = message_box('For PL_SET_HK, set to Default? (all packets enabled w/ default heartbeat check periods)', 'YES', 'NO')
             enable_str = '11111111'
             if cmd_default_enable == 'NO'
                 cmd_all_packets_enable = message_box('For PL_SET_HK, enable all packets?', 'YES', 'NO')
@@ -619,12 +619,26 @@ while true
                 end
             end
             enable_byte = ('0b' + enable_str).to_i(2)
-
-            fpga_heartbeat_period = ask('For PL_SET_HK, enter FPGA heartbeat period in seconds.')
-            system_heartbeat_period = ask('For PL_SET_HK, enter System heartbeat period in seconds.')
-            ch_heartbeat_period = ask('For PL_SET_HK, enter Commandhandler heartbeat period in seconds.')
-            lb_heartbeat_period = ask('For PL_SET_HK, enter Load Balancer heartbeat period in seconds.')
-            pat_heartbeat_period = ask('For PL_SET_HK, enter PAT heartbeat period in seconds.')
+            
+            if cmd_default_enable == 'YES'
+                fpga_heartbeat_period = HK_FPGA_CHECK_PD_DEFAULT
+                system_heartbeat_period = HK_SYS_CHECK_PD_DEFAULT
+                ch_heartbeat_period = HK_CH_CHECK_PD_DEFAULT
+                lb_heartbeat_period = HK_LB_CHECK_PD_DEFAULT
+                pat_heartbeat_period = HK_PAT_CHECK_PD_DEFAULT
+            else
+                fpga_heartbeat_period = ask('For PL_SET_HK, enter FPGA heartbeat check period in seconds (Default = ' + HK_FPGA_CHECK_PD_DEFAULT.to_s + ', Min = ' + HK_FPGA_CHECK_PD_MIN.to_s + ').')
+                system_heartbeat_period = ask('For PL_SET_HK, enter System heartbeat check period in seconds (Default = ' + HK_SYS_CHECK_PD_DEFAULT.to_s + ', Min = ' + HK_SYS_CHECK_PD_MIN.to_s + ').')
+                ch_heartbeat_period = ask('For PL_SET_HK, enter Commandhandler heartbeat check period in seconds (Default = ' + HK_CH_CHECK_PD_DEFAULT.to_s + ', Min = ' + HK_CH_CHECK_PD_MIN.to_s + ').')
+                lb_heartbeat_period = ask('For PL_SET_HK, enter Load Balancer heartbeat check period in seconds (Default = ' + HK_LB_CHECK_PD_DEFAULT.to_s + ', Min = ' + HK_LB_CHECK_PD_MIN.to_s + ').')
+                pat_heartbeat_period = ask('For PL_SET_HK, enter PAT heartbeat period check in seconds (Default = ' + HK_PAT_CHECK_PD_DEFAULT.to_s + ', Min = ' + HK_PAT_CHECK_PD_MIN.to_s + ').')
+                
+                fpga_heartbeat_period = [fpga_heartbeat_period, HK_FPGA_CHECK_PD_MIN].max 
+                system_heartbeat_period = [system_heartbeat_period, HK_SYS_CHECK_PD_MIN].max 
+                ch_heartbeat_period = [ch_heartbeat_period, HK_CH_CHECK_PD_MIN].max 
+                lb_heartbeat_period = [lb_heartbeat_period, HK_LB_CHECK_PD_MIN].max 
+                pat_heartbeat_period = [pat_heartbeat_period, HK_PAT_CHECK_PD_MIN].max           
+            end
             
             data = []
             data[0] = enable_byte
