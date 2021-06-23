@@ -603,7 +603,7 @@ while true
             enable_str = '11111111'
             if cmd_default_enable == 'NO'
                 cmd_all_packets_enable = message_box('For PL_SET_HK, enable all packets?', 'YES', 'NO')
-                if cmd_all_packets_enable == 'N0'
+                if cmd_all_packets_enable == 'NO'
                     enable_str[0] = '0'
                     enable_str[1] = message_box('For PL_SET_HK, click 1 to enable FPGA requests.', '1', '0')
                     enable_str[2] = message_box('For PL_SET_HK, click 1 to enable SYS housekeeping message sending.', '1', '0')
@@ -611,7 +611,7 @@ while true
                 end
                 
                 cmd_all_restarts_enable = message_box('For PL_SET_HK, enable all restarts?', 'YES', 'NO')
-                if cmd_all_restarts_enable == 'N0'
+                if cmd_all_restarts_enable == 'NO'
                     enable_str[4] = message_box('For PL_SET_HK, click 1 to enable command handler restart.', '1', '0')
                     enable_str[5] = message_box('For PL_SET_HK, click 1 to enable PAT restart.', '1', '0')
                     enable_str[6] = message_box('For PL_SET_HK, click 1 to enable FPGA restart.', '1', '0')
@@ -719,6 +719,9 @@ while true
 
                 elsif test_id == LASER_SELF_TEST
                     prompt("PL_LASER_SELF_TEST command sent. Use file transfer to retrieve log data.") ###TODO automate this
+                    wait(10)
+                    request_file("/root/log/laser_self_test_data/0", tlm_id_PL_DL_FILE, "C:/BCT/")
+                    prompt("Test Complete. Please get compressed file at C:/BCT/0.gz")
 
                 elsif test_id == PAT_SELF_TEST
                     getResults_PAT_SELF_TEST(test_log_dir, tlm_id_PL_PAT_SELF_TEST, tlm_id_PL_LIST_FILE, tlm_id_PL_DL_FILE)
