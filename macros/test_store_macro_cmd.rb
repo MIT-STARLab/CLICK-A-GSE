@@ -35,10 +35,12 @@ execute_macro_id = 43 #Turn payload on
 execute_macro_id_format = "S>"
 
 execute_macro_command_data = [len,ccsds_ap_id,ap_id,op_code,execute_macro_id]
-execute_macro_command_packing = [len_format,ccsds_ap_id_format,ap_id_format,op_code_format,execute_macro_id_format]
-execute_macro_command_raw_bytes = execute_macro_command_data.pack(execute_macro_command_packing)
+execute_macro_command_packing = len_format + ccsds_ap_id_format + ap_id_format + op_code_format + execute_macro_id_format
+execute_macro_command_packed = execute_macro_command_data.pack(execute_macro_command_packing)
+execute_macro_command_raw_bytes = execute_macro_command_packed.unpack("C*")
 execute_macro_command_raw_bytes_len = execute_macro_command_raw_bytes.length
 
 # Load switch: PAYLOAD_ENABLE OFF
 time_offset_5Hz = 0
 cmd("UUT STORE_MACRO_COMMAND with TABLE_SLOT #{table_offset}, MACRO_ID #{macro_id}, REL_TIME #{time_offset_5Hz}, LENGTH #{execute_macro_command_raw_bytes_len}, RAW_BYTES #{execute_macro_command_raw_bytes}")
+#puts execute_macro_command_raw_bytes
