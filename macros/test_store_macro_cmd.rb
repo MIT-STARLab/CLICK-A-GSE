@@ -31,10 +31,11 @@ ap_id_format = "C"
 op_code = 7
 op_code_format = "C"
 
-macro_id_format = "S>"
+execute_macro_id = 43 #Turn payload on
+execute_macro_id_format = "S>"
 
-execute_macro_command_data = [len,ccsds_ap_id,ap_id,op_code,macro_id]
-execute_macro_command_packing = [len_format,ccsds_ap_id_format,ap_id_format,op_code_format,macro_id_format]
+execute_macro_command_data = [len,ccsds_ap_id,ap_id,op_code,execute_macro_id]
+execute_macro_command_packing = [len_format,ccsds_ap_id_format,ap_id_format,op_code_format,execute_macro_id_format]
 execute_macro_command_raw_bytes = execute_macro_command_data.pack(execute_macro_command_packing)
 execute_macro_command_raw_bytes_len = execute_macro_command_raw_bytes.length
 
