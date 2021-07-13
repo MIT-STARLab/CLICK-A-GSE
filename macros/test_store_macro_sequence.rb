@@ -30,19 +30,16 @@ set_line_delay(0.1)
 SEC2CYCLES = 5
 
 #Define Macro ID and Starting Table Offset for Downlink Experiment Macro
-MACRO_ID_DOWNLINK_EXPERIMENT = 70
-START_TABLE_OFFSET_DOWNLINK_EXPERIMENT = 315
+MACRO_ID_TEST = 90
+START_TABLE_OFFSET_TEST = 390
 
 #Define Macro IDs for Sub-Macros:
 #T = 0: Execute Macro 43 - Payload On. Runs for 37 sec up to T = 37 sec.
-#T = 3.5 min = 210 sec: Execute Macro 42 - Configure Payload for Optical Downlink. Runs for 1295.4 sec up to T = 1505.4 sec.
-#TODO. T = 27 min = 1620 sec: TBD File Management Payload Command
-#T = 30 min = 1800 sec: Execute Macro 30 - Payload Off. Runs for 2 sec up to T = 1802 sec.
+#T = 1 min = 60 sec: Execute Macro 30 - Payload Off. Runs for 2 sec up to T = 62 sec.
 
 MACRO_ID_PAYLOAD_ON = 43
-MACRO_ID_CONFIG_OPTICAL_DOWNLINK = 42
 MACRO_ID_PAYLOAD_OFF = 30
-time_offsets_5Hz = [0, 210*SEC2CYCLES, 1800*SEC2CYCLES] #Define Execution Times for Sub-Macros
-submacro_sequence = [MACRO_ID_PAYLOAD_ON, MACRO_ID_CONFIG_OPTICAL_DOWNLINK, MACRO_ID_PAYLOAD_OFF] #Define Sub-Macro Sequence
+time_offsets_5Hz = [0, 60*SEC2CYCLES] #Define Execution Times for Sub-Macros
+submacro_sequence = [MACRO_ID_PAYLOAD_ON, MACRO_ID_PAYLOAD_OFF] #Define Sub-Macro Sequence
 
-store_macro_execute_sequence(MACRO_ID_DOWNLINK_EXPERIMENT, START_TABLE_OFFSET_DOWNLINK_EXPERIMENT, time_offsets_5Hz, submacro_sequence)
+store_macro_execute_sequence(MACRO_ID_TEST, START_TABLE_OFFSET_TEST, time_offsets_5Hz, submacro_sequence)
